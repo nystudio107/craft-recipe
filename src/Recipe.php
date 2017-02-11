@@ -48,7 +48,7 @@ class Recipe extends Plugin
             Fields::className(),
             Fields::EVENT_REGISTER_FIELD_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types[] = RecipeField::class;
+                $event->types[] = RecipeField::className();
             }
         );
 

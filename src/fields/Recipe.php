@@ -10,14 +10,12 @@
 
 namespace nystudio107\recipe\fields;
 
-use nystudio107\recipe\Recipe;
 use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
 
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
-use craft\helpers\Db;
-use yii\db\Schema;
+use craft\elements\Asset;
 use craft\helpers\Json;
 
 /**
@@ -31,9 +29,9 @@ class Recipe extends Field
     // =========================================================================
 
     /**
-     * @var string
+     * @var array
      */
-    public $someAttribute = 'Some Default';
+    public $assetSources = [];
 
     // Static Methods
     // =========================================================================
@@ -55,8 +53,6 @@ class Recipe extends Field
     public function rules()
     {
         return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
         ];
     }
 
@@ -76,6 +72,7 @@ class Recipe extends Field
             . 'Recipe_settings',
             [
                 'field' => $this,
+                'assetSources' => Asset::sources(),
             ]
         );
     }
