@@ -1,0 +1,37 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Welcome to Recipe!' %}
+
+{% set linkGetStarted = url('settings/fields') %}
+{% set docsUrl = "https://github.com/nystudio107/craft3-recipe/blob/master/README.md" %}
+
+{% do view.registerAssetBundle("nystudio107\\recipe\\assetbundles\\recipe\\RecipeAsset") %}
+{% set baseAssetsUrl = view.getAssetManager().getPublishedUrl('@nystudio107/recipe/assetbundles/recipe/dist', true) %}
+
+{% set crumbs = [
+    { label: "Recipe", url: url('recipe') },
+    { label: "Welcome"|t, url: url('recipe/welcome') },
+] %}
+
+{% set content %}
+    <div style="text-align:center; margin:0 auto; padding: 5% 10%;">
+        <img src="{{ baseAssetsUrl ~ '/img/Recipe-icon.svg' }}" width="30%" height="auto"/>
+        <h2>Thanks for using Recipe!</h2>
+        <p>Recipe adds a 'Recipe' FieldType for Craft CMS that you can add to any of your Sections.</p>
+        <p>In encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty' fractions for Imperial units, and can output correct ingredient portions for any number of servings.</p>
+        <p>Recipe also generates the <a href='https://developers.google.com/structured-data/' target='_blank'>JSON-LD microdata</a> for your recipes, which allows it to be displayed in the <a href='https://developers.google.com/structured-data/rich-snippets/recipes' target='_blank'>Googleknowledge panel</a> for search results.</p>
+        <p>We hope Recipe makes it easier for you to create and share some yummy recipes!</p>
+        <p>
+            &nbsp;
+        </p>
+        <p>
+            <a href="{{ linkGetStarted }}">
+                <button class="btn submit">Get Started</button>
+            </a>
+        </p>
+    </div>
+    <div style="text-align:center; margin:0 auto; padding: 0;">
+        <p class="instructions">
+            Brought to you by <a href="http://nystudio107.com" target="_blank">nystudio107</a>
+        </p>
+    </div>
+{% endset %}

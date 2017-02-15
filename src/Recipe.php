@@ -2,7 +2,8 @@
 /**
  * Recipe plugin for Craft CMS 3.x
  *
- * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support
+ * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation,
+ * and JSON-LD microdata support
  *
  * @link      https://nystudio107.com
  * @copyright Copyright (c) 2017 nystudio107
@@ -15,7 +16,10 @@ use nystudio107\recipe\fields\Recipe as RecipeField;
 use Craft;
 use craft\base\Plugin;
 use craft\services\Fields;
+use craft\services\Plugins;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\PluginEvent;
+use craft\helpers\UrlHelper;
 use yii\base\Event;
 
 /**
@@ -44,6 +48,7 @@ class Recipe extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Register our Field
         Event::on(
             Fields::className(),
             Fields::EVENT_REGISTER_FIELD_TYPES,
@@ -52,54 +57,17 @@ class Recipe extends Plugin
             }
         );
 
+        // Show our "Welcome to Recipe" message
+        Event::on(
+            Plugins::className(),
+            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+            function (PluginEvent $event) {
+                if (!Craft::$app->getRequest()->getIsConsoleRequest()) {
+                    Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('recipe/welcome'))->send();
+                }
+            }
+        );
+
         Craft::info('Recipe ' . Craft::t('recipe', 'plugin loaded'), __METHOD__);
-    }
-
-    // Protected Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    protected function beforeInstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function afterInstall()
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function beforeUpdate(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function afterUpdate()
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function beforeUninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function afterUninstall()
-    {
     }
 }

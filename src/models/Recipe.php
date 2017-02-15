@@ -153,6 +153,25 @@ class Recipe extends Model
         return [
             ['name', 'string'],
             ['name', 'default', 'value' => ''],
+            ['description', 'string'],
+            ['skill', 'string'],
+            ['serves', 'integer'],
+            ['imageId', 'integer'],
+            ['prepTime', 'integer'],
+            ['cookTime', 'integer'],
+            ['totalTime', 'integer'],
+            ['servingSize', 'string'],
+            ['calories', 'integer'],
+            ['carbohydrateContent', 'integer'],
+            ['cholesterolContent', 'integer'],
+            ['fatContent', 'integer'],
+            ['fiberContent', 'integer'],
+            ['proteinContent', 'integer'],
+            ['saturatedFatContent', 'integer'],
+            ['sodiumContent', 'integer'],
+            ['sugarContent', 'integer'],
+            ['transFatContent', 'integer'],
+            ['unsaturatedFatContent', 'integer'],
         ];
     }
 
@@ -163,7 +182,7 @@ class Recipe extends Model
     public function getImageUrl()
     {
         $result = "";
-        if (isset($this->imageId)) {
+        if (isset($this->imageId) && $this->imageId) {
             $image = Craft::$app->getAssets()->getAssetById($this->imageId);
             if ($image) {
                 $result = $image->url;
@@ -180,7 +199,7 @@ class Recipe extends Model
      */
     public function getIngredients($outputUnits = "imperial", $serving = 0, $raw = true)
     {
-        $result = array();
+        $result = [];
         foreach ($this->ingredients as $row) {
             $convertedUnits = "";
             $ingredient = "";
@@ -252,17 +271,18 @@ class Recipe extends Model
                     $quantity = $this->convertToFractions($quantity);
                 }
                 $ingredient .= $quantity;
-            }
-            if ($row['units']) {
-                $units = $row['units'];
-                if ($convertedUnits) {
-                    $units = $convertedUnits;
+
+                if ($row['units']) {
+                    $units = $row['units'];
+                    if ($convertedUnits) {
+                        $units = $convertedUnits;
+                    }
+                    if ($originalQuantity <= 1) {
+                        $units = rtrim($units);
+                        $units = rtrim($units, 's');
+                    }
+                    $ingredient .= " " . $units;
                 }
-                if ($originalQuantity <= 1) {
-                    $units = rtrim($units);
-                    $units = rtrim($units, 's');
-                }
-                $ingredient .= " " . $units;
             }
             if ($row['ingredient']) {
                 $ingredient .= " " . $row['ingredient'];
@@ -316,19 +336,14 @@ class Recipe extends Model
      */
     public function getRatingsCount()
     {
-        $total = 0;
-        if (isset($this->ratings) && !empty($this->ratings)) {
-            foreach ($this->ratings as $row) {
-                $total++;
-            }
-        }
-        return $total;
+        return count($this->ratings);
     }
 
     /**
-     * @return string the rendered HTML JSON-LD microdata
+     * @param bool $raw
+     * @return string|\Twig_Markup the rendered HTML JSON-LD microdata
      */
-    public function renderRecipeJSONLD()
+    public function renderRecipeJSONLD($raw = true)
     {
         $recipeJSONLD = array(
             "context" => "http://schema.org",
@@ -379,7 +394,7 @@ class Recipe extends Model
                 $review = array(
                     "type" => "Review",
                     'author' => $rating['author'],
-                    'name' => $this->name . Craft::t("recipe", " Review"),
+                    'name' => $this->name . " " . Craft::t("recipe", "Review"),
                     'description' => $rating['review'],
                     'reviewRating' => array(
                         "type" => "Rating",
@@ -404,8 +419,11 @@ class Recipe extends Model
             $recipeJSONLD['totalTime'] = "PT" . $this->totalTime . "M";
         }
 
-        return $this->renderJsonLd($recipeJSONLD);
+        return $this->renderJsonLd($recipeJSONLD, $raw);
     }
+
+    // Private Methods
+    // =========================================================================
 
     /**
      * @param $quantity
@@ -463,9 +481,6 @@ class Recipe extends Model
         return $result;
     }
 
-    // Private Methods
-    // =========================================================================
-
     /**
      * Renders a JSON-LD representation of the schema
      *
@@ -495,5 +510,4 @@ class Recipe extends Model
 
         return $result;
     }
-
 }
