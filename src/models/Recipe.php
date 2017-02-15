@@ -11,6 +11,8 @@
 
 namespace nystudio107\recipe\models;
 
+use nystudio107\recipe\helpers\Json;
+
 use Craft;
 use craft\base\Model;
 use craft\helpers\Template;
@@ -173,16 +175,17 @@ class Recipe extends Model
     /**
      * @param string $outputUnits
      * @param int $serving
+     * @param bool $raw
      * @return array of strings for the ingredients
      */
-    public function getIngredients($outputUnits = "imperial", $serving = 0)
+    public function getIngredients($outputUnits = "imperial", $serving = 0, $raw = true)
     {
         $result = array();
         foreach ($this->ingredients as $row) {
             $convertedUnits = "";
             $ingredient = "";
             if ($row['quantity']) {
-                // Multiply the quanity by how many servings we want
+                // Multiply the quantity by how many servings we want
                 $multiplier = 1;
                 if ($serving > 0) {
                     $multiplier = $serving / $this->serves;
@@ -264,20 +267,27 @@ class Recipe extends Model
             if ($row['ingredient']) {
                 $ingredient .= " " . $row['ingredient'];
             }
-            array_push($result, Template::raw($ingredient));
+            if ($raw) {
+                $ingredient = Template::raw($ingredient);
+            }
+            array_push($result, $ingredient);
         }
         return $result;
     }
 
     /**
+     * @param bool $raw
      * @return array of strings for the directions
      */
-    public function getDirections()
+    public function getDirections($raw = true)
     {
         $result = array();
         foreach ($this->directions as $row) {
             $direction = $row['direction'];
-            array_push($result, Template::raw($direction));
+            if ($raw) {
+                $direction = Template::raw($direction);
+            }
+            array_push($result, $direction);
         }
         return $result;
     }
@@ -320,88 +330,81 @@ class Recipe extends Model
      */
     public function renderRecipeJSONLD()
     {
-        /*
-        if (craft()->plugins->getPlugin('Seomatic')) {
-            $metaVars = craft()->seomatic->getGlobals("", craft()->language);
-            $recipeJSONLD = array(
-                "type" => "Recipe",
-                "name" => $this->name,
-                "image" => $this->getImageUrl(),
-                "description" => $this->description,
-                "recipeYield" => $this->serves,
-                "recipeIngredient" => $this->getIngredients(),
-                "recipeInstructions" => $this->getDirections(),
-            );
-            $recipeJSONLD = array_filter($recipeJSONLD);
+        $recipeJSONLD = array(
+            "context" => "http://schema.org",
+            "type" => "Recipe",
+            "name" => $this->name,
+            "image" => $this->getImageUrl(),
+            "description" => $this->description,
+            "recipeYield" => $this->serves,
+            "recipeIngredient" => $this->getIngredients("imperial", 0, false),
+            "recipeInstructions" => $this->getDirections(false),
+        );
+        $recipeJSONLD = array_filter($recipeJSONLD);
 
-            $nutrition = array(
-                "type" => "NutritionInformation",
-                'servingSize' => $this->servingSize,
-                'calories' => $this->calories,
-                'carbohydrateContent' => $this->carbohydrateContent,
-                'cholesterolContent' => $this->cholesterolContent,
-                'fatContent' => $this->fatContent,
-                'fiberContent' => $this->fiberContent,
-                'proteinContent' => $this->proteinContent,
-                'saturatedFatContent' => $this->saturatedFatContent,
-                'sodiumContent' => $this->sodiumContent,
-                'sugarContent' => $this->sugarContent,
-                'transFatContent' => $this->transFatContent,
-                'unsaturatedFatContent' => $this->unsaturatedFatContent,
+        $nutrition = array(
+            "type" => "NutritionInformation",
+            'servingSize' => $this->servingSize,
+            'calories' => $this->calories,
+            'carbohydrateContent' => $this->carbohydrateContent,
+            'cholesterolContent' => $this->cholesterolContent,
+            'fatContent' => $this->fatContent,
+            'fiberContent' => $this->fiberContent,
+            'proteinContent' => $this->proteinContent,
+            'saturatedFatContent' => $this->saturatedFatContent,
+            'sodiumContent' => $this->sodiumContent,
+            'sugarContent' => $this->sugarContent,
+            'transFatContent' => $this->transFatContent,
+            'unsaturatedFatContent' => $this->unsaturatedFatContent,
+        );
+        $nutrition = array_filter($nutrition);
+        $recipeJSONLD['nutrition'] = $nutrition;
+        if (count($recipeJSONLD['nutrition']) == 1) {
+            unset($recipeJSONLD['nutrition']);
+        }
+        $aggregateRating = $this->getAggregateRating();
+        if ($aggregateRating) {
+            $aggregateRatings = array(
+                "type" => "AggregateRating",
+                'ratingCount' => $this->getRatingsCount(),
+                'bestRating' => '5',
+                'worstRating' => '1',
+                'ratingValue' => $aggregateRating,
             );
-            $nutrition = array_filter($nutrition);
-            $recipeJSONLD['nutrition'] = $nutrition;
-            if (count($recipeJSONLD['nutrition']) == 1)
-                unset($recipeJSONLD['nutrition']);
+            $aggregateRatings = array_filter($aggregateRatings);
+            $recipeJSONLD['aggregateRating'] = $aggregateRatings;
 
-            $aggregateRating = $this->getAggregateRating();
-            if ($aggregateRating) {
-                $aggregateRatings = array(
-                    "type" => "AggregateRating",
-                    'ratingCount' => $this->getRatingsCount(),
-                    'bestRating' => '5',
-                    'worstRating' => '1',
-                    'ratingValue' => $aggregateRating,
+            $reviews = array();
+            foreach ($this->ratings as $rating) {
+                $review = array(
+                    "type" => "Review",
+                    'author' => $rating['author'],
+                    'name' => $this->name . Craft::t("recipe", " Review"),
+                    'description' => $rating['review'],
+                    'reviewRating' => array(
+                        "type" => "Rating",
+                        'bestRating' => '5',
+                        'worstRating' => '1',
+                        'ratingValue' => $rating['rating'],
+                    ),
                 );
-                $aggregateRatings = array_filter($aggregateRatings);
-                $recipeJSONLD['aggregateRating'] = $aggregateRatings;
-
-                $reviews = array();
-                foreach ($this->ratings as $rating) {
-                    $review = array(
-                        "type" => "Review",
-                        'author' => $rating['author'],
-                        'name' => $this->name . Craft::t(" Review"),
-                        'description' => $rating['review'],
-                        'reviewRating' => array(
-                            "type" => "Rating",
-                            'bestRating' => '5',
-                            'worstRating' => '1',
-                            'ratingValue' => $rating['rating'],
-                        ),
-                    );
-                    array_push($reviews, $review);
-                }
-                $reviews = array_filter($reviews);
-                $recipeJSONLD['review'] = $reviews;
+                array_push($reviews, $review);
             }
+            $reviews = array_filter($reviews);
+            $recipeJSONLD['review'] = $reviews;
+        }
 
-            if ($this->prepTime)
-                $recipeJSONLD['prepTime'] = "PT" . $this->prepTime . "M";
-            if ($this->cookTime)
-                $recipeJSONLD['cookTime'] = "PT" . $this->cookTime . "M";
-            if ($this->totalTime)
-                $recipeJSONLD['totalTime'] = "PT" . $this->totalTime . "M";
+        if ($this->prepTime) {
+            $recipeJSONLD['prepTime'] = "PT" . $this->prepTime . "M";
+        }
+        if ($this->cookTime) {
+            $recipeJSONLD['cookTime'] = "PT" . $this->cookTime . "M";
+        }
+        if ($this->totalTime) {
+            $recipeJSONLD['totalTime'] = "PT" . $this->totalTime . "M";
+        }
 
-            $recipeJSONLD['author'] = $metaVars['seomaticIdentity'];
-
-            craft()->seomatic->sanitizeArray($recipeJSONLD);
-            $result = craft()->seomatic->renderJSONLD($recipeJSONLD, false);
-        } else
-            $result = "<!-- SEOmatic plugin must be installed to render the JSON-LD microdata -->";
-
-        return TemplateHelper::getRaw($result);
-        */
+        return $this->renderJsonLd($recipeJSONLD);
     }
 
     /**
@@ -410,7 +413,6 @@ class Recipe extends Model
      */
     private function convertToFractions($quantity)
     {
-        $result = "";
         $whole = floor($quantity);
         $fraction = $quantity - $whole;
         switch ($fraction) {
@@ -460,4 +462,38 @@ class Recipe extends Model
         $result = $whole . $fraction;
         return $result;
     }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Renders a JSON-LD representation of the schema
+     *
+     * @param $json
+     * @param bool $raw
+     * @return string|\Twig_Markup
+     */
+    private function renderJsonLd($json, $raw = true)
+    {
+        $linebreak = "";
+
+        // If `devMode` is enabled, make the JSON-LD human-readable
+        if (Craft::$app->config->get('devMode')) {
+            $linebreak = PHP_EOL;
+        }
+
+        // Render the resulting JSON-LD
+        $result = '<script type="application/ld+json">'
+            . $linebreak
+            . Json::encode($json)
+            . $linebreak
+            . '</script>';
+
+        if ($raw === true) {
+            $result = Template::raw($result);
+        }
+
+        return $result;
+    }
+
 }
