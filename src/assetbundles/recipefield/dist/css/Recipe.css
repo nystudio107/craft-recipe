@@ -40,4 +40,9 @@ img.recipe-field-icon {
     width: 16px;
     height: auto;
     padding-right: 7px;
+    vertical-align: middle;
+}
+
+span.recipe-field-title {
+    vertical-align: middle;
 }

@@ -11,12 +11,15 @@
 namespace nystudio107\recipe\fields;
 
 use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
+use nystudio107\recipe\models\Recipe as RecipeModel;
 
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\elements\Asset;
 use craft\helpers\Json;
+
+use yii\db\Schema;
 
 /**
  * @author    nystudio107
@@ -59,6 +62,26 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
+    public function getContentColumnType(): string
+    {
+        return Schema::TYPE_TEXT;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function normalizeValue($value, ElementInterface $element = null)
+    {
+        if (is_string($value) && !empty($value)) {
+            $value = Json::decode($value);
+        }
+        $model = new RecipeModel($value);
+        return $model;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getSettingsHtml()
     {
         // Render the settings template
@@ -87,17 +110,26 @@ class Recipe extends Field
 
         // Get our id and namespace
         $id = Craft::$app->getView()->formatInputId($this->handle);
-        $namespacedId = Craft::$app->getView()->namespaceInputId($id);
+        $nameSpacedId = Craft::$app->getView()->namespaceInputId($id);
 
         // Variables to pass down to our field JavaScript to let it namespace properly
         $jsonVars = [
             'id' => $id,
             'name' => $this->handle,
-            'namespace' => $namespacedId,
+            'namespace' => $nameSpacedId,
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
             ];
         $jsonVars = Json::encode($jsonVars);
-        Craft::$app->getView()->registerJs("$('#{$namespacedId}-field').RecipeRecipe(" . $jsonVars . ");");
+        Craft::$app->getView()->registerJs("$('#{$nameSpacedId}-field').RecipeRecipe(" . $jsonVars . ");");
+
+        // Set asset elements
+        $elements = [];
+        if ($value->imageId) {
+            if (is_array($value->imageId)) {
+                $value->imageId = $value->imageId[0];
+            }
+            $elements = [Craft::$app->getAssets()->getAssetById($this->imageId)];
+        }
 
         // Render the input template
         return Craft::$app->getView()->renderTemplate(
@@ -113,7 +145,12 @@ class Recipe extends Field
                 'value' => $value,
                 'field' => $this,
                 'id' => $id,
-                'namespacedId' => $namespacedId,
+                'nameSpacedId' => $nameSpacedId,
+                'prefix' => Craft::$app->getView()->namespaceInputId(''),
+                'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
+                'elements' => $elements,
+                'elementType' => Asset::class,
+                'assetSources' => Asset::sources(),
             ]
         );
     }
