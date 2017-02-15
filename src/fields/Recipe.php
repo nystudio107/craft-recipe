@@ -56,8 +56,10 @@ class Recipe extends Field
      */
     public function rules()
     {
-        return [
-        ];
+        $rules = parent::rules();
+        $rules = array_merge($rules, [
+        ]);
+        return $rules;
     }
 
     /**
