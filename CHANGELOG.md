@@ -1,8 +1,9 @@
 # Recipe Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+## 1.0.1 - 2017.02.15
+### Fixed
+- Fixed an issue that would cause you to be unable to choose an asset
+- Merged the Field rules with parent
 
 ## 1.0.0 - 2017.02.10
 ### Added

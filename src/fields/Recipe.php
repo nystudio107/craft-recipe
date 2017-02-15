@@ -132,7 +132,7 @@ class Recipe extends Field
             if (is_array($value->imageId)) {
                 $value->imageId = $value->imageId[0];
             }
-            $elements = [Craft::$app->getAssets()->getAssetById($this->imageId)];
+            $elements = [Craft::$app->getAssets()->getAssetById($value->imageId)];
         }
 
         // Render the input template
@@ -154,7 +154,7 @@ class Recipe extends Field
                 'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
                 'elements' => $elements,
                 'elementType' => Asset::class,
-                'assetSources' => Asset::sources(),
+                'assetSources' => $this->assetSources,
             ]
         );
     }
