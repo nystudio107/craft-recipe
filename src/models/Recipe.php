@@ -2,8 +2,8 @@
 /**
  * Recipe plugin for Craft CMS 3.x
  *
- * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation,
- * and JSON-LD microdata support
+ * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial
+ * conversion, portion calculation, and JSON-LD microdata support
  *
  * @link      https://nystudio107.com
  * @copyright Copyright (c) 2017 nystudio107
@@ -175,9 +175,96 @@ class Recipe extends Model
         ];
     }
 
+    /**
+     * Render the JSON-LD Structured Data for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return string|\Twig_Markup
+     */
+    public function renderRecipeJSONLD($raw = true)
+    {
+        $recipeJSONLD = [
+            "context" => "http://schema.org",
+            "type" => "Recipe",
+            "name" => $this->name,
+            "image" => $this->getImageUrl(),
+            "description" => $this->description,
+            "recipeYield" => $this->serves,
+            "recipeIngredient" => $this->getIngredients("imperial", 0, false),
+            "recipeInstructions" => $this->getDirections(false),
+        ];
+        $recipeJSONLD = array_filter($recipeJSONLD);
+
+        $nutrition = [
+            "type" => "NutritionInformation",
+            'servingSize' => $this->servingSize,
+            'calories' => $this->calories,
+            'carbohydrateContent' => $this->carbohydrateContent,
+            'cholesterolContent' => $this->cholesterolContent,
+            'fatContent' => $this->fatContent,
+            'fiberContent' => $this->fiberContent,
+            'proteinContent' => $this->proteinContent,
+            'saturatedFatContent' => $this->saturatedFatContent,
+            'sodiumContent' => $this->sodiumContent,
+            'sugarContent' => $this->sugarContent,
+            'transFatContent' => $this->transFatContent,
+            'unsaturatedFatContent' => $this->unsaturatedFatContent,
+        ];
+        $nutrition = array_filter($nutrition);
+        $recipeJSONLD['nutrition'] = $nutrition;
+        if (count($recipeJSONLD['nutrition']) == 1) {
+            unset($recipeJSONLD['nutrition']);
+        }
+        $aggregateRating = $this->getAggregateRating();
+        if ($aggregateRating) {
+            $aggregateRatings = [
+                "type" => "AggregateRating",
+                'ratingCount' => $this->getRatingsCount(),
+                'bestRating' => '5',
+                'worstRating' => '1',
+                'ratingValue' => $aggregateRating,
+            ];
+            $aggregateRatings = array_filter($aggregateRatings);
+            $recipeJSONLD['aggregateRating'] = $aggregateRatings;
+
+            $reviews = [];
+            foreach ($this->ratings as $rating) {
+                $review = [
+                    "type" => "Review",
+                    'author' => $rating['author'],
+                    'name' => $this->name." ".Craft::t("recipe", "Review"),
+                    'description' => $rating['review'],
+                    'reviewRating' => [
+                        "type" => "Rating",
+                        'bestRating' => '5',
+                        'worstRating' => '1',
+                        'ratingValue' => $rating['rating'],
+                    ],
+                ];
+                array_push($reviews, $review);
+            }
+            $reviews = array_filter($reviews);
+            $recipeJSONLD['review'] = $reviews;
+        }
+
+        if ($this->prepTime) {
+            $recipeJSONLD['prepTime'] = "PT".$this->prepTime."M";
+        }
+        if ($this->cookTime) {
+            $recipeJSONLD['cookTime'] = "PT".$this->cookTime."M";
+        }
+        if ($this->totalTime) {
+            $recipeJSONLD['totalTime'] = "PT".$this->totalTime."M";
+        }
+
+        return $this->renderJsonLd($recipeJSONLD, $raw);
+    }
 
     /**
-     * @return string the URL to the image
+     * Get the URL to the recipe's image
+     *
+     * @return null|string
      */
     public function getImageUrl()
     {
@@ -188,14 +275,18 @@ class Recipe extends Model
                 $result = $image->url;
             }
         }
+
         return $result;
     }
 
     /**
+     * Get all of the ingredients for this recipe
+     *
      * @param string $outputUnits
-     * @param int $serving
-     * @param bool $raw
-     * @return array of strings for the ingredients
+     * @param int    $serving
+     * @param bool   $raw
+     *
+     * @return array
      */
     public function getIngredients($outputUnits = "imperial", $serving = 0, $raw = true)
     {
@@ -281,153 +372,27 @@ class Recipe extends Model
                         $units = rtrim($units);
                         $units = rtrim($units, 's');
                     }
-                    $ingredient .= " " . $units;
+                    $ingredient .= " ".$units;
                 }
             }
             if ($row['ingredient']) {
-                $ingredient .= " " . $row['ingredient'];
+                $ingredient .= " ".$row['ingredient'];
             }
             if ($raw) {
                 $ingredient = Template::raw($ingredient);
             }
             array_push($result, $ingredient);
         }
+
         return $result;
     }
 
     /**
-     * @param bool $raw
-     * @return array of strings for the directions
-     */
-    public function getDirections($raw = true)
-    {
-        $result = array();
-        foreach ($this->directions as $row) {
-            $direction = $row['direction'];
-            if ($raw) {
-                $direction = Template::raw($direction);
-            }
-            array_push($result, $direction);
-        }
-        return $result;
-    }
-
-    /**
-     * @return string the aggregate rating for this recipe
-     */
-    public function getAggregateRating()
-    {
-        $result = 0;
-        $total = 0;
-        if (isset($this->ratings) && !empty($this->ratings)) {
-            foreach ($this->ratings as $row) {
-                $result += $row['rating'];
-                $total++;
-            }
-            $result = $result / $total;
-        } else {
-            $result = "";
-        }
-        return $result;
-    }
-
-    /**
-     * @return string the number of ratings
-     */
-    public function getRatingsCount()
-    {
-        return count($this->ratings);
-    }
-
-    /**
-     * @param bool $raw
-     * @return string|\Twig_Markup the rendered HTML JSON-LD microdata
-     */
-    public function renderRecipeJSONLD($raw = true)
-    {
-        $recipeJSONLD = array(
-            "context" => "http://schema.org",
-            "type" => "Recipe",
-            "name" => $this->name,
-            "image" => $this->getImageUrl(),
-            "description" => $this->description,
-            "recipeYield" => $this->serves,
-            "recipeIngredient" => $this->getIngredients("imperial", 0, false),
-            "recipeInstructions" => $this->getDirections(false),
-        );
-        $recipeJSONLD = array_filter($recipeJSONLD);
-
-        $nutrition = array(
-            "type" => "NutritionInformation",
-            'servingSize' => $this->servingSize,
-            'calories' => $this->calories,
-            'carbohydrateContent' => $this->carbohydrateContent,
-            'cholesterolContent' => $this->cholesterolContent,
-            'fatContent' => $this->fatContent,
-            'fiberContent' => $this->fiberContent,
-            'proteinContent' => $this->proteinContent,
-            'saturatedFatContent' => $this->saturatedFatContent,
-            'sodiumContent' => $this->sodiumContent,
-            'sugarContent' => $this->sugarContent,
-            'transFatContent' => $this->transFatContent,
-            'unsaturatedFatContent' => $this->unsaturatedFatContent,
-        );
-        $nutrition = array_filter($nutrition);
-        $recipeJSONLD['nutrition'] = $nutrition;
-        if (count($recipeJSONLD['nutrition']) == 1) {
-            unset($recipeJSONLD['nutrition']);
-        }
-        $aggregateRating = $this->getAggregateRating();
-        if ($aggregateRating) {
-            $aggregateRatings = array(
-                "type" => "AggregateRating",
-                'ratingCount' => $this->getRatingsCount(),
-                'bestRating' => '5',
-                'worstRating' => '1',
-                'ratingValue' => $aggregateRating,
-            );
-            $aggregateRatings = array_filter($aggregateRatings);
-            $recipeJSONLD['aggregateRating'] = $aggregateRatings;
-
-            $reviews = array();
-            foreach ($this->ratings as $rating) {
-                $review = array(
-                    "type" => "Review",
-                    'author' => $rating['author'],
-                    'name' => $this->name . " " . Craft::t("recipe", "Review"),
-                    'description' => $rating['review'],
-                    'reviewRating' => array(
-                        "type" => "Rating",
-                        'bestRating' => '5',
-                        'worstRating' => '1',
-                        'ratingValue' => $rating['rating'],
-                    ),
-                );
-                array_push($reviews, $review);
-            }
-            $reviews = array_filter($reviews);
-            $recipeJSONLD['review'] = $reviews;
-        }
-
-        if ($this->prepTime) {
-            $recipeJSONLD['prepTime'] = "PT" . $this->prepTime . "M";
-        }
-        if ($this->cookTime) {
-            $recipeJSONLD['cookTime'] = "PT" . $this->cookTime . "M";
-        }
-        if ($this->totalTime) {
-            $recipeJSONLD['totalTime'] = "PT" . $this->totalTime . "M";
-        }
-
-        return $this->renderJsonLd($recipeJSONLD, $raw);
-    }
-
-    // Private Methods
-    // =========================================================================
-
-    /**
+     * Convert decimal numbers into fractions
+     *
      * @param $quantity
-     * @return string the fractionalized string
+     *
+     * @return string
      */
     private function convertToFractions($quantity)
     {
@@ -471,21 +436,83 @@ class Recipe extends Model
                 $pnum = round($fraction, $precision);
                 $denominator = pow(10, $precision);
                 $numerator = $pnum * $denominator;
-                $fraction = "<sup>" . $numerator . "</sup>&frasl;<sub>" . $denominator . "</sub>";
+                $fraction = "<sup>"
+                    .$numerator
+                    ."</sup>&frasl;<sub>"
+                    .$denominator
+                    ."</sub>";
                 break;
         }
         if ($whole == 0) {
             $whole = "";
         }
-        $result = $whole . $fraction;
+        $result = $whole.$fraction;
+
         return $result;
+    }
+
+    /**
+     * Get all of the directions for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return array
+     */
+    public function getDirections($raw = true)
+    {
+        $result = [];
+        foreach ($this->directions as $row) {
+            $direction = $row['direction'];
+            if ($raw) {
+                $direction = Template::raw($direction);
+            }
+            array_push($result, $direction);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the aggregate rating from all of the ratings
+     *
+     * @return float|int|string
+     */
+    public function getAggregateRating()
+    {
+        $result = 0;
+        $total = 0;
+        if (isset($this->ratings) && !empty($this->ratings)) {
+            foreach ($this->ratings as $row) {
+                $result += $row['rating'];
+                $total++;
+            }
+            $result = $result / $total;
+        } else {
+            $result = "";
+        }
+
+        return $result;
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Get the total number of ratings
+     *
+     * @return int
+     */
+    public function getRatingsCount()
+    {
+        return count($this->ratings);
     }
 
     /**
      * Renders a JSON-LD representation of the schema
      *
-     * @param $json
+     * @param      $json
      * @param bool $raw
+     *
      * @return string|\Twig_Markup
      */
     private function renderJsonLd($json, $raw = true)
@@ -499,10 +526,10 @@ class Recipe extends Model
 
         // Render the resulting JSON-LD
         $result = '<script type="application/ld+json">'
-            . $linebreak
-            . Json::encode($json)
-            . $linebreak
-            . '</script>';
+            .$linebreak
+            .Json::encode($json)
+            .$linebreak
+            .'</script>';
 
         if ($raw === true) {
             $result = Template::raw($result);

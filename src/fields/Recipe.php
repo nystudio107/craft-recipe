@@ -2,8 +2,8 @@
 /**
  * Recipe plugin for Craft CMS 3.x
  *
- * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation,
- * and JSON-LD microdata support
+ * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial
+ * conversion, portion calculation, and JSON-LD microdata support
  *
  * @link      https://nystudio107.com
  * @copyright Copyright (c) 2017 nystudio107
@@ -59,6 +59,7 @@ class Recipe extends Field
         $rules = parent::rules();
         $rules = array_merge($rules, [
         ]);
+
         return $rules;
     }
 
@@ -91,12 +92,12 @@ class Recipe extends Field
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
             'recipe'
-            . DIRECTORY_SEPARATOR
-            . '_components'
-            . DIRECTORY_SEPARATOR
-            . 'fields'
-            . DIRECTORY_SEPARATOR
-            . 'Recipe_settings',
+            .DIRECTORY_SEPARATOR
+            .'_components'
+            .DIRECTORY_SEPARATOR
+            .'fields'
+            .DIRECTORY_SEPARATOR
+            .'Recipe_settings',
             [
                 'field' => $this,
                 'assetSources' => Asset::sources(),
@@ -122,9 +123,9 @@ class Recipe extends Field
             'name' => $this->handle,
             'namespace' => $nameSpacedId,
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
-            ];
+        ];
         $jsonVars = Json::encode($jsonVars);
-        Craft::$app->getView()->registerJs("$('#{$nameSpacedId}-field').RecipeRecipe(" . $jsonVars . ");");
+        Craft::$app->getView()->registerJs("$('#{$nameSpacedId}-field').RecipeRecipe(".$jsonVars.");");
 
         // Set asset elements
         $elements = [];
@@ -138,12 +139,12 @@ class Recipe extends Field
         // Render the input template
         return Craft::$app->getView()->renderTemplate(
             'recipe'
-            . DIRECTORY_SEPARATOR
-            . '_components'
-            . DIRECTORY_SEPARATOR
-            . 'fields'
-            . DIRECTORY_SEPARATOR
-            . 'Recipe_input',
+            .DIRECTORY_SEPARATOR
+            .'_components'
+            .DIRECTORY_SEPARATOR
+            .'fields'
+            .DIRECTORY_SEPARATOR
+            .'Recipe_input',
             [
                 'name' => $this->handle,
                 'value' => $value,

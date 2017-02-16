@@ -2,8 +2,8 @@
 /**
  * Recipe plugin for Craft CMS 3.x
  *
- * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation,
- * and JSON-LD microdata support
+ * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial
+ * conversion, portion calculation, and JSON-LD microdata support
  *
  * @link      https://nystudio107.com
  * @copyright Copyright (c) 2017 nystudio107
@@ -52,7 +52,7 @@ class Recipe extends Plugin
         Event::on(
             Fields::className(),
             Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event) {
+            function(RegisterComponentTypesEvent $event) {
                 $event->types[] = RecipeField::className();
             }
         );
@@ -61,13 +61,13 @@ class Recipe extends Plugin
         Event::on(
             Plugins::className(),
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
+            function(PluginEvent $event) {
                 if (!Craft::$app->getRequest()->getIsConsoleRequest()) {
                     Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('recipe/welcome'))->send();
                 }
             }
         );
 
-        Craft::info('Recipe ' . Craft::t('recipe', 'plugin loaded'), __METHOD__);
+        Craft::info('Recipe '.Craft::t('recipe', 'plugin loaded'), __METHOD__);
     }
 }
