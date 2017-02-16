@@ -183,7 +183,7 @@ class Recipe extends Model
     {
         $result = "";
         if (isset($this->imageId) && $this->imageId) {
-            $image = Craft::$app->getAssets()->getAssetById($this->imageId);
+            $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
             if ($image) {
                 $result = $image->url;
             }
