@@ -23,6 +23,8 @@ use craft\helpers\UrlHelper;
 use yii\base\Event;
 
 /**
+ * Class Recipe
+ *
  * @author    nystudio107
  * @package   Recipe
  * @since     1.0.0
@@ -33,7 +35,7 @@ class Recipe extends Plugin
     // =========================================================================
 
     /**
-     * @var static
+     * @var Recipe
      */
     public static $plugin;
 

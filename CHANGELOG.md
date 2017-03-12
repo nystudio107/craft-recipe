@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 1.0.3 - 2017.03.12
+### Added
+* Added `craft/cms` as a composer dependency
+* Added code inspection typehinting for the plugin
+
 ## 1.0.2 - 2017.03.03
 ### Fixed
 - Redirect to the Welcome message only when the `Recipe` plugin is installed

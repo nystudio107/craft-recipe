@@ -2,7 +2,7 @@
     "name": "nystudio107/craft3-recipe",
     "description": "A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support",
     "type": "craft-plugin",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "keywords": [
         "craft",
         "cms",
@@ -22,6 +22,7 @@
         }
     ],
     "require": {
+        "craftcms/cms": "~3.0.0-beta.1"
     },
     "autoload": {
         "psr-4": {
