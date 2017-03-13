@@ -32,9 +32,10 @@ class Json extends \craft\helpers\Json
      * @inheritdoc
      */
     public static function encode(
-        $value, $options =
-    JSON_UNESCAPED_UNICODE |
-    JSON_UNESCAPED_SLASHES
+        $value,
+        $options =
+        JSON_UNESCAPED_UNICODE
+        | JSON_UNESCAPED_SLASHES
     ) {
         // If `devMode` is enabled, make the JSON-LD human-readable
         if (Craft::$app->config->get('devMode')) {
