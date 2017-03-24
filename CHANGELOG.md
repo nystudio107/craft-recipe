@@ -3,6 +3,7 @@
 ## 1.0.4 - 2017.03.24
 ### Changed
 * `hasSettings` -> `hasCpSettings` for Craft 3 beta 8 compatibility
+* Modified config service calls for Craft 3 beta 8
 
 ## 1.0.3 - 2017.03.12
 ### Added

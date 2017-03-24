@@ -520,7 +520,7 @@ class Recipe extends Model
         $linebreak = "";
 
         // If `devMode` is enabled, make the JSON-LD human-readable
-        if (Craft::$app->config->get('devMode')) {
+        if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $linebreak = PHP_EOL;
         }
 
