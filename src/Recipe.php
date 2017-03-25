@@ -71,6 +71,13 @@ class Recipe extends Plugin
             }
         );
 
-        Craft::info('Recipe '.Craft::t('recipe', 'plugin loaded'), __METHOD__);
+        Craft::info(
+            Craft::t(
+                'recipe',
+                '{name} plugin loaded',
+                ['name' => $this->name]
+            ),
+            __METHOD__
+        );
     }
 }

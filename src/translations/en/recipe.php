@@ -17,5 +17,5 @@
 return [
     'Recipe' => 'Recipe',
     'Review' => 'Review',
-    'plugin loaded' => 'plugin loaded',
+    'Recipe plugin loaded' => 'Recipe plugin loaded',
 ];
