@@ -2,9 +2,13 @@
 
 A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support
 
+![Screenshot](resources/img/plugin-logo.png)
+
 Related: [Recipe for Craft 2.x](https://github.com/nystudio107/recipe)
 
-![Screenshot](resources/screenshots/recipe01.png)
+## Requirements
+
+This plugin requires Craft CMS 3.0.0-RC1 or later.
 
 ## Installation
 
@@ -16,6 +20,8 @@ To install Recipe, follow these steps:
 Recipe works on Craft 3.x.
 
 ## Recipe Overview
+
+![Screenshot](resources/screenshots/recipe01.png)
 
 Recipe adds a 'Recipe' FieldType for Craft CMS that you can add to any of your Sections.
 
