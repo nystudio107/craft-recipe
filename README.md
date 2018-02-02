@@ -14,7 +14,7 @@ This plugin requires Craft CMS 3.0.0-RC1 or later.
 
 To install Recipe, follow these steps:
 
-1. Install with Composer via `composer require nystudio107/craft3-recipe`
+1. Install with Composer via `composer require nystudio107/craft-recipe`
 2. Install plugin in the Craft Control Panel under Settings > Plugins
 
 Recipe works on Craft 3.x.
