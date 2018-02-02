@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.0.6 - 2018.02.01
+### Added
+* Renamed the composer package name to `craft-recipe`
+
 ## 1.0.5 - 2017.12.06
 ### Changed
 * Updated to require craftcms/cms `^3.0.0-RC1`

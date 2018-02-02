@@ -1,8 +1,8 @@
 {
-    "name": "nystudio107/craft3-recipe",
+    "name": "nystudio107/craft-recipe",
     "description": "A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support",
     "type": "craft-plugin",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "keywords": [
         "craft",
         "cms",
@@ -11,10 +11,10 @@
         "recipe"
     ],
     "support": {
-        "docs": "https://github.com/nystudio107/craft3-recipe/blob/master/README.md",
-        "issues": "https://github.com/nystudio107/craft3-recipe/issues"
+        "docs": "https://github.com/nystudio107/craft-recipe/blob/master/README.md",
+        "issues": "https://github.com/nystudio107/craft-recipe/issues"
     },
-    "license": "proprietary",
+    "license": "MIT",
     "authors": [
         {
             "name": "nystudio107",
@@ -35,7 +35,7 @@
         "schemaVersion": "1.0.0",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft3-recipe/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-recipe/master/CHANGELOG.md",
         "class": "nystudio107\\recipe\\Recipe"
     }
 }
