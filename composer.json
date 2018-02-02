@@ -11,7 +11,7 @@
         "recipe"
     ],
     "support": {
-        "docs": "https://github.com/nystudio107/craft-recipe/blob/master/README.md",
+        "docs": "https://github.com/nystudio107/craft-recipe/blob/v1/README.md",
         "issues": "https://github.com/nystudio107/craft-recipe/issues"
     },
     "license": "MIT",
@@ -35,7 +35,7 @@
         "schemaVersion": "1.0.0",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-recipe/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-recipe/v1/CHANGELOG.md",
         "class": "nystudio107\\recipe\\Recipe"
     }
 }
