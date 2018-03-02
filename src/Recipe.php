@@ -52,16 +52,16 @@ class Recipe extends Plugin
 
         // Register our Field
         Event::on(
-            Fields::className(),
+            Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types[] = RecipeField::className();
+                $event->types[] = RecipeField::class;
             }
         );
 
         // Show our "Welcome to Recipe" message
         Event::on(
-            Plugins::className(),
+            Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
             function (PluginEvent $event) {
                 if (!Craft::$app->getRequest()->getIsConsoleRequest()
