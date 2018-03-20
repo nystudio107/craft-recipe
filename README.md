@@ -1,3 +1,5 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
+
 # Recipe plugin for Craft CMS 3.x
 
 A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support
@@ -16,6 +18,8 @@ To install Recipe, follow these steps:
 
 1. Install with Composer via `composer require nystudio107/craft-recipe`
 2. Install plugin in the Craft Control Panel under Settings > Plugins
+
+You can also install Recipe via the **Plugin Store** in the Craft AdminCP.
 
 Recipe works on Craft 3.x.
 
