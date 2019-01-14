@@ -291,97 +291,100 @@ class Recipe extends Model
     public function getIngredients($outputUnits = "imperial", $serving = 0, $raw = true)
     {
         $result = [];
-        foreach ($this->ingredients as $row) {
-            $convertedUnits = "";
-            $ingredient = "";
-            if ($row['quantity']) {
-                // Multiply the quantity by how many servings we want
-                $multiplier = 1;
-                if ($serving > 0) {
-                    $multiplier = $serving / $this->serves;
+        
+        if ($this->ingredients != '') {
+            foreach ($this->ingredients as $row) {
+                $convertedUnits = "";
+                $ingredient = "";
+                if ($row['quantity']) {
+                    // Multiply the quantity by how many servings we want
+                    $multiplier = 1;
+                    if ($serving > 0) {
+                        $multiplier = $serving / $this->serves;
+                    }
+                    $quantity = $row['quantity'] * $multiplier;
+                    $originalQuantity = $quantity;
+
+                    // Do the units conversion
+
+                    if ($outputUnits == 'imperial') {
+                        if ($row['units'] == "mls") {
+                            $convertedUnits = "tsps";
+                            $quantity = $quantity * 0.2;
+                        }
+
+                        if ($row['units'] == "ls") {
+                            $convertedUnits = "cups";
+                            $quantity = $quantity * 4.2;
+                        }
+
+                        if ($row['units'] == "mgs") {
+                            $convertedUnits = "ozs";
+                            $quantity = $quantity * 0.000035274;
+                        }
+
+                        if ($row['units'] == "gs") {
+                            $convertedUnits = "ozs";
+                            $quantity = $quantity * 0.035274;
+                        }
+                    }
+
+                    if ($outputUnits == 'metric') {
+                        if ($row['units'] == "tsps") {
+                            $convertedUnits = "mls";
+                            $quantity = $quantity * 4.929;
+                        }
+
+                        if ($row['units'] == "tbsps") {
+                            $convertedUnits = "mls";
+                            $quantity = $quantity * 14.787;
+                        }
+
+                        if ($row['units'] == "flozs") {
+                            $convertedUnits = "mls";
+                            $quantity = $quantity * 29.574;
+                        }
+
+                        if ($row['units'] == "cups") {
+                            $convertedUnits = "ls";
+                            $quantity = $quantity * 0.236588;
+                        }
+
+                        if ($row['units'] == "ozs") {
+                            $convertedUnits = "gs";
+                            $quantity = $quantity * 28.3495;
+                        }
+
+                        $quantity = round($quantity, 1);
+                    }
+
+                    // Convert imperial units to nice fractions
+
+                    if ($outputUnits == 'imperial') {
+                        $quantity = $this->convertToFractions($quantity);
+                    }
+                    $ingredient .= $quantity;
+
+                    if ($row['units']) {
+                        $units = $row['units'];
+                        if ($convertedUnits) {
+                            $units = $convertedUnits;
+                        }
+                        if ($originalQuantity <= 1) {
+                            $units = rtrim($units);
+                            $units = rtrim($units, 's');
+                        }
+                        $ingredient .= " ".$units;
+                    }
                 }
-                $quantity = $row['quantity'] * $multiplier;
-                $originalQuantity = $quantity;
-
-                // Do the units conversion
-
-                if ($outputUnits == 'imperial') {
-                    if ($row['units'] == "mls") {
-                        $convertedUnits = "tsps";
-                        $quantity = $quantity * 0.2;
-                    }
-
-                    if ($row['units'] == "ls") {
-                        $convertedUnits = "cups";
-                        $quantity = $quantity * 4.2;
-                    }
-
-                    if ($row['units'] == "mgs") {
-                        $convertedUnits = "ozs";
-                        $quantity = $quantity * 0.000035274;
-                    }
-
-                    if ($row['units'] == "gs") {
-                        $convertedUnits = "ozs";
-                        $quantity = $quantity * 0.035274;
-                    }
+                if ($row['ingredient']) {
+                    $ingredient .= " ".$row['ingredient'];
                 }
-
-                if ($outputUnits == 'metric') {
-                    if ($row['units'] == "tsps") {
-                        $convertedUnits = "mls";
-                        $quantity = $quantity * 4.929;
-                    }
-
-                    if ($row['units'] == "tbsps") {
-                        $convertedUnits = "mls";
-                        $quantity = $quantity * 14.787;
-                    }
-
-                    if ($row['units'] == "flozs") {
-                        $convertedUnits = "mls";
-                        $quantity = $quantity * 29.574;
-                    }
-
-                    if ($row['units'] == "cups") {
-                        $convertedUnits = "ls";
-                        $quantity = $quantity * 0.236588;
-                    }
-
-                    if ($row['units'] == "ozs") {
-                        $convertedUnits = "gs";
-                        $quantity = $quantity * 28.3495;
-                    }
-
-                    $quantity = round($quantity, 1);
+                if ($raw) {
+                    $ingredient = Template::raw($ingredient);
                 }
-
-                // Convert imperial units to nice fractions
-
-                if ($outputUnits == 'imperial') {
-                    $quantity = $this->convertToFractions($quantity);
-                }
-                $ingredient .= $quantity;
-
-                if ($row['units']) {
-                    $units = $row['units'];
-                    if ($convertedUnits) {
-                        $units = $convertedUnits;
-                    }
-                    if ($originalQuantity <= 1) {
-                        $units = rtrim($units);
-                        $units = rtrim($units, 's');
-                    }
-                    $ingredient .= " ".$units;
-                }
+                array_push($result, $ingredient);
             }
-            if ($row['ingredient']) {
-                $ingredient .= " ".$row['ingredient'];
-            }
-            if ($raw) {
-                $ingredient = Template::raw($ingredient);
-            }
-            array_push($result, $ingredient);
         }
 
         return $result;
@@ -405,6 +408,14 @@ class Recipe extends Model
 
             case 0.25:
                 $fraction = " &frac14;";
+                break;
+
+            case 0.33:
+                $fraction = " &frac13;";
+                break;
+            
+            case 0.165:
+                $fraction = " &frac16;";
                 break;
 
             case 0.5:
@@ -461,12 +472,14 @@ class Recipe extends Model
     public function getDirections($raw = true)
     {
         $result = [];
-        foreach ($this->directions as $row) {
-            $direction = $row['direction'];
-            if ($raw) {
-                $direction = Template::raw($direction);
+        if ($this->directions != '') {
+            foreach ($this->directions as $row) {
+                $direction = $row['direction'];
+                if ($raw) {
+                    $direction = Template::raw($direction);
+                }
+                array_push($result, $direction);
             }
-            array_push($result, $direction);
         }
 
         return $result;
