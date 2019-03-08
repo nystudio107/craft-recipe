@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.0.8 - 2019.03.08
+### Changed
+* Fixed an issue where tabs didn't work properly in the Field
+
 ## 1.0.7 - 2018.03.02
 ### Changed
 * Fixed deprecation errors from Craft CMS 3 RC13
