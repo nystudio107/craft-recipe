@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 1.0.9 - 2019.03.08
+### Changed
+* Add 1/3 and 1/6 fractions
+* Prevent error on no directions or ingredients
+
 ## 1.0.8 - 2019.03.08
 ### Changed
 * Fixed an issue where tabs didn't work properly in the Field
