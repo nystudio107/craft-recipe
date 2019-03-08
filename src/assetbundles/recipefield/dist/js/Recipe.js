@@ -37,6 +37,16 @@
 
 /* -- _this.options gives us access to the $jsonVars that our FieldType passed down to us */
 
+                // Tab handler
+                $('.recipe-tab-links').on('click', function(e) {
+                    e.preventDefault();
+                    $('.recipe-tab-links').removeClass('sel');
+                    $(this).addClass('sel');
+                    $('.recipe-tab-content').addClass('hidden');
+                    var selector = $(this).attr('href');
+                    $(selector).removeClass('hidden');
+                });
+
             });
         }
     };

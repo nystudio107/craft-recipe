@@ -17,15 +17,14 @@
 {% set baseAssetsUrl = view.getAssetManager().getPublishedUrl('@nystudio107/recipe/assetbundles/recipefield/dist', true) %}
 
 <div id="{{ id }}" class="recipe-field">
-    <div class="pane">
-        <nav id="{{ id ~ "tabs" }}" class="tabs">
+        <nav id="{{ id ~ "tabs" }}" class="recipe-tabs">
             <ul>
-                <li><a id="{{ id ~ "tabs-recipe" }}" class="tab sel" href="#{{ prefix ~ id ~ 'tab-recipe' }}"  tabindex="0"><img class="recipe-field-icon" src="{{ baseAssetsUrl ~ '/img/Recipe-icon.svg' }}" width="16px" height="auto" /><span class="recipe-field-title">Recipe</span></a></li>
-                <li><a id="{{ id ~ "tabs-ratings" }}" class="tab" href="#{{ prefix ~ id ~ 'tab-ratings' }}" tabindex="0"><img class="recipe-field-icon" src="{{ baseAssetsUrl ~ '/img/Star-icon.svg' }}" width="16px" height="auto" /><span class="recipe-field-title">Ratings</span></a></li>
-                <li><a id="{{ id ~ "tabs-health" }}" class="tab" href="#{{ prefix ~ id ~ 'tab-health' }}" tabindex="0"><img class="recipe-field-icon" src="{{ baseAssetsUrl ~ '/img/Healthy-icon.svg' }}" width="16px" height="auto" /><span class="recipe-field-title">Nutrition</span></a></li>
+                <li><a id="{{ id ~ "tabs-recipe" }}" class="recipe-tab-links tab sel" href="#{{ prefix ~ id ~ 'tab-recipe' }}"  tabindex="0"><img class="recipe-field-icon" src="{{ baseAssetsUrl ~ '/img/Recipe-icon.svg' }}" width="16px" height="auto" /><span class="recipe-field-title">Recipe</span></a></li>
+                <li><a id="{{ id ~ "tabs-ratings" }}" class="recipe-tab-links tab" href="#{{ prefix ~ id ~ 'tab-ratings' }}" tabindex="0"><img class="recipe-field-icon" src="{{ baseAssetsUrl ~ '/img/Star-icon.svg' }}" width="16px" height="auto" /><span class="recipe-field-title">Ratings</span></a></li>
+                <li><a id="{{ id ~ "tabs-health" }}" class="recipe-tab-links tab" href="#{{ prefix ~ id ~ 'tab-health' }}" tabindex="0"><img class="recipe-field-icon" src="{{ baseAssetsUrl ~ '/img/Healthy-icon.svg' }}" width="16px" height="auto" /><span class="recipe-field-title">Nutrition</span></a></li>
             </ul>
         </nav>
-        <div id="{{ id ~ "tab-recipe" }}">
+        <div id="{{ id ~ "tab-recipe" }}" class="recipe-tab-content">
             {{ forms.textField({
                 id: id ~ 'name',
                 class: 'nicetext',
@@ -193,7 +192,7 @@
             }) }}
             </div>
 
-        <div id="{{ id ~ "tab-ratings" }}" class="hidden">
+        <div id="{{ id ~ "tab-ratings" }}" class="recipe-tab-content hidden">
             {{ forms.editableTableField({
                 id: id ~ 'ratings',
                 name: name ~ '[ratings]',
@@ -230,7 +229,7 @@
             }) }}
         </div>
 
-        <div id="{{ id ~ "tab-health" }}" class="hidden">
+        <div id="{{ id ~ "tab-health" }}" class="recipe-tab-content hidden">
 
             {{ forms.textField({
                 id: id ~ 'servingSize',
@@ -387,5 +386,4 @@
             }) }}
 
         </div>
-    </div>
 </div>
