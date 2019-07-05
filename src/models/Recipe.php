@@ -413,6 +413,10 @@ class Recipe extends Model
             case 0.33:
                 $fraction = " &frac13;";
                 break;
+                
+            case 0.66:
+                $fraction = " &frac23;";
+                break;
             
             case 0.165:
                 $fraction = " &frac16;";
