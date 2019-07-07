@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.0.11 - 2019.06.06
+### Changed
+* Add support for 2/3 fraction
+
 ## 1.0.10 - 2019.03.08
 ### Changed
 * Fixed the Asset Sources settings to work with Craft 3.1
