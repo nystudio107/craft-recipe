@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2017 nystudio107
  * @link      https://nystudio107.com
  * @package   Recipe
- * @since     1.0.0RecipeRecipe
+ * @since     1.0.0
  */
 
  ;(function ( $, window, document, undefined ) {
@@ -45,6 +45,10 @@
                     $('.recipe-tab-content').addClass('hidden');
                     var selector = $(this).attr('href');
                     $(selector).removeClass('hidden');
+                    // Trigger a resize to make event handlers in Garnish activate
+                    Garnish.$win.trigger('resize');
+                    // Fixes Redactor fixed toolbars on previously hidden panes
+                    Garnish.$doc.trigger('scroll');
                 });
 
             });
