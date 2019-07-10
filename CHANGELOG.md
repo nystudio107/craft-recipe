@@ -1,8 +1,9 @@
 # Recipe Changelog
 
-## 1.0.11 - 2019.06.06
+## 1.0.11 - 2019.07.10
 ### Changed
 * Add support for 2/3 fraction
+* Fixed an issue where controls to add ratings didn't work when you switched tabs until you resized the window
 
 ## 1.0.10 - 2019.03.08
 ### Changed
