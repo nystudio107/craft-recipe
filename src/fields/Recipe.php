@@ -21,6 +21,11 @@ use craft\elements\Asset;
 use craft\helpers\Html;
 use craft\helpers\Json;
 
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\db\Schema;
 
 /**
@@ -112,7 +117,11 @@ class Recipe extends Field
     public function getInputHtml($value, ElementInterface $element = null): string
     {
         // Register our asset bundle
-        Craft::$app->getView()->registerAssetBundle(RecipeFieldAsset::class);
+        try {
+            Craft::$app->getView()->registerAssetBundle(RecipeFieldAsset::class);
+        } catch (InvalidConfigException $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
 
         // Get our id and namespace
         $id = Craft::$app->getView()->formatInputId($this->handle);
@@ -138,27 +147,31 @@ class Recipe extends Field
         }
 
         // Render the input template
-        return Craft::$app->getView()->renderTemplate(
-            'recipe'
-            .DIRECTORY_SEPARATOR
-            .'_components'
-            .DIRECTORY_SEPARATOR
-            .'fields'
-            .DIRECTORY_SEPARATOR
-            .'Recipe_input',
-            [
-                'name' => $this->handle,
-                'value' => $value,
-                'field' => $this,
-                'id' => $id,
-                'nameSpacedId' => $nameSpacedId,
-                'prefix' => Craft::$app->getView()->namespaceInputId(''),
-                'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
-                'elements' => $elements,
-                'elementType' => Asset::class,
-                'assetSources' => $this->assetSources,
-            ]
-        );
+        try {
+            return Craft::$app->getView()->renderTemplate(
+                'recipe/_components/fields/Recipe_input',
+                [
+                    'name' => $this->handle,
+                    'value' => $value,
+                    'field' => $this,
+                    'id' => $id,
+                    'nameSpacedId' => $nameSpacedId,
+                    'prefix' => Craft::$app->getView()->namespaceInputId(''),
+                    'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
+                    'elements' => $elements,
+                    'elementType' => Asset::class,
+                    'assetSources' => $this->assetSources,
+                ]
+            );
+        } catch (LoaderError $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        } catch (RuntimeError $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        } catch (SyntaxError $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        } catch (Exception $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 
     /**

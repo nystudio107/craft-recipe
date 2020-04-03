@@ -12,10 +12,17 @@
 namespace nystudio107\recipe\models;
 
 use nystudio107\recipe\helpers\Json;
+use nystudio107\recipe\helpers\PluginTemplate;
 
 use Craft;
 use craft\base\Model;
 use craft\helpers\Template;
+
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Markup;
+use yii\base\Exception;
 
 /**
  * @author    nystudio107
@@ -233,7 +240,7 @@ class Recipe extends Model
                 $review = [
                     "type" => "Review",
                     'author' => $rating['author'],
-                    'name' => $this->name." ".Craft::t("recipe", "Review"),
+                    'name' => $this->name . " " . Craft::t("recipe", "Review"),
                     'description' => $rating['review'],
                     'reviewRating' => [
                         "type" => "Rating",
@@ -249,13 +256,13 @@ class Recipe extends Model
         }
 
         if ($this->prepTime) {
-            $recipeJSONLD['prepTime'] = "PT".$this->prepTime."M";
+            $recipeJSONLD['prepTime'] = "PT" . $this->prepTime . "M";
         }
         if ($this->cookTime) {
-            $recipeJSONLD['cookTime'] = "PT".$this->cookTime."M";
+            $recipeJSONLD['cookTime'] = "PT" . $this->cookTime . "M";
         }
         if ($this->totalTime) {
-            $recipeJSONLD['totalTime'] = "PT".$this->totalTime."M";
+            $recipeJSONLD['totalTime'] = "PT" . $this->totalTime . "M";
         }
 
         return $this->renderJsonLd($recipeJSONLD, $raw);
@@ -277,6 +284,18 @@ class Recipe extends Model
         }
 
         return $result;
+    }
+
+    /**
+     * @return Markup
+     */
+    public function renderNutritionFacts(): Markup {
+        return PluginTemplate::renderPluginTemplate(
+            '_components/fields/Recipe_nutrition',
+            [
+                'value' => $this,
+            ]
+        );
     }
 
     /**
@@ -523,9 +542,6 @@ class Recipe extends Model
         return $result;
     }
 
-    // Private Methods
-    // =========================================================================
-
     /**
      * Get the total number of ratings
      *
@@ -535,6 +551,9 @@ class Recipe extends Model
     {
         return count($this->ratings);
     }
+
+    // Private Methods
+    // =========================================================================
 
     /**
      * Renders a JSON-LD representation of the schema
