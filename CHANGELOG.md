@@ -1,5 +1,12 @@
 # Recipe Changelog
 
+## 1.1.0 - 2020.04.03
+### Added
+* Added support for imperial pounds and metric kilograms
+
+### Fixed
+* Fixed errant display of the 1.66 quantity by rounding the mantissa so we can do a floating point comparison without weirdness, per: https://www.php.net/manual/en/language.types.float.php#113703
+
 ## 1.0.11 - 2019.07.10
 ### Changed
 * Add support for 2/3 fraction
