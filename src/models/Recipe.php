@@ -327,6 +327,11 @@ class Recipe extends Model
                             $convertedUnits = "ozs";
                             $quantity = $quantity * 0.035274;
                         }
+
+                        if ($row['units'] == "kg") {
+                            $convertedUnits = "lbs";
+                            $quantity = $quantity * 2.2046226218;
+                        }
                     }
 
                     if ($outputUnits == 'metric') {
@@ -353,6 +358,11 @@ class Recipe extends Model
                         if ($row['units'] == "ozs") {
                             $convertedUnits = "gs";
                             $quantity = $quantity * 28.3495;
+                        }
+
+                        if ($row['units'] == "lbs") {
+                            $convertedUnits = "kg";
+                            $quantity = $quantity * 0.45359237;
                         }
 
                         $quantity = round($quantity, 1);
