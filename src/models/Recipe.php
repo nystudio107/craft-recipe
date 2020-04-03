@@ -291,7 +291,7 @@ class Recipe extends Model
     public function getIngredients($outputUnits = "imperial", $serving = 0, $raw = true)
     {
         $result = [];
-        
+
         if ($this->ingredients != '') {
             foreach ($this->ingredients as $row) {
                 $convertedUnits = "";
@@ -400,7 +400,9 @@ class Recipe extends Model
     private function convertToFractions($quantity)
     {
         $whole = floor($quantity);
-        $fraction = $quantity - $whole;
+        // Round the mantissa so we can do a floating point comparison without
+        // weirdness, per: https://www.php.net/manual/en/language.types.float.php#113703
+        $fraction = round($quantity - $whole, 3);
         switch ($fraction) {
             case 0:
                 $fraction = "";
@@ -413,11 +415,11 @@ class Recipe extends Model
             case 0.33:
                 $fraction = " &frac13;";
                 break;
-                
+
             case 0.66:
                 $fraction = " &frac23;";
                 break;
-            
+
             case 0.165:
                 $fraction = " &frac16;";
                 break;
