@@ -58,6 +58,36 @@ To display information about a recipe in your templates, you just use familiar T
 * `entry.someRecipe.cookTime` - the cooking time for the recipe in minutes
 * `entry.someRecipe.totalTime` - the total time for the recipe in minutes
 
+### Nutritional Facts
+
+For a nutrition facts label, you can use:
+
+```twig
+{{ entry.someRecipe.renderNutritionFacts() }}
+```
+
+Which will output a responsive embed nutrition facts label like this:
+
+![Screenshot](./resources/screenshots/recipe03.png)
+
+The percentages are based on [US Recommended Dietary Allowances](https://en.wikipedia.org/wiki/Reference_Daily_Intake), but you can pass in your own values as well:
+
+```twig
+{{ entry.someRecipe.renderNutritionFacts({
+    'calories': 2000,
+    'carbohydrateContent': 275,
+    'cholesterolContent': 300,
+    'fatContent': 78,
+    'fiberContent': 28,
+    'proteinContent': 50,
+    'saturatedFatContent': 20,
+    'sodiumContent': 2300,
+    'sugarContent': 50,
+}) }}
+```
+
+If you want to control the way the template looks, you can put your own frontend template in `recipe/recipe-nutrition-facts` and Recipe will use it
+
 ### Ingredients
 
 For a list of ingredients, do the following (adding whatever output markup you want):
