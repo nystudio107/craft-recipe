@@ -42,6 +42,21 @@ class Recipe extends Model
         'sugarContent' => 50,
     ];
 
+    // Mapping to convert any of the incorrect plural values
+    const NORMALIZE_PLURALS = [
+        'tsps' => 'tsp',
+        'tbsps' => 'tbsp',
+        'flozs' => 'floz',
+        'cups' => 'c',
+        'ozs' => 'oz',
+        'lbs' => 'lb',
+        'mls' => 'ml',
+        'ls' => 'l',
+        'mgs' => 'mg',
+        'gs' => 'g',
+        'kg' => 'kg',
+    ];
+
     // Public Properties
     // =========================================================================
 
@@ -162,6 +177,23 @@ class Recipe extends Model
 
     // Public Methods
     // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        // Fix any of the incorrect plural values
+        if (!empty($this->ingredients)) {
+            foreach ($this->ingredients as &$row) {
+                if (!empty($row['units']) && !empty(self::NORMALIZE_PLURALS[$row['units']])) {
+                    $row['units'] = self::NORMALIZE_PLURALS[$row['units']];
+                }
+            }
+            unset($row);
+        }
+    }
 
     /**
      * @inheritdoc
@@ -342,24 +374,24 @@ class Recipe extends Model
                     // Do the imperial->metric units conversion
                     if ($outputUnits === 'imperial') {
                         switch ($row['units']) {
-                            case 'mls':
-                                $convertedUnits = 'tsps';
+                            case 'ml':
+                                $convertedUnits = 'tsp';
                                 $quantity *= 0.2;
                                 break;
-                            case 'ls':
-                                $convertedUnits = 'cups';
+                            case 'l':
+                                $convertedUnits = 'c';
                                 $quantity *= 4.2;
                                 break;
-                            case 'mgs':
-                                $convertedUnits = 'ozs';
+                            case 'mg':
+                                $convertedUnits = 'oz';
                                 $quantity *= 0.000035274;
                                 break;
-                            case 'gs':
-                                $convertedUnits = 'ozs';
+                            case 'g':
+                                $convertedUnits = 'oz';
                                 $quantity *= 0.035274;
                                 break;
                             case 'kg':
-                                $convertedUnits = 'lbs';
+                                $convertedUnits = 'lb';
                                 $quantity *= 2.2046226218;
                                 break;
                         }
@@ -367,27 +399,27 @@ class Recipe extends Model
                     // Do the metric->imperial units conversion
                     if ($outputUnits === 'metric') {
                         switch ($row['units']) {
-                            case 'tsps':
-                                $convertedUnits = 'mls';
+                            case 'tsp':
+                                $convertedUnits = 'ml';
                                 $quantity *= 4.929;
                                 break;
-                            case 'tbsps':
-                                $convertedUnits = 'mls';
+                            case 'tbsp':
+                                $convertedUnits = 'ml';
                                 $quantity *= 14.787;
                                 break;
-                            case 'flozs':
-                                $convertedUnits = 'mls';
+                            case 'floz':
+                                $convertedUnits = 'ml';
                                 $quantity *= 29.574;
                                 break;
-                            case 'cups':
-                                $convertedUnits = 'ls';
+                            case 'c':
+                                $convertedUnits = 'l';
                                 $quantity *= 0.236588;
                                 break;
-                            case 'ozs':
-                                $convertedUnits = 'gs';
+                            case 'oz':
+                                $convertedUnits = 'g';
                                 $quantity *= 28.3495;
                                 break;
-                            case 'lbs':
+                            case 'lb':
                                 $convertedUnits = 'kg';
                                 $quantity *= 0.45359237;
                                 break;
