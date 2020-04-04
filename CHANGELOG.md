@@ -6,6 +6,7 @@
 
 ### Fixed
 * Fixed errant display of the 1.66 quantity by rounding the mantissa so we can do a floating point comparison without weirdness, per: https://www.php.net/manual/en/language.types.float.php#113703
+* Fix the abbreviations to be be the same whether singular or plural as per [Measurement Abbreviations](https://abbreviations.yourdictionary.com/articles/measurement-abbreviations.html)
 
 ## 1.0.11 - 2019.07.10
 ### Changed
