@@ -66,7 +66,7 @@ For a nutrition facts label, you can use:
 {{ entry.someRecipe.renderNutritionFacts() }}
 ```
 
-Which will output a responsive embed nutrition facts label like this:
+Which will output a responsive nutrition facts label embed based on the data in the Nutrition tab:
 
 ![Screenshot](./resources/screenshots/recipe03.png)
 
