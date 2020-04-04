@@ -314,15 +314,17 @@ class Recipe extends Model
     /**
      * Get the URL to the recipe's image
      *
+     * @param null $transform
+     *
      * @return null|string
      */
-    public function getImageUrl()
+    public function getImageUrl($transform = null)
     {
         $result = '';
         if (isset($this->imageId) && $this->imageId) {
             $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
             if ($image) {
-                $result = $image->url;
+                $result = $image->getUrl($transform);
             }
         }
 
