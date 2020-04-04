@@ -53,10 +53,40 @@ To display information about a recipe in your templates, you just use familiar T
 * `entry.someRecipe.description` - the description of the recipe
 * `entry.someRecipe.skill` - the skill level required to make this recipe
 * `entry.someRecipe.serves` - how many people the recipe serves
-* `entry.someRecipe.getImageUrl()` - a URL to the image for the recipe
+* `entry.someRecipe.getImageUrl()` - a URL to the image for the recipe; you can pass in an optional image transform or image transform handle here as well: `entry.someRecipe.getImageUrl('display')`
 * `entry.someRecipe.prepTime` - the prep time for the recipe in minutes
 * `entry.someRecipe.cookTime` - the cooking time for the recipe in minutes
 * `entry.someRecipe.totalTime` - the total time for the recipe in minutes
+
+### Nutritional Facts
+
+For a nutrition facts label, you can use:
+
+```twig
+{{ entry.someRecipe.renderNutritionFacts() }}
+```
+
+Which will output a responsive nutrition facts label embed based on the data in the Nutrition tab:
+
+![Screenshot](./resources/screenshots/recipe03.png)
+
+The percentages are based on [US Recommended Dietary Allowances](https://en.wikipedia.org/wiki/Reference_Daily_Intake), but you can pass in your own values as well:
+
+```twig
+{{ entry.someRecipe.renderNutritionFacts({
+    'calories': 2000,
+    'carbohydrateContent': 275,
+    'cholesterolContent': 300,
+    'fatContent': 78,
+    'fiberContent': 28,
+    'proteinContent': 50,
+    'saturatedFatContent': 20,
+    'sodiumContent': 2300,
+    'sugarContent': 50,
+}) }}
+```
+
+If you want to control the way the template looks, you can put your own frontend template in `recipe/recipe-nutrition-facts` and Recipe will use it
 
 ### Ingredients
 

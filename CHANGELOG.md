@@ -1,5 +1,14 @@
 # Recipe Changelog
 
+## 1.1.0 - 2020.04.03
+### Added
+* Added support for imperial pounds and metric kilograms
+* Added support for passing in an image transform to `.getImageUrl()`
+
+### Fixed
+* Fixed errant display of the 1.66 quantity by rounding the mantissa so we can do a floating point comparison without weirdness, per: https://www.php.net/manual/en/language.types.float.php#113703
+* Fix the abbreviations to be be the same whether singular or plural as per [Measurement Abbreviations](https://abbreviations.yourdictionary.com/articles/measurement-abbreviations.html)
+
 ## 1.0.11 - 2019.07.10
 ### Changed
 * Add support for 2/3 fraction
