@@ -18,11 +18,7 @@ use Craft;
 use craft\base\Model;
 use craft\helpers\Template;
 
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\Markup;
-use yii\base\Exception;
 
 /**
  * @author    nystudio107
@@ -31,6 +27,21 @@ use yii\base\Exception;
  */
 class Recipe extends Model
 {
+    // Constants
+    // =========================================================================
+
+    const US_RDA = [
+        'calories' => 2000,
+        'carbohydrateContent' => 275,
+        'cholesterolContent' => 300,
+        'fatContent' => 78,
+        'fiberContent' => 28,
+        'proteinContent' => 50,
+        'saturatedFatContent' => 20,
+        'sodiumContent' => 2300,
+        'sugarContent' => 50,
+    ];
+
     // Public Properties
     // =========================================================================
 
@@ -192,19 +203,19 @@ class Recipe extends Model
     public function renderRecipeJSONLD($raw = true)
     {
         $recipeJSONLD = [
-            "context" => "http://schema.org",
-            "type" => "Recipe",
-            "name" => $this->name,
-            "image" => $this->getImageUrl(),
-            "description" => $this->description,
-            "recipeYield" => $this->serves,
-            "recipeIngredient" => $this->getIngredients("imperial", 0, false),
-            "recipeInstructions" => $this->getDirections(false),
+            'context' => 'http://schema.org',
+            'type' => 'Recipe',
+            'name' => $this->name,
+            'image' => $this->getImageUrl(),
+            'description' => $this->description,
+            'recipeYield' => $this->serves,
+            'recipeIngredient' => $this->getIngredients('imperial', 0, false),
+            'recipeInstructions' => $this->getDirections(false),
         ];
         $recipeJSONLD = array_filter($recipeJSONLD);
 
         $nutrition = [
-            "type" => "NutritionInformation",
+            'type' => 'NutritionInformation',
             'servingSize' => $this->servingSize,
             'calories' => $this->calories,
             'carbohydrateContent' => $this->carbohydrateContent,
@@ -220,13 +231,13 @@ class Recipe extends Model
         ];
         $nutrition = array_filter($nutrition);
         $recipeJSONLD['nutrition'] = $nutrition;
-        if (count($recipeJSONLD['nutrition']) == 1) {
+        if (count($recipeJSONLD['nutrition']) === 1) {
             unset($recipeJSONLD['nutrition']);
         }
         $aggregateRating = $this->getAggregateRating();
         if ($aggregateRating) {
             $aggregateRatings = [
-                "type" => "AggregateRating",
+                'type' => 'AggregateRating',
                 'ratingCount' => $this->getRatingsCount(),
                 'bestRating' => '5',
                 'worstRating' => '1',
@@ -238,31 +249,31 @@ class Recipe extends Model
             $reviews = [];
             foreach ($this->ratings as $rating) {
                 $review = [
-                    "type" => "Review",
+                    'type' => 'Review',
                     'author' => $rating['author'],
-                    'name' => $this->name . " " . Craft::t("recipe", "Review"),
+                    'name' => $this->name . ' ' . Craft::t('recipe', 'Review'),
                     'description' => $rating['review'],
                     'reviewRating' => [
-                        "type" => "Rating",
+                        'type' => 'Rating',
                         'bestRating' => '5',
                         'worstRating' => '1',
                         'ratingValue' => $rating['rating'],
                     ],
                 ];
-                array_push($reviews, $review);
+                $reviews[] = $review;
             }
             $reviews = array_filter($reviews);
             $recipeJSONLD['review'] = $reviews;
         }
 
         if ($this->prepTime) {
-            $recipeJSONLD['prepTime'] = "PT" . $this->prepTime . "M";
+            $recipeJSONLD['prepTime'] = 'PT' . $this->prepTime . 'M';
         }
         if ($this->cookTime) {
-            $recipeJSONLD['cookTime'] = "PT" . $this->cookTime . "M";
+            $recipeJSONLD['cookTime'] = 'PT' . $this->cookTime . 'M';
         }
         if ($this->totalTime) {
-            $recipeJSONLD['totalTime'] = "PT" . $this->totalTime . "M";
+            $recipeJSONLD['totalTime'] = 'PT' . $this->totalTime . 'M';
         }
 
         return $this->renderJsonLd($recipeJSONLD, $raw);
@@ -275,7 +286,7 @@ class Recipe extends Model
      */
     public function getImageUrl()
     {
-        $result = "";
+        $result = '';
         if (isset($this->imageId) && $this->imageId) {
             $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
             if ($image) {
@@ -287,13 +298,17 @@ class Recipe extends Model
     }
 
     /**
+     * Render the Nutrition Facts template
+     *
+     * @param array $rda
      * @return Markup
      */
-    public function renderNutritionFacts(): Markup {
+    public function renderNutritionFacts(array $rda = self::US_RDA): Markup {
         return PluginTemplate::renderPluginTemplate(
-            '_components/fields/Recipe_nutrition',
+            'recipe-nutrition-facts',
             [
                 'value' => $this,
+                'rda' => $rda,
             ]
         );
     }
@@ -307,14 +322,14 @@ class Recipe extends Model
      *
      * @return array
      */
-    public function getIngredients($outputUnits = "imperial", $serving = 0, $raw = true)
+    public function getIngredients($outputUnits = 'imperial', $serving = 0, $raw = true): array
     {
         $result = [];
 
-        if ($this->ingredients != '') {
+        if (!empty($this->ingredients)) {
             foreach ($this->ingredients as $row) {
-                $convertedUnits = "";
-                $ingredient = "";
+                $convertedUnits = '';
+                $ingredient = '';
                 if ($row['quantity']) {
                     // Multiply the quantity by how many servings we want
                     $multiplier = 1;
@@ -324,72 +339,65 @@ class Recipe extends Model
                     $quantity = $row['quantity'] * $multiplier;
                     $originalQuantity = $quantity;
 
-                    // Do the units conversion
-
-                    if ($outputUnits == 'imperial') {
-                        if ($row['units'] == "mls") {
-                            $convertedUnits = "tsps";
-                            $quantity = $quantity * 0.2;
-                        }
-
-                        if ($row['units'] == "ls") {
-                            $convertedUnits = "cups";
-                            $quantity = $quantity * 4.2;
-                        }
-
-                        if ($row['units'] == "mgs") {
-                            $convertedUnits = "ozs";
-                            $quantity = $quantity * 0.000035274;
-                        }
-
-                        if ($row['units'] == "gs") {
-                            $convertedUnits = "ozs";
-                            $quantity = $quantity * 0.035274;
-                        }
-
-                        if ($row['units'] == "kg") {
-                            $convertedUnits = "lbs";
-                            $quantity = $quantity * 2.2046226218;
+                    // Do the imperial->metric units conversion
+                    if ($outputUnits === 'imperial') {
+                        switch ($row['units']) {
+                            case 'mls':
+                                $convertedUnits = 'tsps';
+                                $quantity *= 0.2;
+                                break;
+                            case 'ls':
+                                $convertedUnits = 'cups';
+                                $quantity *= 4.2;
+                                break;
+                            case 'mgs':
+                                $convertedUnits = 'ozs';
+                                $quantity *= 0.000035274;
+                                break;
+                            case 'gs':
+                                $convertedUnits = 'ozs';
+                                $quantity *= 0.035274;
+                                break;
+                            case 'kg':
+                                $convertedUnits = 'lbs';
+                                $quantity *= 2.2046226218;
+                                break;
                         }
                     }
-
-                    if ($outputUnits == 'metric') {
-                        if ($row['units'] == "tsps") {
-                            $convertedUnits = "mls";
-                            $quantity = $quantity * 4.929;
-                        }
-
-                        if ($row['units'] == "tbsps") {
-                            $convertedUnits = "mls";
-                            $quantity = $quantity * 14.787;
-                        }
-
-                        if ($row['units'] == "flozs") {
-                            $convertedUnits = "mls";
-                            $quantity = $quantity * 29.574;
-                        }
-
-                        if ($row['units'] == "cups") {
-                            $convertedUnits = "ls";
-                            $quantity = $quantity * 0.236588;
-                        }
-
-                        if ($row['units'] == "ozs") {
-                            $convertedUnits = "gs";
-                            $quantity = $quantity * 28.3495;
-                        }
-
-                        if ($row['units'] == "lbs") {
-                            $convertedUnits = "kg";
-                            $quantity = $quantity * 0.45359237;
+                    // Do the metric->imperial units conversion
+                    if ($outputUnits === 'metric') {
+                        switch ($row['units']) {
+                            case 'tsps':
+                                $convertedUnits = 'mls';
+                                $quantity *= 4.929;
+                                break;
+                            case 'tbsps':
+                                $convertedUnits = 'mls';
+                                $quantity *= 14.787;
+                                break;
+                            case 'flozs':
+                                $convertedUnits = 'mls';
+                                $quantity *= 29.574;
+                                break;
+                            case 'cups':
+                                $convertedUnits = 'ls';
+                                $quantity *= 0.236588;
+                                break;
+                            case 'ozs':
+                                $convertedUnits = 'gs';
+                                $quantity *= 28.3495;
+                                break;
+                            case 'lbs':
+                                $convertedUnits = 'kg';
+                                $quantity *= 0.45359237;
+                                break;
                         }
 
                         $quantity = round($quantity, 1);
                     }
 
                     // Convert imperial units to nice fractions
-
-                    if ($outputUnits == 'imperial') {
+                    if ($outputUnits === 'imperial') {
                         $quantity = $this->convertToFractions($quantity);
                     }
                     $ingredient .= $quantity;
@@ -403,16 +411,16 @@ class Recipe extends Model
                             $units = rtrim($units);
                             $units = rtrim($units, 's');
                         }
-                        $ingredient .= " ".$units;
+                        $ingredient .= ' ' . $units;
                     }
                 }
                 if ($row['ingredient']) {
-                    $ingredient .= " ".$row['ingredient'];
+                    $ingredient .= ' ' . $row['ingredient'];
                 }
                 if ($raw) {
                     $ingredient = Template::raw($ingredient);
                 }
-                array_push($result, $ingredient);
+                $result[] = $ingredient;
             }
         }
 
@@ -434,67 +442,55 @@ class Recipe extends Model
         $fraction = round($quantity - $whole, 3);
         switch ($fraction) {
             case 0:
-                $fraction = "";
+                $fraction = '';
                 break;
-
             case 0.25:
-                $fraction = " &frac14;";
+                $fraction = ' &frac14;';
                 break;
-
             case 0.33:
-                $fraction = " &frac13;";
+                $fraction = ' &frac13;';
                 break;
-
             case 0.66:
-                $fraction = " &frac23;";
+                $fraction = ' &frac23;';
                 break;
-
             case 0.165:
-                $fraction = " &frac16;";
+                $fraction = ' &frac16;';
                 break;
-
             case 0.5:
-                $fraction = " &frac12;";
+                $fraction = ' &frac12;';
                 break;
-
             case 0.75:
-                $fraction = " &frac34;";
+                $fraction = ' &frac34;';
                 break;
-
             case 0.125:
-                $fraction = " &#x215B;";
+                $fraction = ' &#x215B;';
                 break;
-
             case 0.375:
-                $fraction = " &#x215C;";
+                $fraction = ' &#x215C;';
                 break;
-
             case 0.625:
-                $fraction = " &#x215D;";
+                $fraction = ' &#x215D;';
                 break;
-
             case 0.875:
-                $fraction = " &#x215E;";
+                $fraction = ' &#x215E;';
                 break;
-
             default:
                 $precision = 5;
                 $pnum = round($fraction, $precision);
-                $denominator = pow(10, $precision);
+                $denominator = 10 ** $precision;
                 $numerator = $pnum * $denominator;
-                $fraction = "<sup>"
+                $fraction = '<sup>'
                     .$numerator
-                    ."</sup>&frasl;<sub>"
+                    . '</sup>&frasl;<sub>'
                     .$denominator
-                    ."</sub>";
+                    . '</sub>';
                 break;
         }
-        if ($whole == 0) {
-            $whole = "";
+        if ($whole === 0) {
+            $whole = '';
         }
-        $result = $whole.$fraction;
 
-        return $result;
+        return $whole.$fraction;
     }
 
     /**
@@ -507,13 +503,13 @@ class Recipe extends Model
     public function getDirections($raw = true)
     {
         $result = [];
-        if ($this->directions != '') {
+        if (!empty($this->directions)) {
             foreach ($this->directions as $row) {
                 $direction = $row['direction'];
                 if ($raw) {
                     $direction = Template::raw($direction);
                 }
-                array_push($result, $direction);
+                $result[] = $direction;
             }
         }
 
@@ -534,9 +530,9 @@ class Recipe extends Model
                 $result += $row['rating'];
                 $total++;
             }
-            $result = $result / $total;
+            $result /= $total;
         } else {
-            $result = "";
+            $result = '';
         }
 
         return $result;
@@ -547,7 +543,7 @@ class Recipe extends Model
      *
      * @return int
      */
-    public function getRatingsCount()
+    public function getRatingsCount(): int
     {
         return count($this->ratings);
     }
@@ -565,7 +561,7 @@ class Recipe extends Model
      */
     private function renderJsonLd($json, $raw = true)
     {
-        $linebreak = "";
+        $linebreak = '';
 
         // If `devMode` is enabled, make the JSON-LD human-readable
         if (Craft::$app->getConfig()->getGeneral()->devMode) {

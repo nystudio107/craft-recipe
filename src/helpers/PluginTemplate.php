@@ -68,7 +68,7 @@ class PluginTemplate
             }
             // Render the template with our vars passed in
             try {
-                $htmlText = Craft::$app->view->renderTemplate($templatePath, $params);
+                $htmlText = Craft::$app->view->renderTemplate('recipe/' .$templatePath, $params);
                 $templateRendered = true;
             } catch (\Exception $e) {
                 $htmlText = Craft::t(
