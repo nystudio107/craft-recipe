@@ -97,13 +97,7 @@ class Recipe extends Field
     {
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
-            'recipe'
-            .DIRECTORY_SEPARATOR
-            .'_components'
-            .DIRECTORY_SEPARATOR
-            .'fields'
-            .DIRECTORY_SEPARATOR
-            .'Recipe_settings',
+            'recipe/_components/fields/Recipe_settings',
             [
                 'field' => $this,
                 'assetSources' => $this->getSourceOptions(),
