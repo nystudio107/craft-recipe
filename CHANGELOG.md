@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 1.1.1 - 2020.04.06
+### Changed
+* An error is no longer logged if there isn't a frontend template for the Nutrition Facts
+* Updated missing translations
+
 ## 1.1.0 - 2020.04.03
 ### Added
 * Added support for imperial pounds and metric kilograms
