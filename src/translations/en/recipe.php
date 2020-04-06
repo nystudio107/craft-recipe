@@ -17,5 +17,7 @@
 return [
     'Recipe' => 'Recipe',
     'Review' => 'Review',
-    'Recipe plugin loaded' => 'Recipe plugin loaded',
+    '{name} plugin loaded' => '{name} plugin loaded',
+    'Error rendering template string -> {error}' => 'Error rendering template string -> {error}',
+    'Error rendering `{template}` -> {error}' => 'Error rendering `{template}` -> {error}'
 ];
