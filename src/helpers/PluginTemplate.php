@@ -71,12 +71,6 @@ class PluginTemplate
                 $htmlText = Craft::$app->view->renderTemplate('recipe/' .$templatePath, $params);
                 $templateRendered = true;
             } catch (\Exception $e) {
-                $htmlText = Craft::t(
-                    'recipe',
-                    'Error rendering `{template}` -> {error}',
-                    ['template' => $templatePath, 'error' => $e->getMessage()]
-                );
-                Craft::error($htmlText, __METHOD__);
                 $templateRendered = false;
             }
         }
@@ -92,14 +86,18 @@ class PluginTemplate
                 $htmlText = Craft::$app->view->renderTemplate('recipe/' . $templatePath, $params);
                 $templateRendered = true;
             } catch (\Exception $e) {
-                $htmlText = Craft::t(
-                    'recipe',
-                    'Error rendering `{template}` -> {error}',
-                    ['template' => $templatePath, 'error' => $e->getMessage()]
-                );
-                Craft::error($htmlText, __METHOD__);
                 $templateRendered = false;
             }
+        }
+
+        // Only if the template didn't render at all should we log an error
+        if (!$templateRendered) {
+            $htmlText = Craft::t(
+                'recipe',
+                'Error rendering `{template}` -> {error}',
+                ['template' => $templatePath, 'error' => $e->getMessage()]
+            );
+            Craft::error($htmlText, __METHOD__);
         }
 
         // Restore the old template mode
