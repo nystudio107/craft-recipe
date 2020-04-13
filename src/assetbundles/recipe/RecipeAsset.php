@@ -9,7 +9,7 @@
  * @copyright Copyright (c) 2017 nystudio107
  */
 
-namespace nystudio107\recipe\assetbundles\Recipe;
+namespace nystudio107\recipe\assetbundles\recipe;
 
 use Craft;
 use craft\web\AssetBundle;
