@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.1.2 - 2020.04.16
+### Fixed
+* Fixed Asset Bundle namespace case
+
 ## 1.1.1 - 2020.04.06
 ### Changed
 * An error is no longer logged if there isn't a frontend template for the Nutrition Facts
