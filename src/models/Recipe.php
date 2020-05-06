@@ -47,7 +47,7 @@ class Recipe extends Model
         'tsps' => 'tsp',
         'tbsps' => 'tbsp',
         'flozs' => 'floz',
-        'cups' => 'cup',
+        'cups' => 'cups',
         'ozs' => 'oz',
         'lbs' => 'lb',
         'mls' => 'ml',
