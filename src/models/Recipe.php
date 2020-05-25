@@ -47,7 +47,7 @@ class Recipe extends Model
         'tsps' => 'tsp',
         'tbsps' => 'tbsp',
         'flozs' => 'floz',
-        'cups' => 'c',
+        'cups' => 'cups',
         'ozs' => 'oz',
         'lbs' => 'lb',
         'mls' => 'ml',
@@ -381,7 +381,7 @@ class Recipe extends Model
                                 $quantity *= 0.2;
                                 break;
                             case 'l':
-                                $convertedUnits = 'c';
+                                $convertedUnits = 'cups';
                                 $quantity *= 4.2;
                                 break;
                             case 'mg':
@@ -413,7 +413,7 @@ class Recipe extends Model
                                 $convertedUnits = 'ml';
                                 $quantity *= 29.574;
                                 break;
-                            case 'c':
+                            case 'cups':
                                 $convertedUnits = 'l';
                                 $quantity *= 0.236588;
                                 break;
@@ -520,7 +520,7 @@ class Recipe extends Model
                     . '</sub>';
                 break;
         }
-        if ($whole === 0) {
+        if ($whole == 0) {
             $whole = '';
         }
 

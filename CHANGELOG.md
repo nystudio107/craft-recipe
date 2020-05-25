@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 1.1.3 - 2020.05.25
+### Fixed
+* Add plural for grams and remove cups abreviation
+* Correct prefix of 0 for measurements and use 'cups' instead of c
+
 ## 1.1.2 - 2020.04.16
 ### Fixed
 * Fixed Asset Bundle namespace case
