@@ -1,0 +1,189 @@
+{# ------------------------ #}
+{# Available Variables #}
+{# ------------------------ #}
+{# Attributes: #}
+{# type, name, handle, instructions, attribute, default, feed, feedData #}
+{# ------------------------ #}
+{# Fields: #}
+{# name, handle, instructions, feed, feedData, field, fieldClass #}
+{# ------------------------ #}
+
+{% import 'feed-me/_macros' as feedMeMacro %}
+{% import '_includes/forms' as forms %}
+
+{# Special case when inside another complex field (Matrix) #}
+{% if parentPath is defined %}
+    {% set prefixPath = parentPath %}
+{% else %}
+    {% set prefixPath = [handle] %}
+{% endif %}
+
+{% set classes = ['complex-field'] %}
+
+<tr class="complex-field complex-field-header">
+    <td class="col-field" colspan="3">
+        <div class="field">
+            <div class="heading">
+                <label class="">{{ name }}</label>
+            </div>
+
+            <div class="additional-mapping-fields">
+                {% namespace 'fieldMapping[' ~ prefixPath | join('][') ~ ']' %}
+                    <input type="text" name="field" value="{{ className(field) }}">
+                {% endnamespace %}
+            </div>
+        </div>
+    </td>
+</tr>
+
+{% set subfields = [
+    { label: 'Recipe Name', handle: 'name' },
+    { label: 'Recipe Description', handle: 'description' },
+    { label: 'Recipe Skill', handle: 'skill', default: {
+        type: 'select',
+        options: [
+            { label: 'Don\'t import', value: '' },
+            { label: 'Beginner', value: 'beginner' },
+            { label: 'Intermediate', value: 'intermediate' },
+            { label: 'Advanced', value: 'advanced' },
+        ],
+    } },
+    { label: 'Recipe Serves', handle: 'serves' },
+    { label: 'Recipe Image', handle: 'imageId', default: {
+        type: 'elementselect',
+        options: {
+            limit: 1,
+            elementType: 'craft\\elements\\Asset',
+            selectionLabel: "Default Asset" | t('feed-me'),
+        },
+    } },
+    { label: 'Recipe Ingredients', handle: 'ingredients', type: 'table', default: false, cols: {
+        quantity: {
+            heading: "Quantity" |t,
+        },
+        units: {
+            heading: "Units" |t,
+            default: {
+                type: "select" |t,
+                options: {
+                    "": "",
+                    "tsp": "teaspoons" |t,
+                    "tbsp": "tablespoons" |t,
+                    "floz": "fluid ounces" |t,
+                    "cups": "cups" |t,
+                    "oz": "ounces" |t,
+                    "lb": "pounds" |t,
+                    "ml": "milliliters" |t,
+                    "l": "liters" |t,
+                    "mg": "milligram" |t,
+                    "g": "grams" |t,
+                    "kg": "kilograms" |t,
+                },
+            },
+        },
+        ingredient: {
+            heading: "Ingredient" |t,
+        },
+    }, },
+    { label: 'Recipe Directions', handle: 'directions', type: 'table', default: false, cols: {
+        direction: {
+            heading: "Direction" |t,
+        },
+    }, },
+    { label: 'Recipe Prep Time', handle: 'prepTime' },
+    { label: 'Recipe Cook Time', handle: 'cookTime' },
+    { label: 'Recipe Total Time', handle: 'totalTime' },
+
+    { label: 'Recipe Ratings', handle: 'ratings', type: 'table', default: false, cols: {
+        rating: {
+            heading: "Rating" |t,
+            default: {
+                type: "select" |t,
+                options: {
+                    "5": "5 Stars" |t,
+                    "4": "4 Stars" |t,
+                    "3": "3 Stars" |t,
+                    "2": "2 Stars" |t,
+                    "1": "1 Star" |t,
+                }
+            },
+        },
+        review: {
+            heading: "Review" |t,
+        },
+        author: {
+            heading: "Author" |t,
+        },
+    }, },
+
+    { label: 'Recipe Serving Size', handle: 'servingSize' },
+    { label: 'Recipe Calories', handle: 'calories' },
+    { label: 'Recipe Carbohydrate Content', handle: 'carbohydrateContent' },
+    { label: 'Recipe Cholesterol Content', handle: 'cholesterolContent' },
+    { label: 'Recipe Fat Content', handle: 'fatContent' },
+    { label: 'Recipe Fiber Content', handle: 'fiberContent' },
+    { label: 'Recipe Protein Content', handle: 'proteinContent' },
+    { label: 'Recipe Saturated Fat Content', handle: 'saturatedFatContent' },
+    { label: 'Recipe Sodium Content', handle: 'sodiumContent' },
+    { label: 'Recipe Sugar Content', handle: 'sugarContent' },
+    { label: 'Recipe Trans Fat Content', handle: 'transFatContent' },
+    { label: 'Recipe Unsaturated Fat Content', handle: 'unsaturatedFatContent' },
+] %}
+
+{% for subfield in subfields %}
+    {% set nameLabel = subfield.label %}
+    {% set instructionsHandle = handle ~ '[' ~ subfield.handle ~ ']' %}
+
+    {% set path = prefixPath | merge ([ 'fields', subfield.handle ]) %}
+
+    {% set default = subfield.default ?? {
+        type: 'text',
+    } %}
+
+    {% set type = subfield.type ?? '_base' %}
+
+    {% if type == 'table' %}
+        {% set columns = subfield.cols ?? {} %}
+
+        <tr class="complex-field complex-field-header">
+            <td class="col-field" colspan="3">
+                <div class="field">
+                    <div class="heading">
+                        <label class="">{{ nameLabel }}</label>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        {% for colHandle, col in columns %}
+            {% set path = prefixPath | merge ([ 'fields', subfield.handle, 'fields', colHandle ]) %}
+
+            {% set nameLabel = subfield.label ~ ': ' ~ col.heading %}
+            {% set instructionsHandle = handle ~ '[' ~ subfield.handle ~ ']' ~ '[' ~ colHandle ~ ']' %}
+
+            {% set default = col.default ?? {
+                type: 'text',
+            } %}
+
+            {% embed 'feed-me/_includes/fields/_base' %}
+                {% block additionalFieldSettings %}
+
+                {% endblock %}
+
+                {% block fieldSettings %}
+
+                {% endblock %}
+            {% endembed %}
+        {% endfor %}
+    {% else %}
+        {% embed 'feed-me/_includes/fields/_base' %}
+            {% block additionalFieldSettings %}
+                
+            {% endblock %}
+
+            {% block fieldSettings %}
+
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+{% endfor %}
