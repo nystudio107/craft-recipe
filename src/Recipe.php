@@ -20,7 +20,8 @@ use craft\services\Plugins;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\PluginEvent;
 use craft\helpers\UrlHelper;
-use nystudio107\recipe\integrations\feedme\Recipe as RecipeField;
+use nystudio107\recipe\fields\Recipe as RecipeField;
+use nystudio107\recipe\integrations\feedme\Recipe as RecipeFeedMe;
 use yii\base\Event;
 
 /**
@@ -98,7 +99,7 @@ class Recipe extends Plugin
             FeedMeFields::class,
             FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS,
             function(RegisterFeedMeFieldsEvent $event) {
-                $event->fields[] = RecipeField::class;
+                $event->fields[] = RecipeFeedMe::class;
             }
         );
     }
