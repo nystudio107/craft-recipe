@@ -1,0 +1,164 @@
+{# ------------------------ #}
+{# Available Variables #}
+{# ------------------------ #}
+{# Attributes: #}
+{# type, name, handle, instructions, attribute, default, feed, feedData #}
+{# ------------------------ #}
+{# Fields: #}
+{# name, handle, instructions, feed, feedData, field, fieldClass #}
+{# ------------------------ #}
+
+{% import 'feed-me/_macros' as feedMeMacro %}
+{% import '_includes/forms' as forms %}
+
+{# Special case when inside another complex field (Matrix) #}
+{% if parentPath is defined %}
+    {% set prefixPath = parentPath %}
+{% else %}
+    {% set prefixPath = [handle] %}
+{% endif %}
+
+{% set classes = ['complex-field'] %}
+
+<tr class="complex-field complex-field-header">
+    <td class="col-field" colspan="3">
+        <div class="field">
+            <div class="heading">
+                <label class="">{{ name }}</label>
+            </div>
+
+            <div class="additional-mapping-fields">
+                {% namespace 'fieldMapping[' ~ prefixPath | join('][') ~ ']' %}
+                    <input type="text" name="field" value="{{ className(field) }}">
+                {% endnamespace %}
+            </div>
+        </div>
+    </td>
+</tr>
+
+{% set subFields = [
+    {
+        label: 'Name',
+        handle: 'name',
+    },
+    {
+        label: 'Description',
+        handle: 'description',
+    },
+    {
+        label: 'Skill',
+        handle: 'skill',
+    },
+    {
+        label: 'Serves',
+        handle: 'serves',
+    },
+    {
+        label: 'Image',
+        handle: 'image',
+        type: 'assets-create',
+    },
+    {
+        label: 'Ingredients : Quantity',
+        handle: 'ingredientsquantity',
+    },
+    {
+        label: 'Ingredients : Units',
+        handle: 'ingredientsunits',
+    },
+    {
+        label: 'Ingredients : Ingredient',
+        handle: 'ingredientsingredient',
+    },
+    {
+        label: 'Directions',
+        handle: 'directions',
+    },
+    {
+        label: 'Prep Time',
+        handle: 'prepTime',
+    },
+    {
+        label: 'Cook Time',
+        handle: 'cookTime',
+    },
+    {
+        label: 'Total Time',
+        handle: 'totalTime',
+    },
+    {
+        label: 'Ratings',
+        handle: 'ratings',
+    },
+    {
+        label: 'Serving Size',
+        handle: 'servingSize',
+    },
+    {
+        label: 'Calories',
+        handle: 'calories',
+    },
+    {
+        label: 'Carbohydrate Content',
+        handle: 'carbohydrateContent',
+    },
+    {
+        label: 'Cholesterol Content',
+        handle: 'cholesterolContent',
+    },
+    {
+        label: 'Fat Content',
+        handle: 'fatContent',
+    },
+    {
+        label: 'Fiber Content',
+        handle: 'fiberContent',
+    },
+    {
+        label: 'Protein Content',
+        handle: 'proteinContent',
+    },
+    {
+        label: 'Saturated Fat Content',
+        handle: 'saturatedFatContent',
+    },
+    {
+        label: 'Sodium Content',
+        handle: 'sodiumContent',
+    },
+    {
+        label: 'Sugar Content',
+        handle: 'sugarContent',
+    },
+    {
+        label: 'Trans Fat Content',
+        handle: 'transFatContent',
+    },
+    {
+        label: 'Unsaturated Fat Content',
+        handle: 'unsaturatedFatContent',
+    },
+] %}
+
+{% for subField in subFields %}
+    {% set nameLabel = 'Recipe ' ~ subField.label %}
+    {% set instructionsHandle = subField.instructions ?? '' %}
+
+    {% set path = prefixPath | merge ([ 'fields', subField.handle ]) %}
+
+    {% set default = subField.default ?? {
+        type: 'text',
+    } %}
+
+    {% set type = subField.type ?? '_base' %}
+
+    {% embed 'feed-me/_includes/fields/' ~ type %}
+        {% block additionalFieldSettings %}
+
+        {% endblock %}
+
+        {% block fieldSettings %}
+
+        {% endblock %}
+    {% endembed %}
+{% endfor %}

@@ -11,15 +11,16 @@
 
 namespace nystudio107\recipe;
 
-use nystudio107\recipe\fields\Recipe as RecipeField;
-
 use Craft;
 use craft\base\Plugin;
+use craft\feedme\events\RegisterFeedMeFieldsEvent;
+use craft\feedme\services\Fields as FeedMeFields;
 use craft\services\Fields;
 use craft\services\Plugins;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\PluginEvent;
 use craft\helpers\UrlHelper;
+use nystudio107\recipe\integrations\feedme\Recipe as RecipeField;
 use yii\base\Event;
 
 /**
@@ -71,6 +72,8 @@ class Recipe extends Plugin
             }
         );
 
+        $this->_registerFeedMeEvents();
+
         Craft::info(
             Craft::t(
                 'recipe',
@@ -78,6 +81,25 @@ class Recipe extends Plugin
                 ['name' => $this->name]
             ),
             __METHOD__
+        );
+    }
+
+    /**
+     * Registers FeedMe events if installed.
+     */
+    private function _registerFeedMeEvents()
+    {
+        if (!Craft::$app->plugins->isPluginInstalled('feed-me')) {
+            return;
+        }
+
+        // Register the recipe field
+        Event::on(
+            FeedMeFields::class,
+            FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS,
+            function(RegisterFeedMeFieldsEvent $event) {
+                $event->fields[] = RecipeField::class;
+            }
         );
     }
 }
