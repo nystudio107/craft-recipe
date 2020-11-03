@@ -44,7 +44,7 @@ class RecipeFeedMeField extends Field implements FieldInterface
             if ($subfields) {
                 foreach ($subfields as $subSubFieldHandle => $subSubFieldInfo) {
                     // Handle array data, man I hate Feed Me's data mapping now...
-                    $content = DataHelper::fetchValue($this->feedData, $subSubFieldInfo);
+                    $content = DataHelper::fetchArrayValue($this->feedData, $subSubFieldInfo);
 
                     if (is_array($content)) {
                         foreach ($content as $key => $value) {
