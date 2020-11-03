@@ -57,6 +57,21 @@
             selectionLabel: "Default Asset" | t('feed-me'),
         },
     } },
+    { label: 'Recipe Prep Time', handle: 'prepTime' },
+    { label: 'Recipe Cook Time', handle: 'cookTime' },
+    { label: 'Recipe Total Time', handle: 'totalTime' },
+    { label: 'Recipe Serving Size', handle: 'servingSize' },
+    { label: 'Recipe Calories', handle: 'calories' },
+    { label: 'Recipe Carbohydrate Content', handle: 'carbohydrateContent' },
+    { label: 'Recipe Cholesterol Content', handle: 'cholesterolContent' },
+    { label: 'Recipe Fat Content', handle: 'fatContent' },
+    { label: 'Recipe Fiber Content', handle: 'fiberContent' },
+    { label: 'Recipe Protein Content', handle: 'proteinContent' },
+    { label: 'Recipe Saturated Fat Content', handle: 'saturatedFatContent' },
+    { label: 'Recipe Sodium Content', handle: 'sodiumContent' },
+    { label: 'Recipe Sugar Content', handle: 'sugarContent' },
+    { label: 'Recipe Trans Fat Content', handle: 'transFatContent' },
+    { label: 'Recipe Unsaturated Fat Content', handle: 'unsaturatedFatContent' },
     { label: 'Recipe Ingredients', handle: 'ingredients', type: 'table', default: false, cols: {
         quantity: {
             heading: "Quantity" |t,
@@ -90,10 +105,6 @@
             heading: "Direction" |t,
         },
     }, },
-    { label: 'Recipe Prep Time', handle: 'prepTime' },
-    { label: 'Recipe Cook Time', handle: 'cookTime' },
-    { label: 'Recipe Total Time', handle: 'totalTime' },
-
     { label: 'Recipe Ratings', handle: 'ratings', type: 'table', default: false, cols: {
         rating: {
             heading: "Rating" |t,
@@ -115,19 +126,6 @@
             heading: "Author" |t,
         },
     }, },
-
-    { label: 'Recipe Serving Size', handle: 'servingSize' },
-    { label: 'Recipe Calories', handle: 'calories' },
-    { label: 'Recipe Carbohydrate Content', handle: 'carbohydrateContent' },
-    { label: 'Recipe Cholesterol Content', handle: 'cholesterolContent' },
-    { label: 'Recipe Fat Content', handle: 'fatContent' },
-    { label: 'Recipe Fiber Content', handle: 'fiberContent' },
-    { label: 'Recipe Protein Content', handle: 'proteinContent' },
-    { label: 'Recipe Saturated Fat Content', handle: 'saturatedFatContent' },
-    { label: 'Recipe Sodium Content', handle: 'sodiumContent' },
-    { label: 'Recipe Sugar Content', handle: 'sugarContent' },
-    { label: 'Recipe Trans Fat Content', handle: 'transFatContent' },
-    { label: 'Recipe Unsaturated Fat Content', handle: 'unsaturatedFatContent' },
 ] %}
 
 {% for subfield in subfields %}
@@ -178,7 +176,7 @@
     {% else %}
         {% embed 'feed-me/_includes/fields/_base' %}
             {% block additionalFieldSettings %}
-                
+
             {% endblock %}
 
             {% block fieldSettings %}
