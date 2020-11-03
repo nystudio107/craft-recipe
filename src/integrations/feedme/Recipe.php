@@ -12,7 +12,6 @@
 namespace nystudio107\recipe\integrations\feedme;
 
 use Cake\Utility\Hash;
-use Craft;
 use craft\feedme\base\Field;
 use craft\feedme\base\FieldInterface;
 use craft\feedme\helpers\DataHelper;
@@ -43,9 +42,19 @@ class Recipe extends Field implements FieldInterface
             return null;
         }
 
-        Craft::dd($fields);
         foreach ($fields as $fieldHandle => $fieldInfo) {
-            $preppedData[$fieldHandle] = DataHelper::fetchValue($this->feedData, $fieldInfo);
+            if (empty($fieldInfo['field'])) {
+                foreach ($fieldInfo as $subFieldHandle => $subFieldInfo) {
+                    $rows = DataHelper::fetchArrayValue($this->feedData, $subFieldInfo);
+
+                    foreach ($rows as $key => $value) {
+                        $preppedData[$fieldHandle][$key][$subFieldHandle] = $value;
+                    }
+                }
+            }
+            else {
+                $preppedData[$fieldHandle] = DataHelper::fetchValue($this->feedData, $fieldInfo);
+            }
         }
 
         // Protect against sending an empty array

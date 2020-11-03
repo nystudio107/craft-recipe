@@ -8,9 +8,6 @@
 {# name, handle, instructions, feed, feedData, field, fieldClass #}
 {# ------------------------ #}
 
-{% import 'feed-me/_macros' as feedMeMacro %}
-{% import '_includes/forms' as forms %}
-
 {# Special case when inside another complex field (Matrix) #}
 {% if parentPath is defined %}
     {% set prefixPath = parentPath %}
@@ -59,20 +56,32 @@
         type: 'assets-create',
     },
     {
-        label: 'Ingredients : Quantity',
-        handle: 'ingredientsquantity',
-    },
-    {
-        label: 'Ingredients : Units',
-        handle: 'ingredientsunits',
-    },
-    {
-        label: 'Ingredients : Ingredient',
-        handle: 'ingredientsingredient',
+        label: 'Ingredients',
+        handle: 'ingredients',
+        subFields: [
+            {
+                label: 'Quantity',
+                handle: 'quantity',
+            },
+            {
+                label: 'Units',
+                handle: 'units',
+            },
+            {
+                label: 'Ingredient',
+                handle: 'ingredient',
+            },
+        ],
     },
     {
         label: 'Directions',
         handle: 'directions',
+        subFields: [
+            {
+                label: 'Direction',
+                handle: 'direction',
+            },
+        ],
     },
     {
         label: 'Prep Time',
@@ -89,6 +98,20 @@
     {
         label: 'Ratings',
         handle: 'ratings',
+        subFields: [
+            {
+                label: 'Rating',
+                handle: 'rating',
+            },
+            {
+                label: 'Review',
+                handle: 'review',
+            },
+            {
+                label: 'Author',
+                handle: 'author',
+            },
+        ],
     },
     {
         label: 'Serving Size',
@@ -140,25 +163,32 @@
     },
 ] %}
 
+
 {% for subField in subFields %}
-    {% set nameLabel = 'Recipe ' ~ subField.label %}
-    {% set instructionsHandle = subField.instructions ?? '' %}
+    {% if subField.subFields is defined %}
+        {% for subSubField in subField.subFields %}
+            {% set nameLabel = subField.label ~ ' ' ~ subSubField.label %}
+            {% set instructionsHandle = handle ~ '[' ~ subField.handle ~ ']' ~ '[' ~ subSubField.handle ~ ']' %}
 
-    {% set path = prefixPath | merge ([ 'fields', subField.handle ]) %}
+            {% set path = prefixPath | merge ([ 'fields', subField.handle, subSubField.handle ]) %}
 
-    {% set default = subField.default ?? {
-        type: 'text',
-    } %}
+            {% set default = subField.default ?? {
+                type: 'text',
+            } %}
 
-    {% set type = subField.type ?? '_base' %}
+            {% embed 'feed-me/_includes/fields/_base' %}{% endembed %}
+        {% endfor %}
+    {% else %}
+        {% set nameLabel = subField.label %}
+        {% set instructionsHandle = handle ~ '[' ~ subField.handle ~ ']' %}
 
-    {% embed 'feed-me/_includes/fields/' ~ type %}
-        {% block additionalFieldSettings %}
+        {% set pathFields = subField.handle ? [ 'fields', subField.handle ] : [ 'fields', subField.handle, subField.handle ] %}
+        {% set path = prefixPath | merge (pathFields) %}
 
-        {% endblock %}
+        {% set default = subField.default ?? {
+            type: 'text',
+        } %}
 
-        {% block fieldSettings %}
-
-        {% endblock %}
-    {% endembed %}
+        {% embed 'feed-me/_includes/fields/_base' %}{% endembed %}
+    {% endif %}
 {% endfor %}

@@ -2,7 +2,7 @@
 
 ## 1.2.0 - Unreleased
 ### Added
-* Added support for importing recipes using Feed Me.
+* Added support for importing recipes (including ingredients, directions and ratings) using Feed Me.
 
 ## 1.1.3 - 2020.05.25
 ### Fixed
