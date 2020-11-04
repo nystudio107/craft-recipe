@@ -52,7 +52,7 @@
                 });
 
                 // Fetch nutritional info handler
-                $('.fetch-nutritional-info a').on('click', function(e) {
+                $('.fetch-nutritional-info button').on('click', function(e) {
                     e.preventDefault();
                     if ($(this).hasClass('disabled')) {
                         return;
@@ -70,13 +70,13 @@
                         serves: $('#fields-recipeserves').val(),
                         ingredients: ingredients,
                     };
-                    $('.fetch-nutritional-info a').addClass('disabled');
+                    $('.fetch-nutritional-info button').addClass('disabled');
                     $('.fetch-nutritional-info .spinner').removeClass('hidden');
                     $.getJSON($(this).attr('data-url'), recipe, function(data) {
                         $.each(data, function(index, value) {
                             $('#fields-recipe' + index).val(value);
                         });
-                        $('.fetch-nutritional-info a').removeClass('disabled');
+                        $('.fetch-nutritional-info button').removeClass('disabled');
                         $('.fetch-nutritional-info .spinner').addClass('hidden');
                     });
                 });
