@@ -21,6 +21,8 @@ use craft\services\Plugins;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\PluginEvent;
 use craft\helpers\UrlHelper;
+use nystudio107\recipe\models\Settings;
+use nystudio107\recipe\services\NutritionApi;
 use yii\base\Event;
 
 use craft\feedme\events\RegisterFeedMeFieldsEvent;
@@ -32,6 +34,9 @@ use craft\feedme\services\Fields as FeedMeFields;
  * @author    nystudio107
  * @package   Recipe
  * @since     1.0.0
+ *
+ * @property NutritionApi $nutritionApi
+ * @property Settings $settings
  */
 class Recipe extends Plugin
 {
@@ -53,6 +58,11 @@ class Recipe extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+
+        // Register services
+        $this->setComponents([
+            'nutritionApi' => NutritionApi::class,
+        ]);
 
         // Register our Field
         Event::on(
@@ -91,5 +101,13 @@ class Recipe extends Plugin
             ),
             __METHOD__
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createSettingsModel(): Settings
+    {
+        return new Settings();
     }
 }
