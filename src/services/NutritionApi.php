@@ -13,7 +13,7 @@ namespace nystudio107\recipe\services;
 
 use Craft;
 use craft\base\Component;
-use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use nystudio107\recipe\Recipe;
 
 /**
@@ -26,65 +26,57 @@ class NutritionApi extends Component
     /**
      * Returns nutritional information about a recipe.
      *
+     * @param string $name
+     * @param int $serves
      * @param array $ingredients
-     * @param int|null $serves
+     *
      * @return array
      */
-    public function getNutritionalInfo(array $ingredients, int $serves = null): array
+    public function getNutritionalInfo(string $name, int $serves, array $ingredients): array
     {
         if (Recipe::$plugin->settings->hasApiCredentials() === false) {
             return [];
         }
 
         $url = 'https://api.edamam.com/api/nutrition-details'
-            .'?app_id='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationId)
-            .'&app_key='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationKey);
+            .'?app_id='.Recipe::$plugin->settings->apiApplicationId
+            .'&app_key='.Recipe::$plugin->settings->apiApplicationKey;
 
         $data = [
+            'title' => $name,
+            'yield' => $serves,
             'ingr' => $ingredients,
         ];
 
-        if ($serves) {
-            $data['yield'] = $serves;
-        }
-
         try {
-            $response = Craft::createGuzzleClient()->post($url, ['json' => $data]);
+            $response = Craft::createGuzzleClient()
+                ->post($url, ['json' => $data]);
 
             $result = json_decode($response->getBody());
 
-            $yield = $result->yield ?: 1;
-
-            return [
-                'servingSize' => round($result->totalWeight / $yield, 0).' grams',
-                'calories' => round($result->totalNutrients->ENERC_KCAL->quantity / $yield, 0),
-                'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity / $yield, 1),
-                'cholesterolContent' => round($result->totalNutrients->CHOLE->quantity / $yield, 1),
-                'fatContent' => round($result->totalNutrients->FAT->quantity / $yield, 1),
-                'fiberContent' => round($result->totalNutrients->FIBTG->quantity / $yield, 1),
-                'proteinContent' => round($result->totalNutrients->PROCNT->quantity / $yield, 1),
-                'saturatedFatContent' => round($result->totalNutrients->FASAT->quantity / $yield, 1),
-                'sodiumContent' => round($result->totalNutrients->NA->quantity / $yield, 1),
-                'sugarContent' => round($result->totalNutrients->SUGAR->quantity / $yield, 1),
-                'transFatContent' => round($result->totalNutrients->FATRN->quantity / $yield, 1),
-                'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity) / $yield, 1),
+            $nutritionalInfo = [
+                'calories' => $result->totalNutrients->ENERC_KCAL->quantity,
+                'carbohydrateContent' => $result->totalNutrients->CHOCDF->quantity,
+                'cholesterolContent' => $result->totalNutrients->CHOLE->quantity,
+                'fatContent' => $result->totalNutrients->FAT->quantity,
+                'fiberContent' => $result->totalNutrients->FIBTG->quantity,
+                'saturatedFatContent' => $result->totalNutrients->FASAT->quantity,
+                'sodiumContent' => $result->totalNutrients->NA->quantity,
+                'sugarContent' => $result->totalNutrients->SUGAR->quantity,
+                'transFatContent' => $result->totalNutrients->FATRN->quantity,
+                'unsaturatedFatContent' => $result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity,
             ];
-        }
-        catch (Exception $exception) {
-            $message = 'Error fetching nutritional information from API. ';
 
-            switch ($exception->getCode()) {
-                case 401:
-                    $message .= 'Please verify your API credentials.';
-                    break;
-                case 555:
-                    $message .= 'One or more ingredients could not be recognized.';
-                    break;
+            foreach ($nutritionalInfo as $key => $value) {
+                $nutritionalInfo[$key] = round($value / $serves);
             }
 
-            Craft::error($message.$exception->getMessage(), __METHOD__);
+            $nutritionalInfo['servingSize'] = $result->totalWeight ? $result->totalWeight.' grams' : '';
 
-            return ['error' => $message];
+            return $nutritionalInfo;
+        }
+        catch (GuzzleException $exception) {
+            return [];
         }
     }
 }

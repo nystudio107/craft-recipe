@@ -14,7 +14,6 @@ namespace nystudio107\recipe\controllers;
 use Craft;
 use craft\web\Controller;
 use nystudio107\recipe\Recipe;
-use yii\web\BadRequestHttpException;
 
 /**
  * @author    nystudio107
@@ -25,23 +24,17 @@ class NutritionApiController extends Controller
 {
     /**
      * Returns nutritional information about a recipe.
-     *
-     * @throws BadRequestHttpException
      */
     public function actionGetNutritionalInfo()
     {
         $this->requireAcceptsJson();
 
-        $ingredients = Craft::$app->getRequest()->getParam('ingredients');
-        $serves = Craft::$app->getRequest()->getParam('serves');
+        $request = Craft::$app->getRequest();
+        $name = $request->getRequiredParam('name');
+        $serves = $request->getRequiredParam('serves');
+        $ingredients = $request->getRequiredParam('ingredients');
 
-        if (empty($ingredients)) {
-            return $this->asJson([
-                'error' => 'Please provide some ingredients first.'
-            ]);
-        }
-
-        $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($ingredients, $serves);
+        $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($name, $serves, $ingredients);
 
         return $this->asJson($nutritionalInfo);
     }
