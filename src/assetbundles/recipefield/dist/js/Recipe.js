@@ -70,7 +70,7 @@
                     $('.fetch-nutritional-info .spinner').removeClass('hidden');
 
                     Craft.postActionRequest('recipe/nutrition-api/get-nutritional-info',
-                        { ingredients: ingredients },
+                        {ingredients: ingredients},
                         function(response) {
                             if (typeof response.error !== 'undefined') {
                                 Craft.cp.displayError(response.error);
