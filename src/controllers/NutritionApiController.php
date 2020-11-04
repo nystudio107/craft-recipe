@@ -29,12 +29,9 @@ class NutritionApiController extends Controller
     {
         $this->requireAcceptsJson();
 
-        $request = Craft::$app->getRequest();
-        $name = $request->getRequiredParam('name');
-        $serves = $request->getRequiredParam('serves');
-        $ingredients = $request->getRequiredParam('ingredients');
+        $ingredients = Craft::$app->getRequest()->getRequiredParam('ingredients');
 
-        $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($name, $serves, $ingredients);
+        $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($ingredients);
 
         return $this->asJson($nutritionalInfo);
     }
