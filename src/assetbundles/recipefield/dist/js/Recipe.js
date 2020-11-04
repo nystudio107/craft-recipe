@@ -51,6 +51,36 @@
                     Garnish.$doc.trigger('scroll');
                 });
 
+                // Fetch nutritional info handler
+                $('.fetch-nutritional-info a').on('click', function(e) {
+                    e.preventDefault();
+                    if ($(this).hasClass('disabled')) {
+                        return;
+                    }
+                    var ingredients = [];
+                    $('#fields-recipeingredients tbody tr').each(function() {
+                        var ingredient = [];
+                        $(this).find('textarea, select').each(function() {
+                            ingredient.push($(this).val());
+                        })
+                        ingredients.push(ingredient.join(' '));
+                    });
+                    var recipe = {
+                        name: $('#fields-recipename').val(),
+                        serves: $('#fields-recipeserves').val(),
+                        ingredients: ingredients,
+                    };
+                    $('.fetch-nutritional-info a').addClass('disabled');
+                    $('.fetch-nutritional-info .spinner').removeClass('hidden');
+                    $.getJSON($(this).attr('data-url'), recipe, function(data) {
+                        $.each(data, function(index, value) {
+                            $('#fields-recipe' + index).val(value);
+                        });
+                        $('.fetch-nutritional-info a').removeClass('disabled');
+                        $('.fetch-nutritional-info .spinner').addClass('hidden');
+                    });
+                });
+
             });
         }
     };
