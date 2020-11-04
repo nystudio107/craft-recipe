@@ -65,22 +65,27 @@
                         })
                         ingredients.push(ingredient.join(' '));
                     });
-                    var recipe = {
-                        name: $('#fields-recipename').val(),
-                        serves: $('#fields-recipeserves').val(),
-                        ingredients: ingredients,
-                    };
+
                     $('.fetch-nutritional-info button').addClass('disabled');
                     $('.fetch-nutritional-info .spinner').removeClass('hidden');
-                    $.getJSON($(this).attr('data-url'), recipe, function(data) {
-                        $.each(data, function(index, value) {
-                            $('#fields-recipe' + index).val(value);
-                        });
-                        $('.fetch-nutritional-info button').removeClass('disabled');
-                        $('.fetch-nutritional-info .spinner').addClass('hidden');
-                    });
-                });
 
+                    Craft.postActionRequest('recipe/nutrition-api/get-nutritional-info',
+                        { ingredients: ingredients },
+                        function(response) {
+                            if (typeof response.error !== 'undefined') {
+                                Craft.cp.displayError(response.error);
+                            }
+                            else {
+                                $.each(response, function(index, value) {
+                                    $('#fields-recipe' + index).val(value);
+                                });
+                            }
+
+                            $('.fetch-nutritional-info button').removeClass('disabled');
+                            $('.fetch-nutritional-info .spinner').addClass('hidden');
+                        }
+                    );
+                });
             });
         }
     };
