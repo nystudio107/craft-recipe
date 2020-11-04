@@ -21,6 +21,7 @@ use craft\elements\Asset;
 use craft\helpers\Html;
 use craft\helpers\Json;
 
+use nystudio107\recipe\Recipe as RecipePlugin;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -155,6 +156,7 @@ class Recipe extends Field
                     'elements' => $elements,
                     'elementType' => Asset::class,
                     'assetSources' => $this->assetSources,
+                    'hasApiCredentials' => RecipePlugin::$plugin->settings->hasApiCredentials(),
                 ]
             );
         } catch (LoaderError $e) {
