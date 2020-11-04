@@ -50,28 +50,20 @@ class NutritionApi extends Component
 
             $result = json_decode($response->getBody());
 
-            $serves = $result->yield;
-
             $nutritionalInfo = [
-                'servingSize' => $result->totalWeight,
-                'calories' => $result->totalNutrients->ENERC_KCAL->quantity,
-                'carbohydrateContent' => $result->totalNutrients->CHOCDF->quantity,
-                'cholesterolContent' => $result->totalNutrients->CHOLE->quantity,
-                'fatContent' => $result->totalNutrients->FAT->quantity,
-                'fiberContent' => $result->totalNutrients->FIBTG->quantity,
-                'proteinContent' => $result->totalNutrients->PROCNT->quantity,
-                'saturatedFatContent' => $result->totalNutrients->FASAT->quantity,
-                'sodiumContent' => $result->totalNutrients->NA->quantity,
-                'sugarContent' => $result->totalNutrients->SUGAR->quantity,
-                'transFatContent' => $result->totalNutrients->FATRN->quantity,
-                'unsaturatedFatContent' => $result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity,
+                'servingSize' => round($result->totalWeight, 0).' grams',
+                'calories' => round($result->totalNutrients->ENERC_KCAL->quantity, 0),
+                'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity, 1),
+                'cholesterolContent' => round($result->totalNutrients->CHOLE->quantity, 1),
+                'fatContent' => round($result->totalNutrients->FAT->quantity, 1),
+                'fiberContent' => round($result->totalNutrients->FIBTG->quantity, 1),
+                'proteinContent' => round($result->totalNutrients->PROCNT->quantity, 1),
+                'saturatedFatContent' => round($result->totalNutrients->FASAT->quantity, 1),
+                'sodiumContent' => round($result->totalNutrients->NA->quantity, 1),
+                'sugarContent' => round($result->totalNutrients->SUGAR->quantity, 1),
+                'transFatContent' => round($result->totalNutrients->FATRN->quantity, 1),
+                'unsaturatedFatContent' => round($result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity, 1),
             ];
-
-            foreach ($nutritionalInfo as $key => $value) {
-                $nutritionalInfo[$key] = round($value / $serves);
-            }
-
-            $nutritionalInfo['servingSize'] = $nutritionalInfo['servingSize'] ? $nutritionalInfo['servingSize'].' grams' : '';
 
             return $nutritionalInfo;
         }
