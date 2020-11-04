@@ -39,8 +39,8 @@ class NutritionApi extends Component
         }
 
         $url = 'https://api.edamam.com/api/nutrition-details'
-            .'?app_id='.Recipe::$plugin->settings->apiApplicationId
-            .'&app_key='.Recipe::$plugin->settings->apiApplicationKey;
+            .'?app_id='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationId)
+            .'&app_key='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationKey);
 
         $data = [
             'title' => $name,
@@ -48,35 +48,31 @@ class NutritionApi extends Component
             'ingr' => $ingredients,
         ];
 
-        try {
-            $response = Craft::createGuzzleClient()
-                ->post($url, ['json' => $data]);
+        $response = Craft::createGuzzleClient()
+            ->post($url, ['json' => $data]);
 
-            $result = json_decode($response->getBody());
+        $result = json_decode($response->getBody());
 
-            $nutritionalInfo = [
-                'calories' => $result->totalNutrients->ENERC_KCAL->quantity,
-                'carbohydrateContent' => $result->totalNutrients->CHOCDF->quantity,
-                'cholesterolContent' => $result->totalNutrients->CHOLE->quantity,
-                'fatContent' => $result->totalNutrients->FAT->quantity,
-                'fiberContent' => $result->totalNutrients->FIBTG->quantity,
-                'saturatedFatContent' => $result->totalNutrients->FASAT->quantity,
-                'sodiumContent' => $result->totalNutrients->NA->quantity,
-                'sugarContent' => $result->totalNutrients->SUGAR->quantity,
-                'transFatContent' => $result->totalNutrients->FATRN->quantity,
-                'unsaturatedFatContent' => $result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity,
-            ];
+        $nutritionalInfo = [
+            'calories' => $result->totalNutrients->ENERC_KCAL->quantity,
+            'carbohydrateContent' => $result->totalNutrients->CHOCDF->quantity,
+            'cholesterolContent' => $result->totalNutrients->CHOLE->quantity,
+            'fatContent' => $result->totalNutrients->FAT->quantity,
+            'fiberContent' => $result->totalNutrients->FIBTG->quantity,
+            'proteinContent' => $result->totalNutrients->PROCNT->quantity,
+            'saturatedFatContent' => $result->totalNutrients->FASAT->quantity,
+            'sodiumContent' => $result->totalNutrients->NA->quantity,
+            'sugarContent' => $result->totalNutrients->SUGAR->quantity,
+            'transFatContent' => $result->totalNutrients->FATRN->quantity,
+            'unsaturatedFatContent' => $result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity,
+        ];
 
-            foreach ($nutritionalInfo as $key => $value) {
-                $nutritionalInfo[$key] = round($value / $serves);
-            }
-
-            $nutritionalInfo['servingSize'] = $result->totalWeight ? $result->totalWeight.' grams' : '';
-
-            return $nutritionalInfo;
+        foreach ($nutritionalInfo as $key => $value) {
+            $nutritionalInfo[$key] = round($value / $serves);
         }
-        catch (GuzzleException $exception) {
-            return [];
-        }
+
+        $nutritionalInfo['servingSize'] = $result->totalWeight ? $result->totalWeight.' grams' : '';
+
+        return $nutritionalInfo;
     }
 }
