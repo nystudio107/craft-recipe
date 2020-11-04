@@ -70,12 +70,6 @@ class NutritionApiController extends Controller
             return ExitCode::OK;
         }
 
-        if ($this->field === null) {
-            $this->stderr(Craft::t('recipe', 'A field handle must be provided using --field.').PHP_EOL, Console::FG_RED);
-
-            return ExitCode::OK;
-        }
-
         $entries = Entry::find()->section($this->section)->all();
 
         if (empty($entries)) {
@@ -88,19 +82,18 @@ class NutritionApiController extends Controller
         $count = 0;
         $failed = 0;
 
-        $this->stdout(Craft::t('recipe', 'Generating nutritional information for {count} entries...', ['count' => $total]).PHP_EOL, Console::FG_YELLOW);
+        $this->stdout(Craft::t('recipe', 'Generating nutrional information for {count} entries...', ['count' => $total]).PHP_EOL, Console::FG_YELLOW);
 
         Console::startProgress($count, $total, '', 0.8);
 
         foreach ($entries as $entry) {
-            $field = $entry->{$this->field};
-            $ingredients = $field->ingredients;
+            $ingredients = $entry->{$this->field}->ingredients;
 
             foreach ($ingredients as $key => $value) {
                 $ingredients[$key] = implode(' ', $value);
             }
 
-            $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($ingredients, $field->serves);
+            $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($ingredients);
 
             if (empty($nutritionalInfo['error'])) {
                 $recipe = $entry->{$this->field};
@@ -128,10 +121,10 @@ class NutritionApiController extends Controller
 
         $succeeded = $count - $failed;
 
-        $this->stdout(Craft::t('recipe', 'Successfully generated nutritional information for {count} entries.', ['count' => $succeeded]).PHP_EOL, Console::FG_GREEN);
+        $this->stdout(Craft::t('recipe', 'Successfully generated nutrional information for {count} entries.', ['count' => $succeeded]).PHP_EOL, Console::FG_GREEN);
 
         if ($failed > 0) {
-            $this->stderr(Craft::t('recipe', 'Failed to generate nutritional information for {count} entries.', ['count' => $failed]).PHP_EOL, Console::FG_RED);
+            $this->stderr(Craft::t('recipe', 'Failed to generate nutrional information for {count} entries.', ['count' => $failed]).PHP_EOL, Console::FG_RED);
         }
 
         return ExitCode::OK;
