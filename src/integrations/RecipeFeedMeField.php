@@ -1,4 +1,14 @@
 <?php
+/**
+ * Recipe plugin for Craft CMS 3.x
+ *
+ * A comprehensive recipe FieldType for Craft CMS that includes metric/imperial
+ * conversion, portion calculation, and JSON-LD microdata support
+ *
+ * @link      https://nystudio107.com
+ * @copyright Copyright (c) 2020 nystudio107
+ */
+
 namespace nystudio107\recipe\integrations;
 
 use Cake\Utility\Hash;
@@ -6,6 +16,11 @@ use craft\feedme\base\Field;
 use craft\feedme\base\FieldInterface;
 use craft\feedme\helpers\DataHelper;
 
+/**
+ * @author    nystudio107
+ * @package   Recipe
+ * @since     1.2.0
+ */
 class RecipeFeedMeField extends Field implements FieldInterface
 {
     // Properties
