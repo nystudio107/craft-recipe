@@ -1,5 +1,11 @@
 # Recipe Changelog
 
+## 1.3.0 - Unreleased
+### Added
+* Added the ability to fetch nutritional information from ingredients using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api).
+* Added plugin settings for configuring API credentials.
+* Added a console controller action that generates nutritional information for all entries in a section using the API.
+
 ## 1.2.0 - 2020.11.04
 ### Added
 * Added support for importing recipes (including ingredients, directions and ratings) using Feed Me.
