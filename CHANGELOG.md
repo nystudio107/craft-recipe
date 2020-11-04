@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.2.0 - 2020.11.04
+### Added
+* Added support for importing recipes (including ingredients, directions and ratings) using Feed Me.
+
 ## 1.1.3 - 2020.05.25
 ### Fixed
 * Add plural for grams and remove cups abreviation

@@ -162,4 +162,96 @@ Recipe can render JSON-LD microdata for you, which allows it to be displayed in 
 
 ![Screenshot](./resources/screenshots/recipe02.png)
 
+## Importing Recipes with Feed Me
+
+Recipes can be imported using the first-party [Feed Me](https://plugins.craftcms.com/feed-me) plugin by Pixel & Tonic. Ingredients, directions and ratings can be repeated as shown below.
+
+### XML
+
+```xml
+<Recipe>
+    <Name>Dough</Name>
+    <Description>Simple dough recipe.</Description>
+    <Ingredients>
+        <Row>
+            <Quantity>1</Quantity>
+            <Units>cups</Units>
+            <Ingredient>Lukewarm water</Ingredient>
+        </Row>
+        <Row>
+            <Quantity>0.5</Quantity>
+            <Units>cups</Units>
+            <Ingredient>Unsalted butter</Ingredient>
+        </Row>
+        <Row>
+            <Quantity>2</Quantity>
+            <Units>cups</Units>
+            <Ingredient>Flour</Ingredient>
+        </Row>
+    </Ingredients>
+    <Directions>
+        <Row>
+            <Direction>Mix and stir.</Direction>
+        </Row>
+    </Directions>
+    <Reviews>
+        <Row>
+            <Rating>5</Rating>
+            <Review>Works a charm.</Review>
+            <Author>Arthur</Author>
+        </Row>
+        <Row>
+            <Rating>3</Rating>
+            <Review>It's just dough.</Review>
+            <Author>Alanis</Author>
+        </Row>
+    </Reviews>
+</Recipe>
+```
+
+### JSON
+
+```json
+{
+    "Recipe": {
+        "Name": "Recipe #1",
+        "Description": "Simple dough recipe.",
+        "Ingredients": [
+            {
+                "Quantity": 1,
+                "Units": "cups",
+                "Ingredient": "Lukewarm water"
+            },
+            {
+                "Quantity": 0.5,
+                "Units": "cups",
+                "Ingredient": "Unsalted butter"
+            },
+            {
+                "Quantity": 2,
+                "Units": "cups",
+                "Ingredient": "Flour"
+            }
+        ],
+        "Directions": [
+            {
+                "Direction": "Mix and stir."
+            }
+        ],
+        "Ratings": [
+            {
+                "Rating": 5,
+                "Review": "Works a charm.",
+                "Author": "Arthur"
+            },
+            {
+                "Rating": 3,
+                "Review": "It's just dough.",
+                "Author": "Alanis"
+            }
+        ]
+    }
+}
+```
+
 Brought to you by [nystudio107](https://nystudio107.com)
