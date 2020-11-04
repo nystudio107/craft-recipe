@@ -110,4 +110,14 @@ class Recipe extends Plugin
     {
         return new Settings();
     }
+
+    /**
+     * @inheritdoc
+     */
+    protected function settingsHtml()
+    {
+        return Craft::$app->getView()->renderTemplate('recipe/settings', [
+            'settings' => $this->settings
+        ]);
+    }
 }
