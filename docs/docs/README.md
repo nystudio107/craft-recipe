@@ -203,7 +203,7 @@ Recipes can be imported using the first-party [Feed Me](https://plugins.craftcms
         <Row>
             <Rating>3</Rating>
             <Review>It's just dough.</Review>
-            <Author>Alanis</Author>
+            <Author>Alice</Author>
         </Row>
     </Reviews>
 </Recipe>
@@ -247,7 +247,7 @@ Recipes can be imported using the first-party [Feed Me](https://plugins.craftcms
             {
                 "Rating": 3,
                 "Review": "It's just dough.",
-                "Author": "Alanis"
+                "Author": "Alice"
             }
         ]
     }
@@ -260,13 +260,13 @@ Nutritional information for recipe ingredients can be fetched in the Nutrition t
 
 ![Screenshot](./resources/screenshots/recipe-api.png)
 
-A console command to generate nitritional information from the API for all entries in a specific section is also available.
+A console command to generate nutritional information from the API for all entries in a specific section is also available.
 
 ```sh
 ./craft recipe/nutrition-api/generate --section=recipes --field=recipe
 ```
 
-Both the `section` (section handle) and `field` (recipe field handle) options are required. Note that this command will overwrite the nitritional information for _every_ entry in the given section.
+Both the `section` (section handle) and `field` (recipe field handle) options are required. Note that this command will overwrite the nutritional information for _every_ entry in the given section.
 
 
 Brought to you by [nystudio107](https://nystudio107.com)
