@@ -20,6 +20,8 @@ use craft\feedme\helpers\DataHelper;
  * @author    nystudio107
  * @package   Recipe
  * @since     1.2.0
+ *
+ * @property-read string $mappingTemplate
  */
 class RecipeFeedMeField extends Field implements FieldInterface
 {
