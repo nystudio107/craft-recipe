@@ -254,4 +254,19 @@ Recipes can be imported using the first-party [Feed Me](https://plugins.craftcms
 }
 ```
 
+## Fetching Nutritional Information from an API
+
+Nutritional information for recipe ingredients can be fetched in the Nutrition tab using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api). You must first get an API application ID and key and enter them in the plugin settings. A `Fetch Nutritional Information` button will then appear in the `Nutrition` tab of the recipe field.
+
+![Screenshot](./resources/screenshots/recipe-api.png)
+
+A console command to generate nitritional information from the API for all entries in a specific section is also available.
+
+```sh
+./craft recipe/nutrition-api/generate --section=recipes --field=recipe
+```
+
+Both the `section` (section handle) and `field` (recipe field handle) options are required. Note that this command will overwrite the nitritional information for _every_ entry in the given section.
+
+
 Brought to you by [nystudio107](https://nystudio107.com)
