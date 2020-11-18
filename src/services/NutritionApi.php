@@ -50,7 +50,7 @@ class NutritionApi extends Component
 
             $result = json_decode($response->getBody());
 
-            $nutritionalInfo = [
+            return [
                 'servingSize' => round($result->totalWeight, 0).' grams',
                 'calories' => round($result->totalNutrients->ENERC_KCAL->quantity, 0),
                 'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity, 1),
@@ -64,8 +64,6 @@ class NutritionApi extends Component
                 'transFatContent' => round($result->totalNutrients->FATRN->quantity, 1),
                 'unsaturatedFatContent' => round($result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity, 1),
             ];
-
-            return $nutritionalInfo;
         }
         catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';
@@ -73,9 +71,10 @@ class NutritionApi extends Component
             switch ($exception->getCode()) {
                 case 401:
                     $message .= 'Please verify your API credentials.';
-
+                    break;
                 case 555:
                     $message .= 'One or more ingredients could not be recognized.';
+                    break;
             }
 
             Craft::error($message.$exception->getMessage(), __METHOD__);
