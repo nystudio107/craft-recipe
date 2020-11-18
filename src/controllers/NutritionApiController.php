@@ -14,6 +14,7 @@ namespace nystudio107\recipe\controllers;
 use Craft;
 use craft\web\Controller;
 use nystudio107\recipe\Recipe;
+use yii\web\BadRequestHttpException;
 
 /**
  * @author    nystudio107
@@ -24,6 +25,8 @@ class NutritionApiController extends Controller
 {
     /**
      * Returns nutritional information about a recipe.
+     *
+     * @throws BadRequestHttpException
      */
     public function actionGetNutritionalInfo()
     {
