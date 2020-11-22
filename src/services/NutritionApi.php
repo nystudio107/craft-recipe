@@ -45,8 +45,7 @@ class NutritionApi extends Component
         ];
 
         try {
-            $response = Craft::createGuzzleClient()
-                ->post($url, ['json' => $data]);
+            $response = Craft::createGuzzleClient()->post($url, ['json' => $data]);
 
             $result = json_decode($response->getBody());
 
