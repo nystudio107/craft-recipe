@@ -58,7 +58,9 @@
                         return;
                     }
                     var ingredients = [];
-                    $('#fields-recipeingredients tbody tr').each(function() {
+
+                    var field = $(this).attr('data-field');
+                    $('#fields-' + field + 'ingredients tbody tr').each(function() {
                         var ingredient = [];
                         $(this).find('textarea, select').each(function() {
                             ingredient.push($(this).val());
