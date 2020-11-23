@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.2.1 - Unreleased
+### Added
+* Added sodium content to nutrition facts template.
+
 ## 1.2.0 - 2020.11.04
 ### Added
 * Added support for importing recipes (including ingredients, directions and ratings) using Feed Me.

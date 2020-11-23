@@ -168,6 +168,12 @@
                         <td><b>{{ percentage(value.cholesterolContent, rda.cholesterolContent) }}</b></td>
                     </tr>
                 {% endif %}
+                {% if value.sodiumContent | length %}
+                    <tr class="recipe-plugin-macros">
+                        <td colspan="2"><b>Sodium:</b> {{ value.sodiumContent ~ 'mg' }}</td>
+                        <td><b>{{ percentage(value.sodiumContent, rda.sodiumContent) }}</b></td>
+                    </tr>
+                {% endif %}
                 {% if value.carbohydrateContent | length %}
                     <tr class="recipe-plugin-macros">
                         <td colspan="2"><b>Total Carbohydrate:</b> {{ value.carbohydrateContent ~ 'g' }}</td>
