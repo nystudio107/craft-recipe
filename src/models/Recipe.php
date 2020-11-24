@@ -430,10 +430,9 @@ class Recipe extends Model
                         $quantity = round($quantity, 1);
                     }
 
-                    // Convert imperial units to nice fractions
-                    if ($outputUnits === 'imperial') {
-                        $quantity = $this->convertToFractions($quantity);
-                    }
+                    // Convert units to nice fractions
+                    $quantity = $this->convertToFractions($quantity);
+
                     $ingredient .= $quantity;
 
                     if ($row['units']) {
@@ -509,11 +508,11 @@ class Recipe extends Model
                 $fraction = ' &#x215E;';
                 break;
             default:
-                $precision = 5;
+                $precision = 1;
                 $pnum = round($fraction, $precision);
                 $denominator = 10 ** $precision;
                 $numerator = $pnum * $denominator;
-                $fraction = '<sup>'
+                $fraction = ' <sup>'
                     .$numerator
                     . '</sup>&frasl;<sub>'
                     .$denominator
