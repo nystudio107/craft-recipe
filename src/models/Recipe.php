@@ -508,7 +508,7 @@ class Recipe extends Model
                 $fraction = ' &#x215E;';
                 break;
             default:
-                $precision = 5;
+                $precision = 1;
                 $pnum = round($fraction, $precision);
                 $denominator = 10 ** $precision;
                 $numerator = $pnum * $denominator;
