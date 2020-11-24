@@ -6,6 +6,11 @@
 * Added plugin settings for configuring API credentials.
 * Added a console controller action that generates nutritional information for all entries in a section using the API.
 
+### Changed
+* Non-imperial units are converted to nice fractions too
+* Nice fraction now has a space before it
+* Changed fraction precision to `1`
+
 ## 1.2.0 - 2020.11.04
 ### Added
 * Added support for importing recipes (including ingredients, directions and ratings) using Feed Me.
