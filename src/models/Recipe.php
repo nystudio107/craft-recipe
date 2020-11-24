@@ -512,7 +512,7 @@ class Recipe extends Model
                 $pnum = round($fraction, $precision);
                 $denominator = 10 ** $precision;
                 $numerator = $pnum * $denominator;
-                $fraction = '<sup>'
+                $fraction = ' <sup>'
                     .$numerator
                     . '</sup>&frasl;<sub>'
                     .$denominator
