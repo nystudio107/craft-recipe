@@ -79,7 +79,7 @@
                             }
                             else {
                                 $.each(response, function(index, value) {
-                                    $('#fields-recipe' + index).val(value);
+                                    $('#fields-' + field + index).val(value);
                                 });
                             }
 
