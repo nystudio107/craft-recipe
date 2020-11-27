@@ -27,10 +27,10 @@ class NutritionApi extends Component
      * Returns nutritional information about a recipe.
      *
      * @param array $ingredients
-     *
+     * @param int|null $serves
      * @return array
      */
-    public function getNutritionalInfo(array $ingredients): array
+    public function getNutritionalInfo(array $ingredients, int $serves = null): array
     {
         if (Recipe::$plugin->settings->hasApiCredentials() === false) {
             return [];
@@ -44,6 +44,10 @@ class NutritionApi extends Component
             'ingr' => $ingredients,
         ];
 
+        if ($serves) {
+            $data['yield'] = $serves;
+        }
+
         try {
             $response = Craft::createGuzzleClient()->post($url, ['json' => $data]);
 
@@ -52,7 +56,7 @@ class NutritionApi extends Component
             $yield = $result->yield ?: 1;
 
             return [
-                'servingSize' => round($result->totalWeight, 0).' grams',
+                'servingSize' => round($result->totalWeight / $yield, 0).' grams',
                 'calories' => round($result->totalNutrients->ENERC_KCAL->quantity / $yield, 0),
                 'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity / $yield, 1),
                 'cholesterolContent' => round($result->totalNutrients->CHOLE->quantity / $yield, 1),

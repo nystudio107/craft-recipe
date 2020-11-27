@@ -93,13 +93,14 @@ class NutritionApiController extends Controller
         Console::startProgress($count, $total, '', 0.8);
 
         foreach ($entries as $entry) {
-            $ingredients = $entry->{$this->field}->ingredients;
+            $field = $entry->{$this->field};
+            $ingredients = $field->ingredients;
 
             foreach ($ingredients as $key => $value) {
                 $ingredients[$key] = implode(' ', $value);
             }
 
-            $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($ingredients);
+            $nutritionalInfo = Recipe::$plugin->nutritionApi->getNutritionalInfo($ingredients, $field->serves);
 
             if (empty($nutritionalInfo['error'])) {
                 $recipe = $entry->{$this->field};
