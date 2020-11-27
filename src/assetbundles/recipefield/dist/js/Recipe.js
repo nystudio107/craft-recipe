@@ -68,11 +68,16 @@
                         ingredients.push(ingredient.join(' '));
                     });
 
+                    var serves = $('#fields-' + field + 'serves').val();
+
                     $('.fetch-nutritional-info button').addClass('disabled');
                     $('.fetch-nutritional-info .spinner').removeClass('hidden');
 
                     Craft.postActionRequest('recipe/nutrition-api/get-nutritional-info',
-                        {ingredients: ingredients},
+                        {
+                            ingredients: ingredients,
+                            serves: serves,
+                        },
                         function(response) {
                             if (typeof response.error !== 'undefined') {
                                 Craft.cp.displayError(response.error);
