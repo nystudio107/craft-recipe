@@ -75,10 +75,7 @@ class Recipe extends Plugin
             }
         );
 
-        $feedMeInstalled = Craft::$app->getPlugins()->isPluginInstalled('feed-me') && Craft::$app->getPlugins()->isPluginEnabled('feed-me');
-        $feedMeClassExists = class_exists(FeedMeFields::class);
-
-        if ($feedMeInstalled && $feedMeClassExists) {
+        if (class_exists(FeedMeFields::class)) {
             Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function(RegisterFeedMeFieldsEvent $e) {
                 $e->fields[] = RecipeFeedMeField::class;
             });
