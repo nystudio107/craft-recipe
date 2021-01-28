@@ -79,6 +79,15 @@ class Recipe extends Field
 
     /**
      * @inheritdoc
+     * @since 1.2.1
+     */
+    public function useFieldset(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function normalizeValue($value, ElementInterface $element = null)
     {

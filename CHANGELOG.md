@@ -1,5 +1,15 @@
 # Recipe Changelog
 
+## 1.2.1 - 2021.01.28
+### Added
+* Added sodium content to nutrition facts template.
+* Implemented `useFieldset` for Craft 3.6
+
+### Changed
+* Non-imperial units are converted to nice fractions too
+* Nice fraction now has a space before it
+* Changed fraction precision to `1`
+
 ## 1.2.0 - 2020.11.04
 ### Added
 * Added support for importing recipes (including ingredients, directions and ratings) using Feed Me.
