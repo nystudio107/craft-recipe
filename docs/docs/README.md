@@ -29,7 +29,7 @@ Recipe works on Craft 3.x.
 
 Recipe adds a 'Recipe' FieldType for Craft CMS that you can add to any of your Sections.
 
-In encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty' fractions for Imperial units, and can output correct ingredient portions for any number of servings.
+It encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty' fractions for Imperial units, and can output correct ingredient portions for any number of servings.
 
 Recipe also generates the [JSON-LD microdata](https://developers.google.com/structured-data/) for your recipes, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results.
 
