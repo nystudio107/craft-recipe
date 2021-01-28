@@ -1,8 +1,9 @@
 # Recipe Changelog
 
-## 1.2.1 - Unreleased
+## 1.2.1 - 2021.01.28
 ### Added
 * Added sodium content to nutrition facts template.
+* Implemented `useFieldset` for Craft 3.6
 
 ### Changed
 * Non-imperial units are converted to nice fractions too
