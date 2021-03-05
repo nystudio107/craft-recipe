@@ -51,6 +51,48 @@
                     Garnish.$doc.trigger('scroll');
                 });
 
+                // Fetch nutritional info handler
+                $('.fetch-nutritional-info button').on('click', function(e) {
+                    e.preventDefault();
+                    if ($(this).hasClass('disabled')) {
+                        return;
+                    }
+                    var ingredients = [];
+
+                    var field = $(this).attr('data-field');
+                    $('#fields-' + field + 'ingredients tbody tr').each(function() {
+                        var ingredient = [];
+                        $(this).find('textarea, select').each(function() {
+                            ingredient.push($(this).val());
+                        })
+                        ingredients.push(ingredient.join(' '));
+                    });
+
+                    var serves = $('#fields-' + field + 'serves').val();
+
+                    $('.fetch-nutritional-info button').addClass('disabled');
+                    $('.fetch-nutritional-info .spinner').removeClass('hidden');
+
+                    Craft.postActionRequest('recipe/nutrition-api/get-nutritional-info',
+                        {
+                            ingredients: ingredients,
+                            serves: serves,
+                        },
+                        function(response) {
+                            if (typeof response.error !== 'undefined') {
+                                Craft.cp.displayError(response.error);
+                            }
+                            else {
+                                $.each(response, function(index, value) {
+                                    $('#fields-' + field + index).val(value);
+                                });
+                            }
+
+                            $('.fetch-nutritional-info button').removeClass('disabled');
+                            $('.fetch-nutritional-info .spinner').addClass('hidden');
+                        }
+                    );
+                });
             });
         }
     };

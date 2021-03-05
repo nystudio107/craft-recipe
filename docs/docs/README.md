@@ -29,7 +29,7 @@ Recipe works on Craft 3.x.
 
 Recipe adds a 'Recipe' FieldType for Craft CMS that you can add to any of your Sections.
 
-It encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty' fractions for Imperial units, and can output correct ingredient portions for any number of servings.
+In encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty' fractions for Imperial units, and can output correct ingredient portions for any number of servings.
 
 Recipe also generates the [JSON-LD microdata](https://developers.google.com/structured-data/) for your recipes, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results.
 
@@ -203,7 +203,7 @@ Recipes can be imported using the first-party [Feed Me](https://plugins.craftcms
         <Row>
             <Rating>3</Rating>
             <Review>It's just dough.</Review>
-            <Author>Alanis</Author>
+            <Author>Alice</Author>
         </Row>
     </Reviews>
 </Recipe>
@@ -247,11 +247,26 @@ Recipes can be imported using the first-party [Feed Me](https://plugins.craftcms
             {
                 "Rating": 3,
                 "Review": "It's just dough.",
-                "Author": "Alanis"
+                "Author": "Alice"
             }
         ]
     }
 }
 ```
+
+## Fetching Nutritional Information from an API
+
+Nutritional information for recipe ingredients can be fetched in the Nutrition tab using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api). You must first get an API application ID and key and enter them in the plugin settings. A `Fetch Nutritional Information` button will then appear in the `Nutrition` tab of the recipe field.
+
+![Screenshot](./resources/screenshots/recipe-api.png)
+
+A console command to generate nutritional information from the API for all entries in a specific section is also available.
+
+```sh
+./craft recipe/nutrition-api/generate --section=recipes --field=recipe
+```
+
+Both the `section` (section handle) and `field` (recipe field handle) options are required. Note that this command will overwrite the nutritional information for _every_ entry in the given section.
+
 
 Brought to you by [nystudio107](https://nystudio107.com)

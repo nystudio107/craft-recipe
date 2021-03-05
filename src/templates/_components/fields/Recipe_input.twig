@@ -233,6 +233,15 @@
 
         <div id="{{ id ~ "tab-health" }}" class="recipe-tab-content hidden">
 
+            {% if hasApiCredentials %}
+                <div class="fetch-nutritional-info text-right" style="margin: -8px 0 -24px;">
+                    <span class="spinner hidden"></span>
+                    <button data-field="{{ name }}" class="btn submit">
+                        Fetch Nutritional Information
+                    </button>
+                </div>
+            {% endif %}
+
             {{ forms.textField({
                 id: id ~ 'servingSize',
                 class: 'nicetext',

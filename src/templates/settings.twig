@@ -1,0 +1,27 @@
+{% import '_includes/forms' as forms %}
+
+
+<h3>
+	{{ 'The [Edamam Nutrition Analysis API]({url}) can be used to fetch nutritional information from your ingredients.'|t('recipe', { url: 'https://developer.edamam.com/edamam-nutrition-api' })|md }}
+</h3>
+
+<br>
+
+{{ forms.autosuggestField({
+	label: 'API Application ID'|t('blitz'),
+	instructions: 'An application ID for the Edamam Nutrition Analysis API.'|t('recipe'),
+	suggestEnvVars: true,
+	name: 'apiApplicationId',
+	value: settings.apiApplicationId,
+	errors: settings.getErrors('apiApplicationId'),
+	first: true,
+}) }}
+
+{{ forms.autosuggestField({
+	label: 'API Application Key'|t('recipe'),
+	instructions: 'An application ID for the Edamam Nutrition Analysis API.'|t('recipe'),
+	suggestEnvVars: true,
+	name: 'apiApplicationKey',
+	value: settings.apiApplicationKey,
+	errors: settings.getErrors('apiApplicationKey'),
+}) }}

@@ -1,5 +1,12 @@
 # Recipe Changelog
 
+## 1.3.0 - 2021.03.05
+### Added
+* Added the ability to fetch nutritional information from ingredients using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api).
+* Added plugin settings for configuring API credentials.
+* Added a console controller action that generates nutritional information for all entries in a section using the API.
+* Added docs buildchain
+
 ## 1.2.1 - 2021.01.28
 ### Added
 * Added sodium content to nutrition facts template.
@@ -16,7 +23,7 @@
 
 ## 1.1.3 - 2020.05.25
 ### Fixed
-* Add plural for grams and remove cups abreviation
+* Add plural for grams and remove cups abbreviation
 * Correct prefix of 0 for measurements and use 'cups' instead of c
 
 ## 1.1.2 - 2020.04.16
