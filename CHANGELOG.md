@@ -1,30 +1,20 @@
 # Recipe Changelog
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-## 1.2.1 - 2021.01.28
-### Added
-* Added sodium content to nutrition facts template.
-* Implemented `useFieldset` for Craft 3.6
-=======
 ## 1.3.0 - Unreleased
 ### Added
 * Added the ability to fetch nutritional information from ingredients using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api).
 * Added plugin settings for configuring API credentials.
 * Added a console controller action that generates nutritional information for all entries in a section using the API.
->>>>>>> 2b833e9d5868e0026f24098bc53cb2a24949a8e4
+
+## 1.2.1 - 2021.01.28
+### Added
+* Added sodium content to nutrition facts template.
+* Implemented `useFieldset` for Craft 3.6
 
 ### Changed
 * Non-imperial units are converted to nice fractions too
 * Nice fraction now has a space before it
 * Changed fraction precision to `1`
-=======
-## 1.3.0 - Unreleased
-### Added
-* Added the ability to fetch nutritional information from ingredients using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api).
-* Added plugin settings for configuring API credentials.
-* Added a console controller action that generates nutritional information for all entries in a section using the API.
->>>>>>> Updated changelog
 
 ## 1.2.0 - 2020.11.04
 ### Added
