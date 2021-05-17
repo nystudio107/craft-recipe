@@ -587,7 +587,7 @@ class Recipe extends Model
     }
 
     /**
-     * Returns concatenated serves number with its unit
+     * Returns concatenated serves with its unit
      */
     public function getServes(): string
     {
