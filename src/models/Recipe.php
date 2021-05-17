@@ -81,6 +81,11 @@ class Recipe extends Model
     public $serves = 1;
 
     /**
+     * @var string
+     */
+    public $servesUnit = '';
+
+    /**
      * @var array
      */
     public $ingredients = [];
@@ -240,7 +245,7 @@ class Recipe extends Model
             'name' => $this->name,
             'image' => $this->getImageUrl(),
             'description' => $this->description,
-            'recipeYield' => $this->serves,
+            'recipeYield' => $this->getServes(),
             'recipeIngredient' => $this->getIngredients('imperial', 0, false),
             'recipeInstructions' => $this->getDirections(false),
         ];
@@ -579,6 +584,18 @@ class Recipe extends Model
     public function getRatingsCount(): int
     {
         return count($this->ratings);
+    }
+
+    /**
+     * Returns concatenated serves number with its unit
+     */
+    public function getServes(): string
+    {
+        if(!empty($this->servesUnit)) {
+            return $this->serves . ' ' . $this->servesUnit;
+        } else {
+            return $this->serves;
+        }
     }
 
     // Private Methods
