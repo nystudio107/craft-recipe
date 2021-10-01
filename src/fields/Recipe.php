@@ -168,14 +168,9 @@ class Recipe extends Field
                     'hasApiCredentials' => RecipePlugin::$plugin->settings->hasApiCredentials(),
                 ]
             );
-        } catch (LoaderError $e) {
+        } catch (\Throwable $e) {
             Craft::error($e->getMessage(), __METHOD__);
-        } catch (RuntimeError $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-        } catch (SyntaxError $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-        } catch (Exception $e) {
-            Craft::error($e->getMessage(), __METHOD__);
+            return '';
         }
     }
 
