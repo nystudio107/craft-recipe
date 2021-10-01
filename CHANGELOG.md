@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.3.1 - UNRELEASED
+### Changed
+* Switched over to using VitePress for the documentation
+
 ## 1.3.0 - 2021.03.05
 ### Added
 * Added the ability to fetch nutritional information from ingredients using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api).
