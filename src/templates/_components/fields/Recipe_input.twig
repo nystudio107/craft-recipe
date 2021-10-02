@@ -154,6 +154,23 @@
                 addRowLabel: "Add a Direction" |t,
             }) }}
 
+            {{ forms.editableTableField({
+                id: id ~ 'equipment',
+                name: name ~ '[equipment]',
+                label: 'Recipe Equipment' |t,
+                instructions: "Enter the equipment for this recipe by clicking on 'Add Equipment'." |t,
+                required: false,
+                static: false,
+                cols: {
+                    equipment: {
+                        heading: "Equipment" |t,
+                        type: "multiline" |t,
+                    },
+                },
+                rows: value.equipment,
+                addRowLabel: "Add Equipment" |t,
+            }) }}
+
             {{ forms.textField({
                 id: id ~ 'prepTime',
                 type: 'number',

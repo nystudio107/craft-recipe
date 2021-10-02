@@ -20,6 +20,7 @@ use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
 use craft\helpers\Template;
+use craft\validators\ArrayValidator;
 
 use Twig\Markup;
 
@@ -95,6 +96,11 @@ class Recipe extends Model
      * @var array
      */
     public $directions = [];
+
+    /**
+     * @var array
+     */
+    public $equipment = [];
 
     /**
      * @var int
@@ -228,6 +234,15 @@ class Recipe extends Model
             ['sugarContent', 'integer'],
             ['transFatContent', 'integer'],
             ['unsaturatedFatContent', 'integer'],
+            [
+                [
+                    'ingredients',
+                    'directions',
+                    'equipment',
+                ],
+                ArrayValidator::class,
+            ],
+
         ];
     }
 
@@ -247,6 +262,7 @@ class Recipe extends Model
             'recipeYield' => $this->serves,
             'recipeIngredient' => $this->getIngredients('imperial', 0, false),
             'recipeInstructions' => $this->getDirections(false),
+            'tool' => $this->getEquipment(false),
         ];
         $recipeJSONLD = array_filter($recipeJSONLD);
 
@@ -602,6 +618,29 @@ class Recipe extends Model
                     $direction = Template::raw($direction);
                 }
                 $result[] = $direction;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all of the equipment for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return array
+     */
+    public function getEquipment($raw = true)
+    {
+        $result = [];
+        if (!empty($this->equipment)) {
+            foreach ($this->equipment as $row) {
+                $equipment = $row['equipment'];
+                if ($raw) {
+                    $equipment = Template::raw(equipment);
+                }
+                $result[] = $equipment;
             }
         }
 
