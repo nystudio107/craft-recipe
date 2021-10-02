@@ -3,6 +3,7 @@
 ## 1.3.1 - UNRELEASED
 ### Added
 * Added `.createRecipeMetaJsonLd()` to the Recipes field, to allow the creation of SEOmatic MetaJsonLd objects that can be manipulated and rendered on the page by SEOmatic
+* Added **Recipe Equipment** ([#32](https://github.com/nystudio107/craft-recipe/issues/32))
 
 ### Changed
 * Switched over to using VitePress for the documentation
