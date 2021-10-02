@@ -47,6 +47,28 @@
                 required: false,
             }) }}
 
+            {{ forms.textField({
+                id: id ~ 'recipeCategory',
+                class: 'nicetext',
+                name: name ~ '[recipeCategory]',
+                label: 'Recipe Category' |t,
+                instructions: 'The category of the recipe—for example, appetizer, entree, etc.' |t,
+                value: value.recipeCategory,
+                errors: value.getErrors('recipeCategory'),
+                required: false,
+            }) }}
+
+            {{ forms.textField({
+                id: id ~ 'recipeCuisine',
+                class: 'nicetext',
+                name: name ~ '[recipeCuisine]',
+                label: 'Recipe Cuisine' |t,
+                instructions: 'The cuisine of the recipe (for example, French or Ethiopian).' |t,
+                value: value.recipeCuisine,
+                errors: value.getErrors('recipeCuisine'),
+                required: false,
+            }) }}
+
             {{ forms.selectField({
                 id: id ~ "skill",
                 name: name ~ "[skill]",

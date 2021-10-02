@@ -51,6 +51,8 @@ To display information about a recipe in your templates, you just use familiar T
 
 * `entry.someRecipe.name` - the name of the recipe
 * `entry.someRecipe.description` - the description of the recipe
+* `entry.someRecipe.recipeCategory` - The category of the recipe—for example, appetizer, entree, etc.
+* `entry.someRecipe.recipeCuisine` - The cuisine of the recipe (for example, French or Ethiopian).
 * `entry.someRecipe.skill` - the skill level required to make this recipe
 * `entry.someRecipe.serves` - how many people the recipe serves
 * `entry.someRecipe.getImageUrl()` - a URL to the image for the recipe; you can pass in an optional image transform or image transform handle here as well: `entry.someRecipe.getImageUrl('display')`
@@ -109,6 +111,17 @@ For a list of directions, do the following (adding whatever output markup you wa
     {% set directions = entry.someRecipe.getDirections() %}
     {% for direction in directions %}
         {{ direction }}
+    {% endfor %}
+```
+
+### Equipment
+
+For a list of equipment, do the following (adding whatever output markup you want):
+
+```twig
+    {% set equipment = entry.someRecipe.getEquipment() %}
+    {% for item in equipment %}
+        {{ item }}
     {% endfor %}
 ```
 

@@ -80,6 +80,16 @@ class Recipe extends Model
     /**
      * @var string
      */
+    public $recipeCategory;
+
+    /**
+     * @var string
+     */
+    public $recipeCuisine;
+
+    /**
+     * @var string
+     */
     public $skill = 'intermediate';
 
     /**
@@ -216,6 +226,8 @@ class Recipe extends Model
             ['name', 'string'],
             ['name', 'default', 'value' => ''],
             ['description', 'string'],
+            ['recipeCategory', 'string'],
+            ['recipeCuisine', 'string'],
             ['skill', 'string'],
             ['serves', 'integer'],
             ['imageId', 'integer'],
@@ -259,6 +271,8 @@ class Recipe extends Model
             'name' => $this->name,
             'image' => $this->getImageUrl(),
             'description' => $this->description,
+            'recipeCategory' => $this->recipeCategory,
+            'recipeCuisine' => $this->recipeCuisine,
             'recipeYield' => $this->serves,
             'recipeIngredient' => $this->getIngredients('imperial', 0, false),
             'recipeInstructions' => $this->getDirections(false),
