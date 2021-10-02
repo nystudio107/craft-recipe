@@ -318,13 +318,16 @@ class Recipe extends Model
      *
      * @return null|MetaJsonLd
      */
-    public function getRecipeSeomaticModel()
+    public function createRecipeMetaJsonLd(bool $add = true)
     {
         $result = null;
         if (Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE)) {
             $seomatic = Seomatic::getInstance();
             if ($seomatic !== null) {
-                $result = MetaJsonLd::create('Recipe', $this->getRecipeJSONLD());
+                $result = Seomatic::$plugin->jsonLd->create(
+                    $this->getRecipeJSONLD(),
+                    $add
+                );
             }
         }
 
