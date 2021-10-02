@@ -154,13 +154,43 @@ If you need to do any further manipulation of the Recipe Image (perhaps a transf
 
 ## Rendering Recipe JSON-LD Microdata
 
-Recipe can render JSON-LD microdata for you, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results:
+### Using SEOmatic
+
+If you are using the [SEOmatic plugin](https://plugins.craftcms.com/seomatic), you can create a MetaJsonLd model from the Recipe field data:
+
+```twig
+	{% do recipeMetaJsonLd = entry.someRecipe.createRecipeMetaJsonLd() %}
+```
+
+This creates the MetaJsonLd model, and by default adds it to the container so that SEOmatic will render it on the page.
+
+You can modify the MetaJsonLd before it renders, just like you can any [SEOmatic MetaJsonLd item](https://nystudio107.com/docs/seomatic/using.html#json-ld-meta-object-examples). Extensive examples can be found in the [Annotated JSON-LD Structured Data Examples](https://nystudio107.com/blog/annotated-json-ld-structured-data-examples) article.
+
+If you're adding a single recipe to the page, and it should be the [Main Entity of the page](https://schema.org/docs/datamodel.html#mainEntityBackground), pass in `mainEntityOfPage` as the first `key` parameter:
+
+```twig
+	{% do recipeMetaJsonLd = entry.someRecipe.createRecipeMetaJsonLd('mainEntityOfPage') %}
+```
+
+If you just want to create the MetaJsonLd object but _not_ add it to the container, you can pass in `false` as the second parameter:
+
+```twig
+	{% do recipeMetaJsonLd = entry.someRecipe.createRecipeMetaJsonLd(null, false) %}
+```
+
+You might do this if you wanted to create one or more Recipe MetaJsonLd items to be added a sub-properties of another MetaJsonLd object.
+
+### Manually rendering
+
+If you're not using SEOmatic, Recipe can manually render JSON-LD microdata for you, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results:
 
 ```twig
 	{{ entry.someRecipe.renderRecipeJSONLD() }}
 ```
 
 ![Screenshot](./resources/screenshots/recipe02.png)
+
+Typically you would want to render the JSON-LD before the `</body>` tag.
 
 ## Importing Recipes with Feed Me
 
