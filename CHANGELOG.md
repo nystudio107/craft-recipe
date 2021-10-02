@@ -1,6 +1,9 @@
 # Recipe Changelog
 
 ## 1.3.1 - UNRELEASED
+### Added
+* Added `.createRecipeMetaJsonLd()` to the Recipes field, to allow the creation of SEOmatic MetaJsonLd objects that can be manipulated and rendered on the page by SEOmatic
+
 ### Changed
 * Switched over to using VitePress for the documentation
 
