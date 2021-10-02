@@ -13,6 +13,8 @@ namespace nystudio107\recipe\models;
 
 use nystudio107\recipe\helpers\Json;
 use nystudio107\recipe\helpers\PluginTemplate;
+use nystudio107\seomatic\Seomatic;
+use nystudio107\seomatic\models\MetaJsonLd;
 
 use Craft;
 use craft\base\Model;
@@ -29,6 +31,8 @@ class Recipe extends Model
 {
     // Constants
     // =========================================================================
+
+    const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
 
     const US_RDA = [
         'calories' => 2000,
@@ -226,13 +230,11 @@ class Recipe extends Model
     }
 
     /**
-     * Render the JSON-LD Structured Data for this recipe
+     * Return the JSON-LD Structured Data for this recipe
      *
-     * @param bool $raw
-     *
-     * @return string|\Twig_Markup
+     * @return array
      */
-    public function renderRecipeJSONLD($raw = true)
+    public function getRecipeJSONLD(): array
     {
         $recipeJSONLD = [
             'context' => 'http://schema.org',
@@ -308,7 +310,37 @@ class Recipe extends Model
             $recipeJSONLD['totalTime'] = 'PT' . $this->totalTime . 'M';
         }
 
-        return $this->renderJsonLd($recipeJSONLD, $raw);
+        return $recipeJSONLD;
+    }
+
+    /**
+     * Render the JSON-LD Structured Data for this recipe
+     *
+     * @return null|MetaJsonLd
+     */
+    public function getRecipeSeomaticModel()
+    {
+        $result = null;
+        if (Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE)) {
+            $seomatic = Seomatic::getInstance();
+            if ($seomatic !== null) {
+                $result = MetaJsonLd::create('Recipe', $this->getRecipeJSONLD());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Render the JSON-LD Structured Data for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return string|\Twig_Markup
+     */
+    public function renderRecipeJSONLD($raw = true)
+    {
+        return $this->renderJsonLd($this->getRecipeJSONLD(), $raw);
     }
 
     /**
