@@ -18,6 +18,7 @@ use nystudio107\seomatic\models\MetaJsonLd;
 
 use Craft;
 use craft\base\Model;
+use craft\helpers\StringHelper;
 use craft\helpers\Template;
 
 use Twig\Markup;
@@ -33,6 +34,7 @@ class Recipe extends Model
     // =========================================================================
 
     const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
+    const MAIN_ENTITY_KEY = 'mainEntityOfPage';
 
     const US_RDA = [
         'calories' => 2000,
@@ -314,18 +316,40 @@ class Recipe extends Model
     }
 
     /**
-     * Render the JSON-LD Structured Data for this recipe
+     * Create the SEOmatic MetaJsonLd object for this recipe
      *
+     * @param bool $add
+     * @param null $key
      * @return null|MetaJsonLd
      */
-    public function createRecipeMetaJsonLd(bool $add = true)
+    public function createRecipeMetaJsonLd($key = null, bool $add = true)
     {
         $result = null;
         if (Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE)) {
             $seomatic = Seomatic::getInstance();
             if ($seomatic !== null) {
+                $recipeJson = $this->getRecipeJSONLD();
+                // If we're adding the MetaJsonLd to the container, and no key is provided, give it a random key
+                if ($add && $key === null) {
+                    try {
+                        $key = StringHelper::UUID();
+                    } catch (\Exception $e) {
+                        // That's okay
+                    }
+                }
+                if ($key !== null) {
+                    $recipeJson['key'] = $key;
+                }
+                // If the key is `mainEntityOfPage` add in the URL
+                if ($key === self::MAIN_ENTITY_KEY) {
+                    $mainEntity = Seomatic::$plugin->jsonLd->get(self::MAIN_ENTITY_KEY);
+                    if ($mainEntity) {
+                        $recipeJson[self::MAIN_ENTITY_KEY] = $mainEntity[self::MAIN_ENTITY_KEY];
+                    }
+                }
+
                 $result = Seomatic::$plugin->jsonLd->create(
-                    $this->getRecipeJSONLD(),
+                    $recipeJson,
                     $add
                 );
             }
