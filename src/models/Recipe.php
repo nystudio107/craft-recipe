@@ -75,7 +75,17 @@ class Recipe extends Model
     /**
      * @var string
      */
+    public $author;
+
+    /**
+     * @var string
+     */
     public $description;
+
+    /**
+     * @var string
+     */
+    public $keywords;
 
     /**
      * @var string
@@ -234,8 +244,10 @@ class Recipe extends Model
     {
         return [
             ['name', 'string'],
+            ['author', 'string'],
             ['name', 'default', 'value' => ''],
             ['description', 'string'],
+            ['keywords', 'string'],
             ['recipeCategory', 'string'],
             ['recipeCuisine', 'string'],
             ['skill', 'string'],
@@ -282,6 +294,7 @@ class Recipe extends Model
             'name' => $this->name,
             'image' => $this->getImageUrl(),
             'description' => $this->description,
+            'keywords' => $this->keywords,
             'recipeCategory' => $this->recipeCategory,
             'recipeCuisine' => $this->recipeCuisine,
             'recipeYield' => $this->getServes(),
@@ -290,6 +303,15 @@ class Recipe extends Model
             'tool' => $this->getEquipment(false),
         ];
         $recipeJSONLD = array_filter($recipeJSONLD);
+
+        if (!empty($this->author)) {
+            $author = [
+                'type' => 'Person',
+                'name' => $this->author,
+            ];
+            $author = array_filter($author);
+            $recipeJSONLD['author'] = $author;
+        }
 
         $videoUrl = $this->getVideoUrl();
         if (!empty($videoUrl)) {

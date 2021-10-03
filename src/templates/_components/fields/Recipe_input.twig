@@ -36,6 +36,17 @@
                 required: true,
             }) }}
 
+            {{ forms.textField({
+                id: id ~ 'author',
+                class: 'nicetext',
+                name: name ~ '[author]',
+                label: 'Recipe Author' |t,
+                instructions: 'Enter the person who authored this recipe' |t,
+                value: value.author,
+                errors: value.getErrors('author'),
+                required: false,
+            }) }}
+
             {{ forms.textareaField({
                 id: id ~ 'description',
                 class: 'nicetext',
@@ -44,6 +55,17 @@
                 instructions: 'Enter a description of this recipe' |t,
                 value: value.description,
                 errors: value.getErrors('description'),
+                required: false,
+            }) }}
+
+            {{ forms.textField({
+                id: id ~ 'keywords',
+                class: 'nicetext',
+                name: name ~ '[keywords]',
+                label: 'Recipe Keywords' |t,
+                instructions: 'A comma-separated list of keywords for this recipe' |t,
+                value: value.keywords,
+                errors: value.getErrors('keywords'),
                 required: false,
             }) }}
 
