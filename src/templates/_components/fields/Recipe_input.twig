@@ -95,6 +95,17 @@
                 required: true,
             }) }}
 
+            {{ forms.textField({
+                id: id ~ 'servesUnit',
+                class: 'nicetext',
+                name: name ~ '[servesUnit]',
+                label: 'Recipe Serves Unit' |t,
+                instructions: 'Enter the name of the portions (slices, pints, loafs...)' |t,
+                value: value.servesUnit,
+                errors: value.getErrors('servesUnit'),
+                required: false,
+            }) }}
+
             {% if assetsSourceExists %}
                 {{ forms.elementSelectField({
                     elements: elements,
