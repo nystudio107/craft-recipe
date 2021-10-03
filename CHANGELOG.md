@@ -1,5 +1,14 @@
 # Recipe Changelog
 
+## 1.3.1 - UNRELEASED
+### Added
+* Added `.createRecipeMetaJsonLd()` to the Recipes field, to allow the creation of SEOmatic MetaJsonLd objects that can be manipulated and rendered on the page by SEOmatic
+* Added **Recipe Equipment** ([#32](https://github.com/nystudio107/craft-recipe/issues/32))
+* Added `recipeCategory` and `recipeCuisine` fields ([#50](https://github.com/nystudio107/craft-recipe/issues/50))
+
+### Changed
+* Switched over to using VitePress for the documentation
+
 ## 1.3.0 - 2021.03.05
 ### Added
 * Added the ability to fetch nutritional information from ingredients using the [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api).
