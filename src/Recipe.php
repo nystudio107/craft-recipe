@@ -48,6 +48,21 @@ class Recipe extends Plugin
      */
     public static $plugin;
 
+    // Static Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct($id, $parent = null, array $config = [])
+    {
+        $config['components'] = [
+            'nutritionApi' => NutritionApi::class,
+        ];
+
+        parent::__construct($id, $parent, $config);
+    }
+
     // Public Methods
     // =========================================================================
 
@@ -58,11 +73,6 @@ class Recipe extends Plugin
     {
         parent::init();
         self::$plugin = $this;
-
-        // Register services
-        $this->setComponents([
-            'nutritionApi' => NutritionApi::class,
-        ]);
 
         // Register our Field
         Event::on(
