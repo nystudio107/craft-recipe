@@ -705,9 +705,9 @@ class Recipe extends Model
     {
         if(!empty($this->servesUnit)) {
             return $this->serves . ' ' . $this->servesUnit;
-        } else {
-            return $this->serves;
         }
+
+        return $this->serves;
     }
 
     // Private Methods
