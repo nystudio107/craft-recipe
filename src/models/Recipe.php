@@ -125,6 +125,11 @@ class Recipe extends Model
     /**
      * @var int
      */
+    public $videoId = 0;
+
+    /**
+     * @var int
+     */
     public $prepTime;
 
     /**
@@ -236,6 +241,7 @@ class Recipe extends Model
             ['skill', 'string'],
             ['serves', 'integer'],
             ['imageId', 'integer'],
+            ['videoId', 'integer'],
             ['prepTime', 'integer'],
             ['cookTime', 'integer'],
             ['totalTime', 'integer'],
@@ -284,6 +290,20 @@ class Recipe extends Model
             'tool' => $this->getEquipment(false),
         ];
         $recipeJSONLD = array_filter($recipeJSONLD);
+
+        $videoUrl = $this->getVideoUrl();
+        if (!empty($videoUrl)) {
+            $video = [
+                'type' => 'VideoObject',
+                'name' => $this->name,
+                'description' => $this->description,
+                'contentUrl' => $videoUrl,
+                'thumbnailUrl' => $this->getImageUrl(),
+                'uploadDate' => $this->getVideoUploadedDate()
+            ];
+            $video = array_filter($video);
+            $recipeJSONLD['video'] = $video;
+        }
 
         $nutrition = [
             'type' => 'NutritionInformation',
@@ -419,6 +439,42 @@ class Recipe extends Model
             $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
             if ($image) {
                 $result = $image->getUrl($transform);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the URL to the recipe's video
+     *
+     * @return null|string
+     */
+    public function getVideoUrl()
+    {
+        $result = '';
+        if (isset($this->videoId) && $this->videoId) {
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            if ($video) {
+                $result = $video->getUrl();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the URL to the recipe's uploaded date
+     *
+     * @return null|string
+     */
+    public function getVideoUploadedDate()
+    {
+        $result = '';
+        if (isset($this->videoId) && $this->videoId) {
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            if ($video) {
+                $result = $video->dateCreated->format('c');
             }
         }
 

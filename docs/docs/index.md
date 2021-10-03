@@ -54,8 +54,10 @@ To display information about a recipe in your templates, you just use familiar T
 * `entry.someRecipe.recipeCategory` - The category of the recipe—for example, appetizer, entree, etc.
 * `entry.someRecipe.recipeCuisine` - The cuisine of the recipe (for example, French or Ethiopian).
 * `entry.someRecipe.skill` - the skill level required to make this recipe
-* `entry.someRecipe.serves` - how many people the recipe serves
+* `entry.someRecipe.serves` - the raw number of how many people the recipe serves
+* `entry.someRecipe.getServes()` - how many people the recipe serves combined with the `entry.someRecipe.servesUnit`
 * `entry.someRecipe.getImageUrl()` - a URL to the image for the recipe; you can pass in an optional image transform or image transform handle here as well: `entry.someRecipe.getImageUrl('display')`
+* `entry.someRecipe.getVideoUrl()` - a URL to the video for the recipe
 * `entry.someRecipe.prepTime` - the prep time for the recipe in minutes
 * `entry.someRecipe.cookTime` - the cooking time for the recipe in minutes
 * `entry.someRecipe.totalTime` - the total time for the recipe in minutes

@@ -112,16 +112,38 @@
                     id: id ~ 'imageId',
                     name: name ~ '[imageId]',
                     label: 'Recipe Image' |t,
-                    instructions: 'Pick an image that represents this recipe' |t,
+                    instructions: 'Pick an image that represents this recipe. This is also used for the Recipe Video thumbnail, if a Recipe Video is present.' |t,
                     elementType: elementType,
                     criteria: {
-                        'kind': [],
+                        'kind': ['image'],
                         'enabledForSite': null,
                     },
                     sourceElementId: value.imageId,
                     sources: assetSources,
                     jsClass: 'Craft.AssetSelectInput',
                     addButtonLabel: "Select an Image" |t,
+                    limit: 1,
+                }) }}
+            {% else %}
+                <p class="error">No assets sources currently exist.</p>
+            {% endif %}
+
+            {% if assetsSourceExists %}
+                {{ forms.elementSelectField({
+                    elements: videoElements,
+                    id: id ~ 'videoId',
+                    name: name ~ '[videoId]',
+                    label: 'Recipe Video' |t,
+                    instructions: 'Pick an video that represents this recipe' |t,
+                    elementType: elementType,
+                    criteria: {
+                        'kind': ['video'],
+                        'enabledForSite': null,
+                    },
+                    sourceElementId: value.videoId,
+                    sources: assetSources,
+                    jsClass: 'Craft.AssetSelectInput',
+                    addButtonLabel: "Select a Video" |t,
                     limit: 1,
                 }) }}
             {% else %}
