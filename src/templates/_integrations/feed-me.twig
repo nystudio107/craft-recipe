@@ -38,7 +38,11 @@
 
 {% set subfields = [
     { label: 'Recipe Name', handle: 'name' },
+    { label: 'Recipe Author', handle: 'author' },
     { label: 'Recipe Description', handle: 'description' },
+    { label: 'Recipe Keywords', handle: 'keywords' },
+    { label: 'Recipe Category', handle: 'recipeCategory' },
+    { label: 'Recipe Cuisine', handle: 'recipeCuisine' },
     { label: 'Recipe Skill', handle: 'skill', default: {
         type: 'select',
         options: [
@@ -49,12 +53,21 @@
         ],
     } },
     { label: 'Recipe Serves', handle: 'serves' },
+    { label: 'Recipe Serves Unit', handle: 'servesUnit' },
     { label: 'Recipe Image', handle: 'imageId', default: {
         type: 'elementselect',
         options: {
             limit: 1,
             elementType: 'craft\\elements\\Asset',
             selectionLabel: "Default Asset" | t('feed-me'),
+        },
+    } },
+    { label: 'Recipe Video', handle: 'videoId', default: {
+        type: 'elementselect',
+        options: {
+            limit: 1,
+            elementType: 'craft\\elements\\Asset',
+            selectionLabel: "Default Video Asset" | t('feed-me'),
         },
     } },
     { label: 'Recipe Prep Time', handle: 'prepTime' },
@@ -103,6 +116,11 @@
     { label: 'Recipe Directions', handle: 'directions', type: 'table', default: false, cols: {
         direction: {
             heading: "Direction" |t,
+        },
+    }, },
+    { label: 'Recipe Equipment', handle: 'equipment', type: 'table', default: false, cols: {
+        equipment: {
+            heading: "Equipment" |t,
         },
     }, },
     { label: 'Recipe Ratings', handle: 'ratings', type: 'table', default: false, cols: {
