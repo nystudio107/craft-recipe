@@ -13,10 +13,14 @@ namespace nystudio107\recipe\models;
 
 use nystudio107\recipe\helpers\Json;
 use nystudio107\recipe\helpers\PluginTemplate;
+use nystudio107\seomatic\Seomatic;
+use nystudio107\seomatic\models\MetaJsonLd;
 
 use Craft;
 use craft\base\Model;
+use craft\helpers\StringHelper;
 use craft\helpers\Template;
+use craft\validators\ArrayValidator;
 
 use Twig\Markup;
 
@@ -29,6 +33,9 @@ class Recipe extends Model
 {
     // Constants
     // =========================================================================
+
+    const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
+    const MAIN_ENTITY_KEY = 'mainEntityOfPage';
 
     const US_RDA = [
         'calories' => 2000,
@@ -68,7 +75,27 @@ class Recipe extends Model
     /**
      * @var string
      */
+    public $author;
+
+    /**
+     * @var string
+     */
     public $description;
+
+    /**
+     * @var string
+     */
+    public $keywords;
+
+    /**
+     * @var string
+     */
+    public $recipeCategory;
+
+    /**
+     * @var string
+     */
+    public $recipeCuisine;
 
     /**
      * @var string
@@ -81,6 +108,11 @@ class Recipe extends Model
     public $serves = 1;
 
     /**
+     * @var string
+     */
+    public $servesUnit = '';
+
+    /**
      * @var array
      */
     public $ingredients = [];
@@ -91,9 +123,19 @@ class Recipe extends Model
     public $directions = [];
 
     /**
+     * @var array
+     */
+    public $equipment = [];
+
+    /**
      * @var int
      */
     public $imageId = 0;
+
+    /**
+     * @var int
+     */
+    public $videoId = 0;
 
     /**
      * @var int
@@ -202,11 +244,16 @@ class Recipe extends Model
     {
         return [
             ['name', 'string'],
+            ['author', 'string'],
             ['name', 'default', 'value' => ''],
             ['description', 'string'],
+            ['keywords', 'string'],
+            ['recipeCategory', 'string'],
+            ['recipeCuisine', 'string'],
             ['skill', 'string'],
             ['serves', 'integer'],
             ['imageId', 'integer'],
+            ['videoId', 'integer'],
             ['prepTime', 'integer'],
             ['cookTime', 'integer'],
             ['totalTime', 'integer'],
@@ -222,17 +269,24 @@ class Recipe extends Model
             ['sugarContent', 'integer'],
             ['transFatContent', 'integer'],
             ['unsaturatedFatContent', 'integer'],
+            [
+                [
+                    'ingredients',
+                    'directions',
+                    'equipment',
+                ],
+                ArrayValidator::class,
+            ],
+
         ];
     }
 
     /**
-     * Render the JSON-LD Structured Data for this recipe
+     * Return the JSON-LD Structured Data for this recipe
      *
-     * @param bool $raw
-     *
-     * @return string|\Twig_Markup
+     * @return array
      */
-    public function renderRecipeJSONLD($raw = true)
+    public function getRecipeJSONLD(): array
     {
         $recipeJSONLD = [
             'context' => 'http://schema.org',
@@ -240,11 +294,38 @@ class Recipe extends Model
             'name' => $this->name,
             'image' => $this->getImageUrl(),
             'description' => $this->description,
-            'recipeYield' => $this->serves,
+            'keywords' => $this->keywords,
+            'recipeCategory' => $this->recipeCategory,
+            'recipeCuisine' => $this->recipeCuisine,
+            'recipeYield' => $this->getServes(),
             'recipeIngredient' => $this->getIngredients('imperial', 0, false),
             'recipeInstructions' => $this->getDirections(false),
+            'tool' => $this->getEquipment(false),
         ];
         $recipeJSONLD = array_filter($recipeJSONLD);
+
+        if (!empty($this->author)) {
+            $author = [
+                'type' => 'Person',
+                'name' => $this->author,
+            ];
+            $author = array_filter($author);
+            $recipeJSONLD['author'] = $author;
+        }
+
+        $videoUrl = $this->getVideoUrl();
+        if (!empty($videoUrl)) {
+            $video = [
+                'type' => 'VideoObject',
+                'name' => $this->name,
+                'description' => $this->description,
+                'contentUrl' => $videoUrl,
+                'thumbnailUrl' => $this->getImageUrl(),
+                'uploadDate' => $this->getVideoUploadedDate()
+            ];
+            $video = array_filter($video);
+            $recipeJSONLD['video'] = $video;
+        }
 
         $nutrition = [
             'type' => 'NutritionInformation',
@@ -308,7 +389,62 @@ class Recipe extends Model
             $recipeJSONLD['totalTime'] = 'PT' . $this->totalTime . 'M';
         }
 
-        return $this->renderJsonLd($recipeJSONLD, $raw);
+        return $recipeJSONLD;
+    }
+
+    /**
+     * Create the SEOmatic MetaJsonLd object for this recipe
+     *
+     * @param bool $add
+     * @param null $key
+     * @return null|MetaJsonLd
+     */
+    public function createRecipeMetaJsonLd($key = null, bool $add = true)
+    {
+        $result = null;
+        if (Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE)) {
+            $seomatic = Seomatic::getInstance();
+            if ($seomatic !== null) {
+                $recipeJson = $this->getRecipeJSONLD();
+                // If we're adding the MetaJsonLd to the container, and no key is provided, give it a random key
+                if ($add && $key === null) {
+                    try {
+                        $key = StringHelper::UUID();
+                    } catch (\Exception $e) {
+                        // That's okay
+                    }
+                }
+                if ($key !== null) {
+                    $recipeJson['key'] = $key;
+                }
+                // If the key is `mainEntityOfPage` add in the URL
+                if ($key === self::MAIN_ENTITY_KEY) {
+                    $mainEntity = Seomatic::$plugin->jsonLd->get(self::MAIN_ENTITY_KEY);
+                    if ($mainEntity) {
+                        $recipeJson[self::MAIN_ENTITY_KEY] = $mainEntity[self::MAIN_ENTITY_KEY];
+                    }
+                }
+
+                $result = Seomatic::$plugin->jsonLd->create(
+                    $recipeJson,
+                    $add
+                );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Render the JSON-LD Structured Data for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return string|\Twig_Markup
+     */
+    public function renderRecipeJSONLD($raw = true)
+    {
+        return $this->renderJsonLd($this->getRecipeJSONLD(), $raw);
     }
 
     /**
@@ -325,6 +461,42 @@ class Recipe extends Model
             $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
             if ($image) {
                 $result = $image->getUrl($transform);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the URL to the recipe's video
+     *
+     * @return null|string
+     */
+    public function getVideoUrl()
+    {
+        $result = '';
+        if (isset($this->videoId) && $this->videoId) {
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            if ($video) {
+                $result = $video->getUrl();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the URL to the recipe's uploaded date
+     *
+     * @return null|string
+     */
+    public function getVideoUploadedDate()
+    {
+        $result = '';
+        if (isset($this->videoId) && $this->videoId) {
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            if ($video) {
+                $result = $video->dateCreated->format('c');
             }
         }
 
@@ -550,6 +722,29 @@ class Recipe extends Model
     }
 
     /**
+     * Get all of the equipment for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return array
+     */
+    public function getEquipment($raw = true)
+    {
+        $result = [];
+        if (!empty($this->equipment)) {
+            foreach ($this->equipment as $row) {
+                $equipment = $row['equipment'];
+                if ($raw) {
+                    $equipment = Template::raw(equipment);
+                }
+                $result[] = $equipment;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get the aggregate rating from all of the ratings
      *
      * @return float|int|string
@@ -579,6 +774,18 @@ class Recipe extends Model
     public function getRatingsCount(): int
     {
         return count($this->ratings);
+    }
+
+    /**
+     * Returns concatenated serves with its unit
+     */
+    public function getServes(): string
+    {
+        if(!empty($this->servesUnit)) {
+            return $this->serves . ' ' . $this->servesUnit;
+        }
+
+        return $this->serves;
     }
 
     // Private Methods

@@ -27,9 +27,9 @@ Recipe works on Craft 3.x.
 
 ![Screenshot](./resources/screenshots/recipe01.png)
 
-Recipe adds a 'Recipe' FieldType for Craft CMS that you can add to any of your Sections.
+Recipe adds a 'Recipe’ FieldType for Craft CMS that you can add to any of your Sections.
 
-In encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty' fractions for Imperial units, and can output correct ingredient portions for any number of servings.
+In encapsulates everything you need for a recipe, including the ingredients, a photo of the recipe, directions, cooking time, ratings, and even nutritional information. It handles converting between Imperial and Metric units, outputs 'pretty’ fractions for Imperial units, and can output correct ingredient portions for any number of servings.
 
 Recipe also generates the [JSON-LD microdata](https://developers.google.com/structured-data/) for your recipes, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results.
 
@@ -41,19 +41,23 @@ Create a Recipe field via **Settings->Fields** and you can set the Asset Sources
 
 ## Using Recipe
 
-Once you have created the Recipe field, add it to your Section Entry Types, and fill in what recipe information is appropriate.  Nothing other than the name is required, so feel free to leave anything blank that you're not using.
+Once you have created the Recipe field, add it to your Section Entry Types, and fill in what recipe information is appropriate.  Nothing other than the name is required, so feel free to leave anything blank that you’re not using.
 
 ## Using Recipe in your Templates
 
-To display information about a recipe in your templates, you just use familiar Twig code.  Let's assume the field handle for your Recipe field is `someRecipe`; this is what you'd use to output information about it:
+To display information about a recipe in your templates, you just use familiar Twig code.  Let’s assume the field handle for your Recipe field is `someRecipe`; this is what you’d use to output information about it:
 
 ### Basic Info
 
 * `entry.someRecipe.name` - the name of the recipe
 * `entry.someRecipe.description` - the description of the recipe
+* `entry.someRecipe.recipeCategory` - The category of the recipe—for example, appetizer, entree, etc.
+* `entry.someRecipe.recipeCuisine` - The cuisine of the recipe (for example, French or Ethiopian).
 * `entry.someRecipe.skill` - the skill level required to make this recipe
-* `entry.someRecipe.serves` - how many people the recipe serves
+* `entry.someRecipe.serves` - the raw number of how many people the recipe serves
+* `entry.someRecipe.getServes()` - how many people the recipe serves combined with the `entry.someRecipe.servesUnit`
 * `entry.someRecipe.getImageUrl()` - a URL to the image for the recipe; you can pass in an optional image transform or image transform handle here as well: `entry.someRecipe.getImageUrl('display')`
+* `entry.someRecipe.getVideoUrl()` - a URL to the video for the recipe
 * `entry.someRecipe.prepTime` - the prep time for the recipe in minutes
 * `entry.someRecipe.cookTime` - the cooking time for the recipe in minutes
 * `entry.someRecipe.totalTime` - the total time for the recipe in minutes
@@ -86,7 +90,7 @@ The percentages are based on [US Recommended Dietary Allowances](https://en.wiki
 }) }}
 ```
 
-If you want to control the way the template looks, you can put your own frontend template in `recipe/recipe-nutrition-facts` and Recipe will use it
+To control the way the template looks, you can put your own frontend template in `recipe/recipe-nutrition-facts` and Recipe will use it
 
 ### Ingredients
 
@@ -99,7 +103,7 @@ For a list of ingredients, do the following (adding whatever output markup you w
     {% endfor %}
 ```
 
-The first parameter is the units you'd like to use (`'imperial'` or `'metric'`).  The second parameter is how many people you'd like the recipe portions to be sized for.  By default, it will use `'imperial'` and the serving size in the recipe if you don't pass these parameters in, e.g.: `entry.someRecipe.getIngredients()`
+The first parameter is the units you’d like to use (`'imperial'` or `'metric'`).  The second parameter is how many people you’d like the recipe portions to be sized for.  By default, it will use `'imperial'` and the serving size in the recipe if you don’t pass these parameters in, for example: `entry.someRecipe.getIngredients()`
 
 ### Directions
 
@@ -109,6 +113,17 @@ For a list of directions, do the following (adding whatever output markup you wa
     {% set directions = entry.someRecipe.getDirections() %}
     {% for direction in directions %}
         {{ direction }}
+    {% endfor %}
+```
+
+### Equipment
+
+For a list of equipment, do the following (adding whatever output markup you want):
+
+```twig
+    {% set equipment = entry.someRecipe.getEquipment() %}
+    {% for item in equipment %}
+        {{ item }}
     {% endfor %}
 ```
 
@@ -148,19 +163,49 @@ To output the nutritional information for the recipe, do the following:
 
 ### Image Asset ID
 
-If you need to do any further manipulation of the Recipe Image (perhaps a transform) you can get the Asset ID for it:
+To do any further manipulation of the Recipe Image (perhaps a transform) you can get the Asset ID for it:
 
 * `entry.someRecipe.imageId` - the Asset ID of the image for the recipe
 
 ## Rendering Recipe JSON-LD Microdata
 
-Recipe can render JSON-LD microdata for you, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results:
+### Using SEOmatic
+
+If you are using the [SEOmatic plugin](https://plugins.craftcms.com/seomatic), you can create a MetaJsonLd model from the Recipe field data:
+
+```twig
+	{% do recipeMetaJsonLd = entry.someRecipe.createRecipeMetaJsonLd() %}
+```
+
+This creates the MetaJsonLd model, and by default adds it to the container so that SEOmatic will render it on the page.
+
+You can modify the MetaJsonLd before it renders, just like you can any [SEOmatic MetaJsonLd item](https://nystudio107.com/docs/seomatic/using.html#json-ld-meta-object-examples). Extensive examples can be found in the [Annotated JSON-LD Structured Data Examples](https://nystudio107.com/blog/annotated-json-ld-structured-data-examples) article.
+
+If you’re adding a single recipe to the page, and it should be the [Main Entity of the page](https://schema.org/docs/datamodel.html#mainEntityBackground), pass in `mainEntityOfPage` as the first `key` parameter:
+
+```twig
+	{% do recipeMetaJsonLd = entry.someRecipe.createRecipeMetaJsonLd('mainEntityOfPage') %}
+```
+
+If you just want to create the MetaJsonLd object but _not_ add it to the container, you can pass in `false` as the second parameter:
+
+```twig
+	{% do recipeMetaJsonLd = entry.someRecipe.createRecipeMetaJsonLd(null, false) %}
+```
+
+You might do this if you wanted to create one or more Recipe MetaJsonLd items to be added a sub-properties of another MetaJsonLd object.
+
+### Manually rendering
+
+If you’re not using SEOmatic, Recipe can manually render JSON-LD microdata for you, which allows it to be displayed in the [Google knowledge panel](https://developers.google.com/structured-data/rich-snippets/recipes) for search results:
 
 ```twig
 	{{ entry.someRecipe.renderRecipeJSONLD() }}
 ```
 
 ![Screenshot](./resources/screenshots/recipe02.png)
+
+Typically you would want to render the JSON-LD before the `</body>` tag.
 
 ## Importing Recipes with Feed Me
 

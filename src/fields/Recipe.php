@@ -149,6 +149,13 @@ class Recipe extends Field
             }
             $elements = [Craft::$app->getAssets()->getAssetById($value->imageId)];
         }
+        $videoElements = [];
+        if ($value->videoId) {
+            if (is_array($value->videoId)) {
+                $value->videoId = $value->videoId[0];
+            }
+            $videoElements = [Craft::$app->getAssets()->getAssetById($value->videoId)];
+        }
 
         // Render the input template
         try {
@@ -163,19 +170,15 @@ class Recipe extends Field
                     'prefix' => Craft::$app->getView()->namespaceInputId(''),
                     'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
                     'elements' => $elements,
+                    'videoElements' => $videoElements,
                     'elementType' => Asset::class,
                     'assetSources' => $this->assetSources,
                     'hasApiCredentials' => RecipePlugin::$plugin->settings->hasApiCredentials(),
                 ]
             );
-        } catch (LoaderError $e) {
+        } catch (\Throwable $e) {
             Craft::error($e->getMessage(), __METHOD__);
-        } catch (RuntimeError $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-        } catch (SyntaxError $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-        } catch (Exception $e) {
-            Craft::error($e->getMessage(), __METHOD__);
+            return '';
         }
     }
 

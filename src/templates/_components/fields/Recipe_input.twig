@@ -36,6 +36,17 @@
                 required: true,
             }) }}
 
+            {{ forms.textField({
+                id: id ~ 'author',
+                class: 'nicetext',
+                name: name ~ '[author]',
+                label: 'Recipe Author' |t,
+                instructions: 'Enter the person who authored this recipe' |t,
+                value: value.author,
+                errors: value.getErrors('author'),
+                required: false,
+            }) }}
+
             {{ forms.textareaField({
                 id: id ~ 'description',
                 class: 'nicetext',
@@ -44,6 +55,39 @@
                 instructions: 'Enter a description of this recipe' |t,
                 value: value.description,
                 errors: value.getErrors('description'),
+                required: false,
+            }) }}
+
+            {{ forms.textField({
+                id: id ~ 'keywords',
+                class: 'nicetext',
+                name: name ~ '[keywords]',
+                label: 'Recipe Keywords' |t,
+                instructions: 'A comma-separated list of keywords for this recipe' |t,
+                value: value.keywords,
+                errors: value.getErrors('keywords'),
+                required: false,
+            }) }}
+
+            {{ forms.textField({
+                id: id ~ 'recipeCategory',
+                class: 'nicetext',
+                name: name ~ '[recipeCategory]',
+                label: 'Recipe Category' |t,
+                instructions: 'The category of the recipe—for example, appetizer, entree, etc.' |t,
+                value: value.recipeCategory,
+                errors: value.getErrors('recipeCategory'),
+                required: false,
+            }) }}
+
+            {{ forms.textField({
+                id: id ~ 'recipeCuisine',
+                class: 'nicetext',
+                name: name ~ '[recipeCuisine]',
+                label: 'Recipe Cuisine' |t,
+                instructions: 'The cuisine of the recipe (for example, French or Ethiopian).' |t,
+                value: value.recipeCuisine,
+                errors: value.getErrors('recipeCuisine'),
                 required: false,
             }) }}
 
@@ -73,22 +117,55 @@
                 required: true,
             }) }}
 
+            {{ forms.textField({
+                id: id ~ 'servesUnit',
+                class: 'nicetext',
+                name: name ~ '[servesUnit]',
+                label: 'Recipe Serves Unit' |t,
+                instructions: 'Enter the name of the portions (slices, pints, loafs...)' |t,
+                value: value.servesUnit,
+                errors: value.getErrors('servesUnit'),
+                required: false,
+            }) }}
+
             {% if assetsSourceExists %}
                 {{ forms.elementSelectField({
                     elements: elements,
                     id: id ~ 'imageId',
                     name: name ~ '[imageId]',
                     label: 'Recipe Image' |t,
-                    instructions: 'Pick an image that represents this recipe' |t,
+                    instructions: 'Pick an image that represents this recipe. This is also used for the Recipe Video thumbnail, if a Recipe Video is present.' |t,
                     elementType: elementType,
                     criteria: {
-                        'kind': [],
+                        'kind': ['image'],
                         'enabledForSite': null,
                     },
                     sourceElementId: value.imageId,
                     sources: assetSources,
                     jsClass: 'Craft.AssetSelectInput',
                     addButtonLabel: "Select an Image" |t,
+                    limit: 1,
+                }) }}
+            {% else %}
+                <p class="error">No assets sources currently exist.</p>
+            {% endif %}
+
+            {% if assetsSourceExists %}
+                {{ forms.elementSelectField({
+                    elements: videoElements,
+                    id: id ~ 'videoId',
+                    name: name ~ '[videoId]',
+                    label: 'Recipe Video' |t,
+                    instructions: 'Pick an video that represents this recipe' |t,
+                    elementType: elementType,
+                    criteria: {
+                        'kind': ['video'],
+                        'enabledForSite': null,
+                    },
+                    sourceElementId: value.videoId,
+                    sources: assetSources,
+                    jsClass: 'Craft.AssetSelectInput',
+                    addButtonLabel: "Select a Video" |t,
                     limit: 1,
                 }) }}
             {% else %}
@@ -152,6 +229,23 @@
                 },
                 rows: value.directions,
                 addRowLabel: "Add a Direction" |t,
+            }) }}
+
+            {{ forms.editableTableField({
+                id: id ~ 'equipment',
+                name: name ~ '[equipment]',
+                label: 'Recipe Equipment' |t,
+                instructions: "Enter the equipment for this recipe by clicking on 'Add Equipment'." |t,
+                required: false,
+                static: false,
+                cols: {
+                    equipment: {
+                        heading: "Equipment" |t,
+                        type: "multiline" |t,
+                    },
+                },
+                rows: value.equipment,
+                addRowLabel: "Add Equipment" |t,
             }) }}
 
             {{ forms.textField({
