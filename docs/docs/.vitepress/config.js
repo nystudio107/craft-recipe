@@ -14,7 +14,7 @@ module.exports = {
         docsDir: 'docs/docs',
         docsBranch: 'v1',
         algolia: {
-            apiKey: '',
+            apiKey: 'd9aa4fc31d67fba1d38915de67311070',
             indexName: 'recipe'
         },
         editLinks: true,
