@@ -74,7 +74,7 @@ class Recipe extends Plugin
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event): void {
+            static function (RegisterComponentTypesEvent $event): void {
                 $event->types[] = RecipeField::class;
             }
         );
@@ -84,8 +84,7 @@ class Recipe extends Plugin
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
             function (PluginEvent $event): void {
-                if (!Craft::$app->getRequest()->getIsConsoleRequest()
-                    && ($event->plugin === $this)) {
+                if (($event->plugin === $this) && !Craft::$app->getRequest()->getIsConsoleRequest()) {
                     Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('recipe/welcome'))->send();
                 }
             }
