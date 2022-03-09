@@ -38,8 +38,6 @@ class Settings extends Model
 
     /**
      * Returns whether the settings have API credentials.
-     *
-     * @return bool
      */
     public function hasApiCredentials(): bool
     {

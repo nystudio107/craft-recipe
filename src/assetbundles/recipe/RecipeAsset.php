@@ -28,7 +28,7 @@ class RecipeAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         $this->sourcePath = "@nystudio107/recipe/assetbundles/recipe/dist";
 

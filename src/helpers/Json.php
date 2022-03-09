@@ -36,15 +36,15 @@ class Json extends \craft\helpers\Json
         $options =
         JSON_UNESCAPED_UNICODE
         | JSON_UNESCAPED_SLASHES
-    ) {
+    ): string {
         // If `devMode` is enabled, make the JSON-LD human-readable
         if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $options |= JSON_PRETTY_PRINT;
         }
-        self::$recursionLevel = 0;
-        $result = parent::encode($value, $options);
 
-        return $result;
+        self::$recursionLevel = 0;
+
+        return parent::encode($value, $options);
     }
 
     /**
@@ -52,9 +52,9 @@ class Json extends \craft\helpers\Json
      */
     protected static function processData($data, &$expressions, $expPrefix)
     {
-        self::$recursionLevel++;
+        ++self::$recursionLevel;
         $result = parent::processData($data, $expressions, $expPrefix);
-        self::$recursionLevel--;
+        --self::$recursionLevel;
         static::normalizeJsonLdArray($result, self::$recursionLevel);
 
         return $result;
@@ -71,7 +71,7 @@ class Json extends \craft\helpers\Json
      * @param $array
      * @param $depth
      */
-    protected static function normalizeJsonLdArray(&$array, $depth)
+    protected static function normalizeJsonLdArray(&$array, $depth): void
     {
         $array = array_filter($array);
         $array = self::changeKey($array, 'context', '@context');
@@ -94,6 +94,7 @@ class Json extends \craft\helpers\Json
         if (!array_key_exists($oldKey, $array)) {
             return $array;
         }
+
         $keys = array_keys($array);
         $keys[array_search($oldKey, $keys)] = $newKey;
 

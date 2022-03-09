@@ -61,13 +61,12 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
-        $rules = array_merge($rules, [
-        ]);
 
-        return $rules;
+        return array_merge($rules, [
+        ]);
     }
 
     /**
@@ -90,20 +89,20 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
-    public function normalizeValue($value, ElementInterface $element = null)
+    public function normalizeValue(mixed $value, ?\craft\base\ElementInterface $element = null): RecipeModel
     {
         if (is_string($value) && !empty($value)) {
             $value = Json::decode($value);
         }
-        $model = new RecipeModel($value);
 
-        return $model;
+
+        return new RecipeModel($value);
     }
 
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
@@ -118,13 +117,13 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?\craft\base\ElementInterface $element = null): string
     {
         // Register our asset bundle
         try {
             Craft::$app->getView()->registerAssetBundle(RecipeFieldAsset::class);
-        } catch (InvalidConfigException $e) {
-            Craft::error($e->getMessage(), __METHOD__);
+        } catch (InvalidConfigException $invalidConfigException) {
+            Craft::error($invalidConfigException->getMessage(), __METHOD__);
         }
 
         // Get our id and namespace
@@ -139,7 +138,7 @@ class Recipe extends Field
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
         ];
         $jsonVars = Json::encode($jsonVars);
-        Craft::$app->getView()->registerJs("$('#{$nameSpacedId}-field').RecipeRecipe(".$jsonVars.");");
+        Craft::$app->getView()->registerJs(sprintf('$(\'#%s-field\').RecipeRecipe(', $nameSpacedId).$jsonVars.");");
 
         // Set asset elements
         $elements = [];
@@ -147,13 +146,16 @@ class Recipe extends Field
             if (is_array($value->imageId)) {
                 $value->imageId = $value->imageId[0];
             }
+
             $elements = [Craft::$app->getAssets()->getAssetById($value->imageId)];
         }
+
         $videoElements = [];
         if ($value->videoId) {
             if (is_array($value->videoId)) {
                 $value->videoId = $value->videoId[0];
             }
+
             $videoElements = [Craft::$app->getAssets()->getAssetById($value->videoId)];
         }
 
@@ -168,16 +170,16 @@ class Recipe extends Field
                     'id' => $id,
                     'nameSpacedId' => $nameSpacedId,
                     'prefix' => Craft::$app->getView()->namespaceInputId(''),
-                    'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
+                    'assetsSourceExists' => is_countable(Craft::$app->getAssets()->findFolders()) ? count(Craft::$app->getAssets()->findFolders()) : 0,
                     'elements' => $elements,
                     'videoElements' => $videoElements,
                     'elementType' => Asset::class,
                     'assetSources' => $this->assetSources,
-                    'hasApiCredentials' => RecipePlugin::$plugin->settings->hasApiCredentials(),
+                    'hasApiCredentials' => RecipePlugin::$plugin->getSettings()->hasApiCredentials(),
                 ]
             );
-        } catch (\Throwable $e) {
-            Craft::error($e->getMessage(), __METHOD__);
+        } catch (\Throwable $throwable) {
+            Craft::error($throwable->getMessage(), __METHOD__);
             return '';
         }
     }
@@ -189,7 +191,7 @@ class Recipe extends Field
     {
         $sourceOptions = [];
 
-        foreach (Asset::sources('settings') as $key => $volume) {
+        foreach (Asset::sources('settings') as $volume) {
             if (!isset($volume['heading'])) {
                 $sourceOptions[] = [
                     'label' => Html::encode($volume['label']),

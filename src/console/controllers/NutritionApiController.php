@@ -38,7 +38,7 @@ class NutritionApiController extends Controller
     /**
      * @inheritdoc
      */
-    public function options($actionID)
+    public function options($actionID): array
     {
         $options = parent::options($actionID);
         $options[] = 'section';
@@ -50,9 +50,9 @@ class NutritionApiController extends Controller
     /**
      * Generates nutritional information for all entries in a section provided using --section.
      */
-    public function actionGenerate()
+    public function actionGenerate(): int
     {
-        if (Recipe::$plugin->settings->hasApiCredentials() === false) {
+        if (!Recipe::$plugin->getSettings()->hasApiCredentials()) {
             $this->stderr(Craft::t('recipe', 'API credentials do not exist in plugin settings.').PHP_EOL, Console::FG_RED);
 
             return ExitCode::OK;
@@ -112,14 +112,14 @@ class NutritionApiController extends Controller
                 $entry->setFieldValue($this->field, $recipe);
 
                 if (!Craft::$app->getElements()->saveElement($entry)) {
-                    $failed++;
+                    ++$failed;
                 }
             }
             else {
-                $failed++;
+                ++$failed;
             }
 
-            $count++;
+            ++$count;
 
             Console::updateProgress($count, $total);
         }

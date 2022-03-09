@@ -26,19 +26,17 @@ class NutritionApi extends Component
     /**
      * Returns nutritional information about a recipe.
      *
-     * @param array $ingredients
      * @param int|null $serves
-     * @return array
      */
     public function getNutritionalInfo(array $ingredients, int $serves = null): array
     {
-        if (Recipe::$plugin->settings->hasApiCredentials() === false) {
+        if (!Recipe::$plugin->getSettings()->hasApiCredentials()) {
             return [];
         }
 
         $url = 'https://api.edamam.com/api/nutrition-details'
-            .'?app_id='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationId)
-            .'&app_key='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationKey);
+            .'?app_id='.Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationId)
+            .'&app_key='.Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationKey);
 
         $data = [
             'ingr' => $ingredients,
@@ -51,7 +49,7 @@ class NutritionApi extends Component
         try {
             $response = Craft::createGuzzleClient()->post($url, ['json' => $data]);
 
-            $result = json_decode($response->getBody());
+            $result = json_decode($response->getBody(), null, 512, JSON_THROW_ON_ERROR);
 
             $yield = $result->yield ?: 1;
 
@@ -73,13 +71,10 @@ class NutritionApi extends Component
         catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';
 
-            switch ($exception->getCode()) {
-                case 401:
-                    $message .= 'Please verify your API credentials.';
-                    break;
-                case 555:
-                    $message .= 'One or more ingredients could not be recognized.';
-                    break;
+            if ($exception->getCode() == 401) {
+                $message .= 'Please verify your API credentials.';
+            } elseif ($exception->getCode() == 555) {
+                $message .= 'One or more ingredients could not be recognized.';
             }
 
             Craft::error($message.$exception->getMessage(), __METHOD__);

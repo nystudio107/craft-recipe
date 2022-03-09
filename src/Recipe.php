@@ -11,22 +11,18 @@
 
 namespace nystudio107\recipe;
 
-use nystudio107\recipe\fields\Recipe as RecipeField;
-use nystudio107\recipe\integrations\RecipeFeedMeField;
-
 use Craft;
 use craft\base\Plugin;
+use craft\events\PluginEvent;
+use craft\events\RegisterComponentTypesEvent;
+use craft\feedme\events\RegisterFeedMeFieldsEvent;
+use craft\helpers\UrlHelper;
 use craft\services\Fields;
 use craft\services\Plugins;
-use craft\events\RegisterComponentTypesEvent;
-use craft\events\PluginEvent;
-use craft\helpers\UrlHelper;
+use nystudio107\recipe\fields\Recipe as RecipeField;
 use nystudio107\recipe\models\Settings;
 use nystudio107\recipe\services\NutritionApi;
 use yii\base\Event;
-
-use craft\feedme\events\RegisterFeedMeFieldsEvent;
-use craft\feedme\services\Fields as FeedMeFields;
 
 /**
  * Class Recipe
@@ -69,7 +65,7 @@ class Recipe extends Plugin
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -78,7 +74,7 @@ class Recipe extends Plugin
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event) {
+            function (RegisterComponentTypesEvent $event): void {
                 $event->types[] = RecipeField::class;
             }
         );
@@ -87,18 +83,18 @@ class Recipe extends Plugin
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
+            function (PluginEvent $event): void {
                 if (!Craft::$app->getRequest()->getIsConsoleRequest()
-                && ($event->plugin === $this)) {
+                    && ($event->plugin === $this)) {
                     Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('recipe/welcome'))->send();
                 }
             }
         );
 
-        $feedMeInstalled = Craft::$app->getPlugins()->isPluginInstalled('feed-me') && Craft::$app->getPlugins()->isPluginEnabled('feed-me');
+        Craft::$app->getPlugins()->isPluginInstalled('feed-me') && Craft::$app->getPlugins()->isPluginEnabled('feed-me');
 
         if ($feedMeInstalled) {
-            Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function(RegisterFeedMeFieldsEvent $e) {
+            Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function (RegisterFeedMeFieldsEvent $e) {
                 $e->fields[] = RecipeFeedMeField::class;
             });
         }
@@ -124,7 +120,7 @@ class Recipe extends Plugin
     /**
      * @inheritdoc
      */
-    protected function settingsHtml()
+    protected function settingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('recipe/settings', [
             'settings' => $this->settings

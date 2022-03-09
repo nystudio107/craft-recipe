@@ -28,7 +28,7 @@ class NutritionApiController extends Controller
      *
      * @throws BadRequestHttpException
      */
-    public function actionGetNutritionalInfo()
+    public function actionGetNutritionalInfo(): \yii\web\Response
     {
         $this->requireAcceptsJson();
 
