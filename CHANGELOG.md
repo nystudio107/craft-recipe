@@ -1,5 +1,11 @@
 # Recipe Changelog
 
+## 4.0.0-beta.1 - 2022.03.09
+
+### Added
+
+* Initial Craft CMS 4 compatibility
+
 ## 1.4.0 - 2021.10.05
 ### Added
 * Added `.createRecipeMetaJsonLd()` to the Recipes field, to allow the creation of SEOmatic MetaJsonLd objects that can be manipulated and rendered on the page by SEOmatic

@@ -1,41 +1,38 @@
 {
-    "name": "nystudio107/craft-recipe",
-    "description": "A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support",
-    "type": "craft-plugin",
-    "version": "1.4.0",
-    "keywords": [
-        "craft",
-        "cms",
-        "craftcms",
-        "craft-plugin",
-        "recipe"
-    ],
-    "support": {
-        "docs": "https://nystudio107.com/plugins/recipe/documentation",
-        "issues": "https://nystudio107.com/plugins/recipe/support"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "nystudio107",
-            "homepage": "https://nystudio107.com"
-        }
-    ],
-    "require": {
-        "craftcms/cms": "^3.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-          "nystudio107\\recipe\\": "src/"
-        }
-    },
-    "extra": {
-        "name": "Recipe",
-        "handle": "recipe",
-        "schemaVersion": "1.0.0",
-        "hasCpSettings": true,
-        "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-recipe/v1/CHANGELOG.md",
-        "class": "nystudio107\\recipe\\Recipe"
+  "name": "nystudio107/craft-recipe",
+  "description": "A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support",
+  "type": "craft-plugin",
+  "version": "4.0.0-beta.1",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "recipe"
+  ],
+  "support": {
+    "docs": "https://nystudio107.com/docs/recipe/",
+    "issues": "https://nystudio107.com/plugins/recipe/support",
+    "source": "https://github.com/nystudio107/craft-recipe"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "nystudio107",
+      "homepage": "https://nystudio107.com"
     }
+  ],
+  "require": {
+    "craftcms/cms": "^4.0.0-alpha.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "nystudio107\\recipe\\": "src/"
+    }
+  },
+  "extra": {
+    "class": "nystudio107\\recipe\\Recipe",
+    "handle": "recipe",
+    "name": "Recipe"
+  }
 }
