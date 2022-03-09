@@ -35,8 +35,8 @@ class NutritionApi extends Component
         }
 
         $url = 'https://api.edamam.com/api/nutrition-details'
-            .'?app_id='.Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationId)
-            .'&app_key='.Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationKey);
+            . '?app_id=' . Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationId)
+            . '&app_key=' . Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationKey);
 
         $data = [
             'ingr' => $ingredients,
@@ -54,7 +54,7 @@ class NutritionApi extends Component
             $yield = $result->yield ?: 1;
 
             return [
-                'servingSize' => round($result->totalWeight / $yield, 0).' grams',
+                'servingSize' => round($result->totalWeight / $yield, 0) . ' grams',
                 'calories' => round($result->totalNutrients->ENERC_KCAL->quantity / $yield, 0),
                 'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity / $yield, 1),
                 'cholesterolContent' => round($result->totalNutrients->CHOLE->quantity / $yield, 1),
@@ -67,8 +67,7 @@ class NutritionApi extends Component
                 'transFatContent' => round($result->totalNutrients->FATRN->quantity / $yield, 1),
                 'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity) / $yield, 1),
             ];
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';
 
             if ($exception->getCode() == 401) {
@@ -77,7 +76,7 @@ class NutritionApi extends Component
                 $message .= 'One or more ingredients could not be recognized.';
             }
 
-            Craft::error($message.$exception->getMessage(), __METHOD__);
+            Craft::error($message . $exception->getMessage(), __METHOD__);
 
             return ['error' => $message];
         }

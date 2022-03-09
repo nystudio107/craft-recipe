@@ -11,21 +11,16 @@
 
 namespace nystudio107\recipe\fields;
 
-use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
-use nystudio107\recipe\models\Recipe as RecipeModel;
-
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\elements\Asset;
 use craft\helpers\Html;
 use craft\helpers\Json;
-
+use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
+use nystudio107\recipe\models\Recipe as RecipeModel;
 use nystudio107\recipe\Recipe as RecipePlugin;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use yii\base\Exception;
+use Throwable;
 use yii\base\InvalidConfigException;
 use yii\db\Schema;
 
@@ -42,7 +37,7 @@ class Recipe extends Field
     /**
      * @var array
      */
-    public $assetSources = [];
+    public array $assetSources = [];
 
     // Static Methods
     // =========================================================================
@@ -89,7 +84,7 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
-    public function normalizeValue(mixed $value, ?\craft\base\ElementInterface $element = null): RecipeModel
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): RecipeModel
     {
         if (is_string($value) && !empty($value)) {
             $value = Json::decode($value);
@@ -117,7 +112,7 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
-    public function getInputHtml(mixed $value, ?\craft\base\ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
         // Register our asset bundle
         try {
@@ -127,7 +122,7 @@ class Recipe extends Field
         }
 
         // Get our id and namespace
-        $id = Craft::$app->getView()->formatInputId($this->handle);
+        $id = Html::id($this->handle);
         $nameSpacedId = Craft::$app->getView()->namespaceInputId($id);
 
         // Variables to pass down to our field JavaScript to let it namespace properly
@@ -138,7 +133,7 @@ class Recipe extends Field
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
         ];
         $jsonVars = Json::encode($jsonVars);
-        Craft::$app->getView()->registerJs(sprintf('$(\'#%s-field\').RecipeRecipe(', $nameSpacedId).$jsonVars.");");
+        Craft::$app->getView()->registerJs(sprintf('$(\'#%s-field\').RecipeRecipe(', $nameSpacedId) . $jsonVars . ");");
 
         // Set asset elements
         $elements = [];
@@ -178,14 +173,14 @@ class Recipe extends Field
                     'hasApiCredentials' => RecipePlugin::$plugin->getSettings()->hasApiCredentials(),
                 ]
             );
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             Craft::error($throwable->getMessage(), __METHOD__);
             return '';
         }
     }
 
     /**
-     * @inheritdoc
+     * Get the asset sources
      */
     public function getSourceOptions(): array
     {

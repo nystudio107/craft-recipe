@@ -11,17 +11,16 @@
 
 namespace nystudio107\recipe\models;
 
-use nystudio107\recipe\helpers\Json;
-use nystudio107\recipe\helpers\PluginTemplate;
-use nystudio107\seomatic\Seomatic;
-use nystudio107\seomatic\models\MetaJsonLd;
-
 use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
 use craft\helpers\Template;
 use craft\validators\ArrayValidator;
-
+use Exception;
+use nystudio107\recipe\helpers\Json;
+use nystudio107\recipe\helpers\PluginTemplate;
+use nystudio107\seomatic\models\MetaJsonLd;
+use nystudio107\seomatic\Seomatic;
 use Twig\Markup;
 
 /**
@@ -33,19 +32,11 @@ class Recipe extends Model
 {
     // Constants
     // =========================================================================
-    /**
-     * @var string
-     */
+
     public const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
 
-    /**
-     * @var string
-     */
     public const MAIN_ENTITY_KEY = 'mainEntityOfPage';
 
-    /**
-     * @var array<string, int>
-     */
     public const US_RDA = [
         'calories' => 2000,
         'carbohydrateContent' => 275,
@@ -59,9 +50,6 @@ class Recipe extends Model
     ];
 
     // Mapping to convert any of the incorrect plural values
-    /**
-     * @var array<string, string>
-     */
     public const NORMALIZE_PLURALS = [
         'tsps' => 'tsp',
         'tbsps' => 'tbsp',
@@ -82,152 +70,152 @@ class Recipe extends Model
     /**
      * @var string
      */
-    public $name;
+    public string $name = '';
 
     /**
      * @var string
      */
-    public $author;
+    public string $author = '';
 
     /**
      * @var string
      */
-    public $description;
+    public string $description = '';
 
     /**
      * @var string
      */
-    public $keywords;
+    public string $keywords = '';
 
     /**
      * @var string
      */
-    public $recipeCategory;
+    public string $recipeCategory = '';
 
     /**
      * @var string
      */
-    public $recipeCuisine;
+    public string $recipeCuisine = '';
 
     /**
      * @var string
      */
-    public $skill = 'intermediate';
+    public string $skill = 'intermediate';
 
     /**
      * @var int
      */
-    public $serves = 1;
+    public int $serves = 1;
 
     /**
      * @var string
      */
-    public $servesUnit = '';
+    public string $servesUnit = '';
 
     /**
      * @var array
      */
-    public $ingredients = [];
+    public array $ingredients = [];
 
     /**
      * @var array
      */
-    public $directions = [];
+    public array $directions = [];
 
     /**
      * @var array
      */
-    public $equipment = [];
+    public array $equipment = [];
+
+    /**
+     * @var ?array
+     */
+    public ?array $imageId = null;
+
+    /**
+     * @var ?array
+     */
+    public ?array $videoId = null;
 
     /**
      * @var int
      */
-    public $imageId = 0;
+    public int $prepTime = 0;
 
     /**
      * @var int
      */
-    public $videoId = 0;
+    public int $cookTime = 0;
 
     /**
      * @var int
      */
-    public $prepTime;
+    public int $totalTime = 0;
 
     /**
-     * @var int
+     * @var ?array
      */
-    public $cookTime;
-
-    /**
-     * @var int
-     */
-    public $totalTime;
-
-    /**
-     * @var array
-     */
-    public $ratings = [];
+    public ?array $ratings = null;
 
     /**
      * @var string
      */
-    public $servingSize;
+    public string $servingSize = '';
 
     /**
      * @var int
      */
-    public $calories;
+    public int $calories = 0;
 
     /**
      * @var int
      */
-    public $carbohydrateContent;
+    public int $carbohydrateContent = 0;
 
     /**
      * @var int
      */
-    public $cholesterolContent;
+    public int $cholesterolContent = 0;
 
     /**
      * @var int
      */
-    public $fatContent;
+    public int $fatContent = 0;
 
     /**
      * @var int
      */
-    public $fiberContent;
+    public int $fiberContent = 0;
 
     /**
      * @var int
      */
-    public $proteinContent;
+    public int $proteinContent = 0;
 
     /**
      * @var int
      */
-    public $saturatedFatContent;
+    public int $saturatedFatContent = 0;
 
     /**
      * @var int
      */
-    public $sodiumContent;
+    public int $sodiumContent = 0;
 
     /**
      * @var int
      */
-    public $sugarContent;
+    public int $sugarContent = 0;
 
     /**
      * @var int
      */
-    public $transFatContent;
+    public int $transFatContent = 0;
 
     /**
      * @var int
      */
-    public $unsaturatedFatContent;
+    public int $unsaturatedFatContent = 0;
 
     // Public Methods
     // =========================================================================
@@ -296,13 +284,11 @@ class Recipe extends Model
 
     /**
      * Return the JSON-LD Structured Data for this recipe
-     *
-     * @return array<string, mixed[]>
      */
     public function getRecipeJSONLD(): array
     {
         $recipeJSONLD = [
-            'context' => 'http://schema.org',
+            'context' => 'https://schema.org',
             'type' => 'Recipe',
             'name' => $this->name,
             'image' => $this->getImageUrl(),
@@ -414,7 +400,7 @@ class Recipe extends Model
      *
      * @param null $key
      */
-    public function createRecipeMetaJsonLd($key = null, bool $add = true): ?\nystudio107\seomatic\models\MetaJsonLd
+    public function createRecipeMetaJsonLd($key = null, bool $add = true): ?MetaJsonLd
     {
         $result = null;
         if (Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE)) {
@@ -425,7 +411,7 @@ class Recipe extends Model
                 if ($add && $key === null) {
                     try {
                         $key = StringHelper::UUID();
-                    } catch (\Exception) {
+                    } catch (Exception) {
                         // That's okay
                     }
                 }
@@ -457,7 +443,7 @@ class Recipe extends Model
      *
      *
      */
-    public function renderRecipeJSONLD(bool $raw = true): string|\Twig\Markup
+    public function renderRecipeJSONLD(bool $raw = true): string|Markup
     {
         return $this->renderJsonLd($this->getRecipeJSONLD(), $raw);
     }
@@ -470,7 +456,7 @@ class Recipe extends Model
     public function getImageUrl($transform = null): ?string
     {
         $result = '';
-        if ($this->imageId !== null && $this->imageId) {
+        if ($this->imageId) {
             $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
             if ($image) {
                 $result = $image->getUrl($transform);
@@ -486,7 +472,7 @@ class Recipe extends Model
     public function getVideoUrl(): ?string
     {
         $result = '';
-        if ($this->videoId !== null && $this->videoId) {
+        if ($this->videoId) {
             $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
             if ($video) {
                 $result = $video->getUrl();
@@ -502,7 +488,7 @@ class Recipe extends Model
     public function getVideoUploadedDate(): ?string
     {
         $result = '';
-        if ($this->videoId !== null && $this->videoId) {
+        if ($this->videoId) {
             $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
             if ($video) {
                 $result = $video->dateCreated->format('c');
@@ -515,7 +501,8 @@ class Recipe extends Model
     /**
      * Render the Nutrition Facts template
      */
-    public function renderNutritionFacts(array $rda = self::US_RDA): Markup {
+    public function renderNutritionFacts(array $rda = self::US_RDA): Markup
+    {
         return PluginTemplate::renderPluginTemplate(
             'recipe-nutrition-facts',
             [
@@ -526,10 +513,7 @@ class Recipe extends Model
     }
 
     /**
-     * Get all of the ingredients for this recipe
-     *
-     *
-     * @return string[]|\Twig\Markup[]
+     * Get all the ingredients for this recipe
      */
     public function getIngredients(string $outputUnits = 'imperial', int $serving = 0, bool $raw = true): array
     {
@@ -641,6 +625,86 @@ class Recipe extends Model
     }
 
     /**
+     * Get all the directions for this recipe
+     *
+     *
+     * @return array
+     */
+    public function getDirections(bool $raw = true): array
+    {
+        $result = [];
+        foreach ($this->directions as $row) {
+            $direction = $row['direction'];
+            if ($raw) {
+                $direction = Template::raw($direction);
+            }
+
+            $result[] = $direction;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all the equipment for this recipe
+     */
+    public function getEquipment(bool $raw = true): array
+    {
+        $result = [];
+        foreach ($this->equipment as $row) {
+            $equipment = $row['equipment'];
+            if ($raw) {
+                $equipment = Template::raw($equipment);
+            }
+
+            $result[] = $equipment;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the aggregate rating from all the ratings
+     */
+    public function getAggregateRating(): float|int|string
+    {
+        $result = 0;
+        $total = 0;
+        if (!empty($this->ratings)) {
+            foreach ($this->ratings as $row) {
+                $result += $row['rating'];
+                ++$total;
+            }
+
+            $result /= $total;
+        } else {
+            $result = '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the total number of ratings
+     */
+    public function getRatingsCount(): int
+    {
+        return count($this->ratings);
+    }
+
+    /**
+     * Returns concatenated serves with its unit
+     */
+    public function getServes(): int|string
+    {
+        if (!empty($this->servesUnit)) {
+            return $this->serves . ' ' . $this->servesUnit;
+        }
+
+        return $this->serves;
+    }
+
+    /**
      * Convert decimal numbers into fractions
      *
      * @param $quantity
@@ -691,9 +755,9 @@ class Recipe extends Model
                 $denominator = 10 ** $precision;
                 $numerator = $pnum * $denominator;
                 $fraction = ' <sup>'
-                    .$numerator
+                    . $numerator
                     . '</sup>&frasl;<sub>'
-                    .$denominator
+                    . $denominator
                     . '</sub>';
                 break;
         }
@@ -702,101 +766,18 @@ class Recipe extends Model
             $whole = '';
         }
 
-        return $whole.$fraction;
-    }
-
-    /**
-     * Get all of the directions for this recipe
-     *
-     *
-     * @return mixed[]
-     */
-    public function getDirections(bool $raw = true): array
-    {
-        $result = [];
-        foreach ($this->directions as $row) {
-            $direction = $row['direction'];
-            if ($raw) {
-                $direction = Template::raw($direction);
-            }
-
-            $result[] = $direction;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get all of the equipment for this recipe
-     *
-     *
-     * @return mixed[]
-     */
-    public function getEquipment(bool $raw = true): array
-    {
-        $result = [];
-        foreach ($this->equipment as $row) {
-            $equipment = $row['equipment'];
-            if ($raw) {
-                $equipment = Template::raw(equipment);
-            }
-
-            $result[] = $equipment;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the aggregate rating from all of the ratings
-     */
-    public function getAggregateRating(): float|int|string
-    {
-        $result = 0;
-        $total = 0;
-        if ($this->ratings !== null && !empty($this->ratings)) {
-            foreach ($this->ratings as $row) {
-                $result += $row['rating'];
-                ++$total;
-            }
-
-            $result /= $total;
-        } else {
-            $result = '';
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the total number of ratings
-     */
-    public function getRatingsCount(): int
-    {
-        return count($this->ratings);
-    }
-
-    /**
-     * Returns concatenated serves with its unit
-     */
-    public function getServes(): int|string
-    {
-        if(!empty($this->servesUnit)) {
-            return $this->serves . ' ' . $this->servesUnit;
-        }
-
-        return $this->serves;
+        return $whole . $fraction;
     }
 
     // Private Methods
     // =========================================================================
+
     /**
      * Renders a JSON-LD representation of the schema
      *
      * @param      $json
-     *
      */
-    private function renderJsonLd($json, bool $raw = true): string|\Twig\Markup
+    private function renderJsonLd($json, bool $raw = true): string|Markup
     {
         $linebreak = '';
 
@@ -807,10 +788,10 @@ class Recipe extends Model
 
         // Render the resulting JSON-LD
         $result = '<script type="application/ld+json">'
-            .$linebreak
-            .Json::encode($json)
-            .$linebreak
-            .'</script>';
+            . $linebreak
+            . Json::encode($json)
+            . $linebreak
+            . '</script>';
 
         if ($raw) {
             $result = Template::raw($result);

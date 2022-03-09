@@ -24,17 +24,17 @@ class Settings extends Model
      * An application ID for the Edamam Nutrition Analysis API.
      * https://developer.edamam.com/edamam-nutrition-api
      *
-     * @var string|null
+     * @var ?string
      */
-    public $apiApplicationId;
+    public ?string $apiApplicationId = null;
 
     /**
      * An application key for the Edamam Nutrition Analysis API.
      * https://developer.edamam.com/edamam-nutrition-api
      *
-     * @var string|null
+     * @var ?string
      */
-    public $apiApplicationKey;
+    public ?string $apiApplicationKey = null;
 
     /**
      * Returns whether the settings have API credentials.

@@ -15,6 +15,7 @@ use Craft;
 use craft\web\Controller;
 use nystudio107\recipe\Recipe;
 use yii\web\BadRequestHttpException;
+use yii\web\Response;
 
 /**
  * @author    nystudio107
@@ -28,7 +29,7 @@ class NutritionApiController extends Controller
      *
      * @throws BadRequestHttpException
      */
-    public function actionGetNutritionalInfo(): \yii\web\Response
+    public function actionGetNutritionalInfo(): Response
     {
         $this->requireAcceptsJson();
 

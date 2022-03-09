@@ -23,7 +23,7 @@ class Json extends \craft\helpers\Json
     // Static Properties
     // =========================================================================
 
-    protected static $recursionLevel;
+    protected static int $recursionLevel;
 
     // Static Methods
     // =========================================================================
@@ -36,7 +36,8 @@ class Json extends \craft\helpers\Json
         $options =
         JSON_UNESCAPED_UNICODE
         | JSON_UNESCAPED_SLASHES
-    ): string {
+    ): string
+    {
         // If `devMode` is enabled, make the JSON-LD human-readable
         if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $options |= JSON_PRETTY_PRINT;
@@ -82,14 +83,8 @@ class Json extends \craft\helpers\Json
     /**
      * Replace key values without reordering the array or converting numeric
      * keys to associative keys (which unset() does)
-     *
-     * @param $array
-     * @param $oldKey
-     * @param $newKey
-     *
-     * @return array
      */
-    protected static function changeKey($array, $oldKey, $newKey)
+    protected static function changeKey(array $array, string $oldKey, string $newKey): array
     {
         if (!array_key_exists($oldKey, $array)) {
             return $array;

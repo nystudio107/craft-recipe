@@ -14,10 +14,8 @@ namespace nystudio107\recipe\helpers;
 use Craft;
 use craft\helpers\Template;
 use craft\web\View;
-
-use yii\base\Exception;
-
 use Twig\Markup;
+use yii\base\Exception;
 
 /**
  * @author    nystudio107
@@ -48,31 +46,29 @@ class PluginTemplate
     /**
      * Render a plugin template
      *
-     * @param $templatePath
-     * @param $params
+     * @param string $templatePath
+     * @param array $params
+     * @return Markup
      */
     public static function renderPluginTemplate(string $templatePath, array $params = []): Markup
     {
-        $e = null;
+        $exception = null;
         $htmlText = '';
         // Stash the old template mode, and set it Control Panel template mode
         $oldMode = Craft::$app->view->getTemplateMode();
-        $templateRendered = false;
         // Look for a frontend template to render first
-        if (!$templateRendered) {
-            try {
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-            } catch (Exception $exception) {
-                Craft::error($exception->getMessage(), __METHOD__);
-            }
+        try {
+            Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+        } catch (Exception $exception) {
+            Craft::error($exception->getMessage(), __METHOD__);
+        }
 
-            // Render the template with our vars passed in
-            try {
-                $htmlText = Craft::$app->view->renderTemplate('recipe/' .$templatePath, $params);
-                $templateRendered = true;
-            } catch (\Exception $exception) {
-                $templateRendered = false;
-            }
+        // Render the template with our vars passed in
+        try {
+            $htmlText = Craft::$app->view->renderTemplate('recipe/' . $templatePath, $params);
+            $templateRendered = true;
+        } catch (\Exception $exception) {
+            $templateRendered = false;
         }
 
         // If no frontend template was found, try our built-in template

@@ -17,6 +17,7 @@ use craft\elements\Entry;
 use craft\helpers\Console;
 use nystudio107\recipe\Recipe;
 use yii\console\ExitCode;
+use yii\helpers\BaseConsole;
 
 /**
  * @author    nystudio107
@@ -26,14 +27,14 @@ use yii\console\ExitCode;
 class NutritionApiController extends Controller
 {
     /**
-     * @var string The handle of the section.
+     * @var ?string The handle of the section.
      */
-    public $section;
+    public ?string $section = null;
 
     /**
-     * @var string The handle of the recipe field.
+     * @var ?string The handle of the recipe field.
      */
-    public $field;
+    public ?string $field = null;
 
     /**
      * @inheritdoc
@@ -53,25 +54,19 @@ class NutritionApiController extends Controller
     public function actionGenerate(): int
     {
         if (!Recipe::$plugin->getSettings()->hasApiCredentials()) {
-            $this->stderr(Craft::t('recipe', 'API credentials do not exist in plugin settings.').PHP_EOL, Console::FG_RED);
+            $this->stderr(Craft::t('recipe', 'API credentials do not exist in plugin settings.') . PHP_EOL, BaseConsole::FG_RED);
 
             return ExitCode::OK;
         }
 
         if ($this->section === null) {
-            $this->stderr(Craft::t('recipe', 'A section handle must be provided using --section.').PHP_EOL, Console::FG_RED);
+            $this->stderr(Craft::t('recipe', 'A section handle must be provided using --section.') . PHP_EOL, BaseConsole::FG_RED);
 
             return ExitCode::OK;
         }
 
         if ($this->field === null) {
-            $this->stderr(Craft::t('recipe', 'A field handle must be provided using --field.').PHP_EOL, Console::FG_RED);
-
-            return ExitCode::OK;
-        }
-
-        if ($this->field === null) {
-            $this->stderr(Craft::t('recipe', 'A field handle must be provided using --field.').PHP_EOL, Console::FG_RED);
+            $this->stderr(Craft::t('recipe', 'A field handle must be provided using --field.') . PHP_EOL, BaseConsole::FG_RED);
 
             return ExitCode::OK;
         }
@@ -79,7 +74,7 @@ class NutritionApiController extends Controller
         $entries = Entry::find()->section($this->section)->all();
 
         if (empty($entries)) {
-            $this->stderr(Craft::t('recipe', 'No entries found in the section with handle `{handle}`.', ['handle' => $this->section]).PHP_EOL, Console::FG_RED);
+            $this->stderr(Craft::t('recipe', 'No entries found in the section with handle `{handle}`.', ['handle' => $this->section]) . PHP_EOL, BaseConsole::FG_RED);
 
             return ExitCode::OK;
         }
@@ -88,7 +83,7 @@ class NutritionApiController extends Controller
         $count = 0;
         $failed = 0;
 
-        $this->stdout(Craft::t('recipe', 'Generating nutritional information for {count} entries...', ['count' => $total]).PHP_EOL, Console::FG_YELLOW);
+        $this->stdout(Craft::t('recipe', 'Generating nutritional information for {count} entries...', ['count' => $total]) . PHP_EOL, BaseConsole::FG_YELLOW);
 
         Console::startProgress($count, $total, '', 0.8);
 
@@ -114,8 +109,7 @@ class NutritionApiController extends Controller
                 if (!Craft::$app->getElements()->saveElement($entry)) {
                     ++$failed;
                 }
-            }
-            else {
+            } else {
                 ++$failed;
             }
 
@@ -128,10 +122,10 @@ class NutritionApiController extends Controller
 
         $succeeded = $count - $failed;
 
-        $this->stdout(Craft::t('recipe', 'Successfully generated nutritional information for {count} entries.', ['count' => $succeeded]).PHP_EOL, Console::FG_GREEN);
+        $this->stdout(Craft::t('recipe', 'Successfully generated nutritional information for {count} entries.', ['count' => $succeeded]) . PHP_EOL, BaseConsole::FG_GREEN);
 
         if ($failed > 0) {
-            $this->stderr(Craft::t('recipe', 'Failed to generate nutritional information for {count} entries.', ['count' => $failed]).PHP_EOL, Console::FG_RED);
+            $this->stderr(Craft::t('recipe', 'Failed to generate nutritional information for {count} entries.', ['count' => $failed]) . PHP_EOL, BaseConsole::FG_RED);
         }
 
         return ExitCode::OK;
