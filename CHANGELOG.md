@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 4.0.0-beta.2 - UNRELEASED
+
+### Fixed
+* Fix issues with editable table fields, due to the change in default values for Craft 4
+
 ## 4.0.0-beta.1 - 2022.03.09
 
 ### Added
