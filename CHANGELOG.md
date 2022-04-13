@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 4.0.0-beta.3 - 2022.04.13
+
+### Fixed
+* Fixed an issue where an exception would be thrown if the FeedMe beta plugin was installed ([#56](https://github.com/nystudio107/craft-recipe/issues/56))
+
 ## 4.0.0-beta.2 - 2022.03.14
 
 ### Fixed
