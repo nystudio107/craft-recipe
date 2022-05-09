@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 4.0.1 - 2022.05.09
+### Fixed
+* Fixed an issue where model properties were not converted from an array to an `int` before saving ((#57)[https://github.com/nystudio107/craft-recipe/issues/57])
+* Fixed an issue with assets not showing up by removing `'enabledForSite': null,` from the `criteria`
+
 ## 4.0.0 - 2022.05.09
 ### Added
 * Initial Craft CMS 4 release
