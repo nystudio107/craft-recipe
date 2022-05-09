@@ -1,5 +1,12 @@
 # Recipe Changelog
 
+## 4.0.0 - 2022.05.09
+### Added
+* Initial Craft CMS 4 release
+
+### Fixed
+* Fixed an issue where certain model properties were typed as `?array` when they should have been typed as `?int`, causing a type error to be thrown ((#57)[https://github.com/nystudio107/craft-recipe/issues/57])
+
 ## 4.0.0-beta.3 - 2022.04.13
 
 ### Fixed
