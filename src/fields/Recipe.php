@@ -86,12 +86,32 @@ class Recipe extends Field
      */
     public function normalizeValue(mixed $value, ?ElementInterface $element = null): RecipeModel
     {
-        if (is_string($value) && !empty($value)) {
-            $value = Json::decode($value);
+        $config = [];
+        // If we already have a model, just return it
+        if ($value instanceof RecipeModel) {
+            return $value;
+        }
+        // If we have a non-empty string, try to JSON-decode it
+        if (is_string($value)) {
+            $value = Json::decodeIfJson($value);
+        }
+        // If we have an array, use that for our config data
+        if (is_array($value)) {
+            $config = $value;
+        }
+        // Ensure we save our asset ids as integers, not arrays
+        if (isset($config['imageId'])) {
+            if (is_array($config['imageId'])) {
+                $config['imageId'] = $config['imageId'][0];
+            }
+        }
+        if (isset($config['videoId'])) {
+            if (is_array($config['videoId'])) {
+                $config['videoId'] = $config['videoId'][0];
+            }
         }
 
-
-        return new RecipeModel($value);
+        return new RecipeModel($config);
     }
 
     /**
