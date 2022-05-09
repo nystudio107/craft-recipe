@@ -128,14 +128,14 @@ class Recipe extends Model
     public array $equipment = [];
 
     /**
-     * @var ?array
+     * @var ?int
      */
-    public ?array $imageId = null;
+    public ?int $imageId = null;
 
     /**
-     * @var ?array
+     * @var ?int
      */
-    public ?array $videoId = null;
+    public ?int $videoId = null;
 
     /**
      * @var int
