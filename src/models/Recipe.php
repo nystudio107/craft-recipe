@@ -457,7 +457,7 @@ class Recipe extends Model
     {
         $result = '';
         if ($this->imageId) {
-            $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
+            $image = Craft::$app->getAssets()->getAssetById($this->imageId);
             if ($image) {
                 $result = $image->getUrl($transform);
             }
@@ -473,7 +473,7 @@ class Recipe extends Model
     {
         $result = '';
         if ($this->videoId) {
-            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId);
             if ($video) {
                 $result = $video->getUrl();
             }
@@ -489,7 +489,7 @@ class Recipe extends Model
     {
         $result = '';
         if ($this->videoId) {
-            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId);
             if ($video) {
                 $result = $video->dateCreated->format('c');
             }
