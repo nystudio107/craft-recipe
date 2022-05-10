@@ -489,7 +489,7 @@ class Recipe extends Model
     {
         $result = '';
         if ($this->videoId) {
-            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId);
             if ($video) {
                 $result = $video->dateCreated->format('c');
             }
