@@ -1,10 +1,12 @@
 # Recipe Changelog
 
-## 1.4.1 - UNRELEASED
+## 1.4.1 - 2022.12.01
 ### Changed
 * Move to using `ServicesTrait` and add getter methods for services
 * Switch to VitePress `^1.0.0-alpha.29` for the documentation
 * Add `allow-plugins` to the `composer.json` to enable CI to work
+* Wrap the fields in `<fieldset>` tags for semantic HTML & a11y
+* Remove the odd Craft `modifiedAttributes` styling when a field value is changed ([#12403](https://github.com/craftcms/cms/issues/12403))
 
 ## 1.4.0 - 2021.10.05
 ### Added
