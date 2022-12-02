@@ -23,7 +23,7 @@ use craft\services\Plugins;
 use nystudio107\recipe\fields\Recipe as RecipeField;
 use nystudio107\recipe\integrations\RecipeFeedMeField;
 use nystudio107\recipe\models\Settings;
-use nystudio107\recipe\services\NutritionApi;
+use nystudio107\recipe\services\ServicesTrait;
 use yii\base\Event;
 
 /**
@@ -33,33 +33,40 @@ use yii\base\Event;
  * @package   Recipe
  * @since     1.0.0
  *
- * @property NutritionApi $nutritionApi
  * @property Settings $settings
  */
 class Recipe extends Plugin
 {
+    // Traits
+    // =========================================================================
+
+    use ServicesTrait;
+
     // Static Properties
     // =========================================================================
 
     /**
-     * @var Recipe
+     * @var ?Recipe
      */
-    public static $plugin;
+    public static ?Recipe $plugin = null;
 
-    // Static Methods
+    // Public Properties
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @var string
      */
-    public function __construct($id, $parent = null, array $config = [])
-    {
-        $config['components'] = [
-            'nutritionApi' => NutritionApi::class,
-        ];
+    public string $schemaVersion = '1.0.0';
 
-        parent::__construct($id, $parent, $config);
-    }
+    /**
+     * @var bool
+     */
+    public bool $hasCpSection = false;
+
+    /**
+     * @var bool
+     */
+    public bool $hasCpSettings = true;
 
     // Public Methods
     // =========================================================================

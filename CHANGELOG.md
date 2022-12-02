@@ -1,5 +1,13 @@
 # Recipe Changelog
 
+## 4.0.3 - 2022.12.01
+### Changed
+* Move to using `ServicesTrait` and add getter methods for services
+* Switch to VitePress `^1.0.0-alpha.29` for the documentation
+* Add `allow-plugins` to the `composer.json` to enable CI to work
+* Wrap the fields in `<fieldset>` tags for semantic HTML & a11y
+* Remove the odd Craft `modifiedAttributes` styling when a field value is changed ([#12403](https://github.com/craftcms/cms/issues/12403))
+
 ## 4.0.2 - 2022.05.10
 ### Fixed
 * Fix array access on new type Int ([#59](https://github.com/nystudio107/craft-recipe/pull/59))

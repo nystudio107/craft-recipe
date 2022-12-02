@@ -124,3 +124,7 @@ div.content-icon-wrapper {
     padding: 3px 10px;
     cursor: help;
 }
+
+fieldset.recipe-fields .status-badge {
+    display: none;
+}
