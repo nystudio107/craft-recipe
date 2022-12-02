@@ -11,22 +11,20 @@
 
 namespace nystudio107\recipe;
 
-use nystudio107\recipe\fields\Recipe as RecipeField;
-use nystudio107\recipe\integrations\RecipeFeedMeField;
-
 use Craft;
 use craft\base\Plugin;
-use craft\services\Fields;
-use craft\services\Plugins;
-use craft\events\RegisterComponentTypesEvent;
 use craft\events\PluginEvent;
-use craft\helpers\UrlHelper;
-use nystudio107\recipe\models\Settings;
-use nystudio107\recipe\services\NutritionApi;
-use yii\base\Event;
-
+use craft\events\RegisterComponentTypesEvent;
 use craft\feedme\events\RegisterFeedMeFieldsEvent;
 use craft\feedme\services\Fields as FeedMeFields;
+use craft\helpers\UrlHelper;
+use craft\services\Fields;
+use craft\services\Plugins;
+use nystudio107\recipe\fields\Recipe as RecipeField;
+use nystudio107\recipe\integrations\RecipeFeedMeField;
+use nystudio107\recipe\models\Settings;
+use nystudio107\recipe\services\ServicesTrait;
+use yii\base\Event;
 
 /**
  * Class Recipe
@@ -35,11 +33,15 @@ use craft\feedme\services\Fields as FeedMeFields;
  * @package   Recipe
  * @since     1.0.0
  *
- * @property NutritionApi $nutritionApi
  * @property Settings $settings
  */
 class Recipe extends Plugin
 {
+    // Traits
+    // =========================================================================
+
+    use ServicesTrait;
+
     // Static Properties
     // =========================================================================
 
@@ -48,20 +50,23 @@ class Recipe extends Plugin
      */
     public static $plugin;
 
-    // Static Methods
+    // Public Properties
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @var string
      */
-    public function __construct($id, $parent = null, array $config = [])
-    {
-        $config['components'] = [
-            'nutritionApi' => NutritionApi::class,
-        ];
+    public $schemaVersion = '1.0.0';
 
-        parent::__construct($id, $parent, $config);
-    }
+    /**
+     * @var bool
+     */
+    public $hasCpSection = false;
+
+    /**
+     * @var bool
+     */
+    public $hasCpSettings = true;
 
     // Public Methods
     // =========================================================================
@@ -89,7 +94,7 @@ class Recipe extends Plugin
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
             function (PluginEvent $event) {
                 if (!Craft::$app->getRequest()->getIsConsoleRequest()
-                && ($event->plugin === $this)) {
+                    && ($event->plugin === $this)) {
                     Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('recipe/welcome'))->send();
                 }
             }
@@ -98,7 +103,7 @@ class Recipe extends Plugin
         $feedMeInstalled = Craft::$app->getPlugins()->isPluginInstalled('feed-me') && Craft::$app->getPlugins()->isPluginEnabled('feed-me');
 
         if ($feedMeInstalled) {
-            Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function(RegisterFeedMeFieldsEvent $e) {
+            Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function (RegisterFeedMeFieldsEvent $e) {
                 $e->fields[] = RecipeFeedMeField::class;
             });
         }
