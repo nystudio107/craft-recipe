@@ -23,7 +23,7 @@ export default defineConfig({
     },
     algolia: {
       appId: 'ANVOBU7GYX',
-      apiKey: 'd9aa4fc31d67fba1d38915de67311070',
+      apiKey: '66d1888afb505fa3d1b0342a487706ff',
       indexName: 'recipe'
     },
     lastUpdatedText: 'Last Updated',
