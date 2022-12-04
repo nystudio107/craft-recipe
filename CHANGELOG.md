@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 4.0.4 - 2022.12.04
+### Changed
+* Fix the display of the Recipe icon logo on the Welcome screen
+
 ## 4.0.3 - 2022.12.01
 ### Changed
 * Move to using `ServicesTrait` and add getter methods for services
