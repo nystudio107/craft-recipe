@@ -1,5 +1,13 @@
 # Recipe Changelog
 
+## 1.4.2 - 2023.02.21
+### Changed
+* Refactored the docs buildchain to use a dynamic docker container setup
+* Updated the docs to include instructions on how to do Multi-Component recipes
+
+### Fixed
+* Allow Recipe fields to work properly if they are embedded in a Matrix block ([#63](https://github.com/nystudio107/craft-recipe/issues/63))
+
 ## 1.4.1 - 2022.12.01
 ### Changed
 * Move to using `ServicesTrait` and add getter methods for services
