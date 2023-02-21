@@ -1,6 +1,9 @@
 # Recipe Changelog
 
 ## 1.4.2 - UNRELEASED
+### Changed
+* Refactored the docs buildchain to use a dynamic docker container setup
+
 ### Fixed
 * Allow Recipe fields to work properly if they are embedded in a Matrix block ([#63](https://github.com/nystudio107/craft-recipe/issues/63))
 
