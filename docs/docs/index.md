@@ -1,6 +1,6 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
 
-# Recipe plugin for Craft CMS 3.x
+# Recipe plugin for Craft CMS
 
 A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support
 
@@ -10,7 +10,7 @@ Related: [Recipe for Craft 2.x](https://github.com/nystudio107/recipe)
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later.
+This plugin requires Craft CMS 3.0.0 or later or Craft CMS 4.0.0 or later.
 
 ## Installation
 
@@ -20,8 +20,6 @@ To install Recipe, follow these steps:
 2. Install the plugin via `./craft install/plugin recipe` via the CLI, or in the Control Panel, go to Settings → Plugins and click the “Install” button for Recipe.
 
 You can also install Recipe via the **Plugin Store** in the Craft AdminCP.
-
-Recipe works on Craft 3.x.
 
 ## Recipe Overview
 
@@ -166,6 +164,24 @@ To output the nutritional information for the recipe, do the following:
 To do any further manipulation of the Recipe Image (perhaps a transform) you can get the Asset ID for it:
 
 * `entry.someRecipe.imageId` - the Asset ID of the image for the recipe
+
+## Multi-Component Recipes
+
+The Recipe field conceptually encompasses a single recipe. However, if you require multiple components in a recipe you can still use Recipe.
+
+An example of a multiple component recipe might be a dish that requires a sauce that's prepared separately from the main dish.
+
+What you can do is create a Matrix field that contains a Recipe field.
+
+![Screenshot](./resources/screenshots/component-recipe-field.png)
+
+Then the content author can create as many separate recipe components as they like, each with their own separate recipe in it.
+
+![Screenshot](./resources/screenshots/component-recipe-content.png)
+
+You can also add whatever other Craft fields you might like to the Matrix field that apply to all of the recipe components.
+
+For example, you might have a Recipe Name field that is the aggregate name of the whole recipe.
 
 ## Rendering Recipe JSON-LD Microdata
 
