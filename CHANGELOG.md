@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.4.3 - UNRELEASED
+### Fixed
+* Fix API Requests ([#65](https://github.com/nystudio107/craft-recipe/pull/65))
+
 ## 1.4.2 - 2023.02.21
 ### Changed
 * Refactored the docs buildchain to use a dynamic docker container setup
