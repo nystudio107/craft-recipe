@@ -54,18 +54,18 @@ class NutritionApi extends Component
             $yield = $result->yield ?: 1;
 
             return [
-                'servingSize' => round($result->totalWeight / $yield, 0) . ' grams',
-                'calories' => round($result->totalNutrients->ENERC_KCAL->quantity / $yield, 0),
-                'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity / $yield, 1),
-                'cholesterolContent' => round($result->totalNutrients->CHOLE->quantity / $yield, 1),
-                'fatContent' => round($result->totalNutrients->FAT->quantity / $yield, 1),
-                'fiberContent' => round($result->totalNutrients->FIBTG->quantity / $yield, 1),
-                'proteinContent' => round($result->totalNutrients->PROCNT->quantity / $yield, 1),
-                'saturatedFatContent' => round($result->totalNutrients->FASAT->quantity / $yield, 1),
-                'sodiumContent' => round($result->totalNutrients->NA->quantity / $yield, 1),
-                'sugarContent' => round($result->totalNutrients->SUGAR->quantity / $yield, 1),
-                'transFatContent' => round($result->totalNutrients->FATRN->quantity / $yield, 1),
-                'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity + $result->totalNutrients->FAPU->quantity) / $yield, 1),
+                'servingSize' => round($result->totalWeight ?? 0 / $yield, 0) . ' grams',
+                'calories' => round($result->totalNutrients->ENERC_KCAL->quantity ?? 0 / $yield, 0),
+                'carbohydrateContent' => round($result->totalNutrients->CHOCDF->quantity ?? 0 / $yield, 1),
+                'cholesterolContent' => round($result->totalNutrients->CHOLE->quantity ?? 0 / $yield, 1),
+                'fatContent' => round($result->totalNutrients->FAT->quantity ?? 0 / $yield, 1),
+                'fiberContent' => round($result->totalNutrients->FIBTG->quantity ?? 0 / $yield, 1),
+                'proteinContent' => round($result->totalNutrients->PROCNT->quantity ?? 0 / $yield, 1),
+                'saturatedFatContent' => round($result->totalNutrients->FASAT->quantity ?? 0 / $yield, 1),
+                'sodiumContent' => round($result->totalNutrients->NA->quantity ?? 0 / $yield, 1),
+                'sugarContent' => round($result->totalNutrients->SUGAR->quantity ?? 0 / $yield, 1),
+                'transFatContent' => round($result->totalNutrients->FATRN->quantity ?? 0 / $yield, 1),
+                'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity ?? 0 + $result->totalNutrients->FAPU->quantity ?? 0) / $yield, 1),
             ];
         } catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';
