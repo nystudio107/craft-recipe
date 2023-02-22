@@ -1,6 +1,6 @@
 # Recipe Changelog
 
-## 4.0.6 - UNRELEASED
+## 4.0.6 - 2023.02.22
 ### Fixed
 * Fix API Requests ([#65](https://github.com/nystudio107/craft-recipe/pull/65))
 
