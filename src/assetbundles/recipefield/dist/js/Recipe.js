@@ -67,7 +67,7 @@
             ingredients.push(ingredient.join(' '));
           });
 
-          var serves = $('#fields-' + field + 'serves').val();
+          var serves = $('#' + field + 'serves').val();
 
           $('.fetch-nutritional-info button').addClass('disabled');
           $('.fetch-nutritional-info .spinner').removeClass('hidden');
@@ -82,7 +82,7 @@
                 Craft.cp.displayError(response.error);
               } else {
                 $.each(response, function (index, value) {
-                  $('#fields-' + field + index).val(value);
+                  $('#' + field + index).val(value);
                 });
               }
 
