@@ -1,5 +1,9 @@
 # Recipe Changelog
 
+## 1.4.4 - UNRELEASED
+### Fixed
+* Fixed an issue where the Nutritional Information display didn't take into account the number of serviings ([#66](https://github.com/nystudio107/craft-recipe/issues/66))
+
 ## 1.4.3 - 2023.02.22
 ### Fixed
 * Fix API Requests ([#65](https://github.com/nystudio107/craft-recipe/pull/65))
