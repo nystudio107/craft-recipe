@@ -77,6 +77,7 @@
     .recipe-plugin-nutrition-label table tr.recipe-plugin-thick-row td {
         border-top: 4px solid #000;
     }
+
     .recipe-plugin-nutrition-label table tr.recipe-plugin-micros li:nth-child(1n+0) {
         padding-right: 8px;
     }
@@ -92,6 +93,7 @@
     .recipe-plugin-nutrition-label table tr.recipe-plugin-micros li {
         border-top: 1px solid #000;
     }
+
     .recipe-plugin-nutrition-label table tr.recipe-plugin-micros li {
         box-sizing: border-box;
         float: left;
@@ -110,7 +112,13 @@
     {% set result = (numerator * 100) / denomoninator %}
     {{ result | number_format(0) ~ '%' }}
 {% endmacro %}
-{% from _self import percentage  %}
+{% from _self import percentage %}
+
+{% macro servesValue(value, serves) %}
+    {% set result = value / serves %}
+    {{- result | number_format(0) -}}
+{% endmacro %}
+{% from _self import servesValue %}
 
 <div class="recipe-plugin-label">
     <div class="recipe-plugin-label-wrapper">
@@ -134,7 +142,7 @@
                 {% if value.calories | length %}
                     <tr class="recipe-plugin-calories-row">
                         <td colspan="2"><b>Calories:</b></td>
-                        <td>{{ value.calories }}</td>
+                        <td>{{ servesValue(value.calories, value.serves) }}</td>
                     </tr>
                 {% endif %}
                 <tr class="recipe-plugin-thick-row">
@@ -142,14 +150,14 @@
                 </tr>
                 {% if value.fatContent | length %}
                     <tr class="recipe-plugin-macros">
-                        <td colspan="2"><b>Total Fat:</b> {{ value.fatContent ~ 'g' }}</td>
+                        <td colspan="2"><b>Total Fat:</b> {{ servesValue(value.fatContent, value.serves) ~ 'g' }}</td>
                         <td><b>{{ percentage(value.fatContent, rda.fatContent) }}</b></td>
                     </tr>
                 {% endif %}
                 {% if value.saturatedFatContent | length %}
                     <tr class="recipe-plugin-macros">
                         <td class="recipe-plugin-indent"></td>
-                        <td>Saturated Fat: {{ value.saturatedFatContent ~ 'g' }}</td>
+                        <td>Saturated Fat: {{ servesValue(value.saturatedFatContent, value.serves) ~ 'g' }}</td>
                         <td>
                         </td>
                     </tr>
@@ -157,46 +165,48 @@
                 {% if value.transFatContent | length %}
                     <tr class="recipe-plugin-macros">
                         <td class="recipe-plugin-indent"></td>
-                        <td>Trans Fat: {{ value.transFatContent ~ 'g' }}</td>
+                        <td>Trans Fat: {{ servesValue(value.transFatContent, value.serves) ~ 'g' }}</td>
                         <td>
                         </td>
                     </tr>
                 {% endif %}
                 {% if value.cholesterolContent | length %}
                     <tr class="recipe-plugin-macros">
-                        <td colspan="2"><b>Cholesterol:</b> {{ value.cholesterolContent ~ 'mg' }}</td>
+                        <td colspan="2">
+                            <b>Cholesterol:</b> {{ servesValue(value.cholesterolContent, value.serves) ~ 'mg' }}</td>
                         <td><b>{{ percentage(value.cholesterolContent, rda.cholesterolContent) }}</b></td>
                     </tr>
                 {% endif %}
                 {% if value.sodiumContent | length %}
                     <tr class="recipe-plugin-macros">
-                        <td colspan="2"><b>Sodium:</b> {{ value.sodiumContent ~ 'mg' }}</td>
+                        <td colspan="2"><b>Sodium:</b> {{ servesValue(value.sodiumContent, value.serves) ~ 'mg' }}</td>
                         <td><b>{{ percentage(value.sodiumContent, rda.sodiumContent) }}</b></td>
                     </tr>
                 {% endif %}
                 {% if value.carbohydrateContent | length %}
                     <tr class="recipe-plugin-macros">
-                        <td colspan="2"><b>Total Carbohydrate:</b> {{ value.carbohydrateContent ~ 'g' }}</td>
+                        <td colspan="2"><b>Total
+                                Carbohydrate:</b> {{ servesValue(value.carbohydrateContent, value.serves) ~ 'g' }}</td>
                         <td><b>{{ percentage(value.carbohydrateContent, rda.carbohydrateContent) }}</b></td>
                     </tr>
                 {% endif %}
                 {% if value.fiberContent | length %}
                     <tr class="recipe-plugin-macros">
                         <td class="recipe-plugin-indent"></td>
-                        <td>Dietary Fiber: {{ value.fiberContent ~ 'g' }}</td>
+                        <td>Dietary Fiber: {{ servesValue(value.fiberContent, value.serves) ~ 'g' }}</td>
                         <td><b>{{ percentage(value.fiberContent, rda.fiberContent) }}</b></td>
                     </tr>
                 {% endif %}
                 {% if value.sugarContent | length %}
                     <tr class="recipe-plugin-macros">
                         <td class="recipe-plugin-indent"></td>
-                        <td>Sugars: {{ value.sugarContent ~ 'g' }}</td>
+                        <td>Sugars: {{ servesValue(value.sugarContent, value.serves) ~ 'g' }}</td>
                         <td><b>{{ percentage(value.sugarContent, rda.sugarContent) }}</b></td>
                     </tr>
                 {% endif %}
                 {% if value.proteinContent | length %}
                     <tr class="recipe-plugin-macros">
-                        <td colspan="2"><b>Protein:</b> {{ value.proteinContent ~ 'g' }}</td>
+                        <td colspan="2"><b>Protein:</b> {{ servesValue(value.proteinContent, value.serves) ~ 'g' }}</td>
                         <td><b>{{ percentage(value.proteinContent, rda.proteinContent) }}</b></td>
                     </tr>
                 {% endif %}
