@@ -130,7 +130,8 @@
             <header class="recipe-plugin-label-header">
                 <h1 class="recipe-plugin-label-title">Nutrition Facts</h1>
                 {% if value.servingSize | length %}
-                    <div class="recipe-plugin-detail">Serving Size: {{ value.servingSize }}</div>
+                    <div class="recipe-plugin-detail">Serving
+                        Size: {{ servesValue(value.servingSize, value.serves) }}</div>
                 {% endif %}
                 {% if value.serves | length %}
                     <div class="recipe-plugin-detail">Serves: {{ value.serves }}</div>
