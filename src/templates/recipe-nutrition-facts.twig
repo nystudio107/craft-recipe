@@ -131,7 +131,9 @@
                 <h1 class="recipe-plugin-label-title">Nutrition Facts</h1>
                 {% if value.servingSize | length %}
                     <div class="recipe-plugin-detail">Serving
-                        Size: {{ servesValue(value.servingSize, value.serves) }}</div>
+                        {% set servingSizeParts = value.servingSize | split(' ') %}
+                        Size: {{ servesValue(servingSizeParts[0], value.serves) ~ ' ' ~ servingSizeParts[1] ?? '' }}
+                    </div>
                 {% endif %}
                 {% if value.serves | length %}
                     <div class="recipe-plugin-detail">Serves: {{ value.serves }}</div>
