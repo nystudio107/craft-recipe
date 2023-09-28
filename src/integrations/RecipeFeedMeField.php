@@ -35,7 +35,7 @@ class RecipeFeedMeField extends Field implements FieldInterface
     // Templates
     // =========================================================================
 
-    public function getMappingTemplate()
+    public function getMappingTemplate(): string
     {
         return 'recipe/_integrations/feed-me';
     }
@@ -44,7 +44,7 @@ class RecipeFeedMeField extends Field implements FieldInterface
     // Public Methods
     // =========================================================================
 
-    public function parseField()
+    public function parseField(): mixed
     {
         $preppedData = [];
 
