@@ -1,6 +1,9 @@
 # Recipe Changelog
 
 ## 4.0.8 - UNRELEASED
+### Added
+* Automate release generation via GitHub action
+
 ### Fixed
 * Fixes compatibility with FeedMe's base FieldInterface ([#69](https://github.com/nystudio107/craft-recipe/pull/69))
 
