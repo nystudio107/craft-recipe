@@ -3,7 +3,7 @@ import {defineConfig} from 'vitepress';
 export default defineConfig({
   title: 'Recipe Plugin',
   description: 'Documentation for the Recipe plugin',
-  base: '/docs/recipe/',
+  base: '/docs/recipe/v1/',
   lang: 'en-US',
   head: [
     ['meta', {content: 'https://github.com/nystudio107', property: 'og:see_also',}],
@@ -33,6 +33,12 @@ export default defineConfig({
       {text: 'Store', link: 'https://plugins.craftcms.com/recipe'},
       {text: 'Changelog', link: 'https://nystudio107.com/plugins/recipe/changelog'},
       {text: 'Issues', link: 'https://github.com/nystudio107/craft-recipe/issues'},
+      {
+        text: 'v1', items: [
+          {text: 'v4', link: 'https://nystudio107.com/docs/recipe/'},
+          {text: 'v1', link: '/'},
+        ],
+      },
     ]
   },
 });
