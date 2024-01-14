@@ -33,6 +33,12 @@ export default defineConfig({
       {text: 'Store', link: 'https://plugins.craftcms.com/recipe'},
       {text: 'Changelog', link: 'https://nystudio107.com/plugins/recipe/changelog'},
       {text: 'Issues', link: 'https://github.com/nystudio107/craft-recipe/issues'},
+      {
+        text: 'v4', items: [
+          {text: 'v4', link: '/'},
+          {text: 'v1', link: 'https://nystudio107.com/docs/recipe/v1/'},
+        ],
+      },
     ]
   },
 });
