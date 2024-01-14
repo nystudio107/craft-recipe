@@ -1,6 +1,6 @@
 # Recipe Changelog
 
-## 1.4.5 - UNRELEASED
+## 1.4.5 - 2024.01.14
 ### Added
 * Automate release generation via GitHub action
 
