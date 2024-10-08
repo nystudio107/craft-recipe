@@ -320,7 +320,7 @@ class Recipe extends Model
                 'description' => $this->description,
                 'contentUrl' => $videoUrl,
                 'thumbnailUrl' => $this->getImageUrl(),
-                'uploadDate' => $this->getVideoUploadedDate()
+                'uploadDate' => $this->getVideoUploadedDate(),
             ];
             $video = array_filter($video);
             $recipeJSONLD['video'] = $video;

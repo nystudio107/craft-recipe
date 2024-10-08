@@ -210,7 +210,7 @@ class Recipe extends Field
             if (!isset($volume['heading'])) {
                 $sourceOptions[] = [
                     'label' => Html::encode($volume['label']),
-                    'value' => $volume['key']
+                    'value' => $volume['key'],
                 ];
             }
         }

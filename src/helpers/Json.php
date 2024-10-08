@@ -35,9 +35,8 @@ class Json extends \craft\helpers\Json
         $value,
         $options =
         JSON_UNESCAPED_UNICODE
-        | JSON_UNESCAPED_SLASHES
-    ): string
-    {
+        | JSON_UNESCAPED_SLASHES,
+    ): string {
         // If `devMode` is enabled, make the JSON-LD human-readable
         if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $options |= JSON_PRETTY_PRINT;

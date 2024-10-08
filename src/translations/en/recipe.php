@@ -29,5 +29,5 @@ return [
     'Generating nutritional information for {count} entries...' => 'Generating nutritional information for {count} entries...',
     'The [Edamam Nutrition Analysis API]({url}) can be used to fetch nutritional information from your ingredients.' => 'The [Edamam Nutrition Analysis API]({url}) can be used to fetch nutritional information from your ingredients.',
     'A field handle must be provided using --field.' => 'A field handle must be provided using --field.',
-    'Successfully generated nutritional information for {count} entries.' => 'Successfully generated nutritional information for {count} entries.'
+    'Successfully generated nutritional information for {count} entries.' => 'Successfully generated nutritional information for {count} entries.',
 ];

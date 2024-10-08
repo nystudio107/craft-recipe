@@ -24,5 +24,5 @@ return [
 
         // An application key for the Edamam Nutrition Analysis API (https://developer.edamam.com/edamam-nutrition-api).
         //'apiApplicationId' => '1a2b3c4e5f6g7h8i9j0k',
-    ]
+    ],
 ];
