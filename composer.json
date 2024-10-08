@@ -27,6 +27,7 @@
   },
   "require-dev": {
     "craftcms/ecs": "dev-main",
+    "craftcms/feed-me": "^5.0.0",
     "craftcms/phpstan": "dev-main",
     "craftcms/rector": "dev-main"
   },
