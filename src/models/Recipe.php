@@ -11,16 +11,16 @@
 
 namespace nystudio107\recipe\models;
 
-use nystudio107\recipe\helpers\Json;
-use nystudio107\recipe\helpers\PluginTemplate;
-use nystudio107\seomatic\Seomatic;
-use nystudio107\seomatic\models\MetaJsonLd;
-
 use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
 use craft\helpers\Template;
+
 use craft\validators\ArrayValidator;
+use nystudio107\recipe\helpers\Json;
+use nystudio107\recipe\helpers\PluginTemplate;
+use nystudio107\seomatic\models\MetaJsonLd;
+use nystudio107\seomatic\Seomatic;
 
 use Twig\Markup;
 
@@ -321,7 +321,7 @@ class Recipe extends Model
                 'description' => $this->description,
                 'contentUrl' => $videoUrl,
                 'thumbnailUrl' => $this->getImageUrl(),
-                'uploadDate' => $this->getVideoUploadedDate()
+                'uploadDate' => $this->getVideoUploadedDate(),
             ];
             $video = array_filter($video);
             $recipeJSONLD['video'] = $video;
@@ -509,7 +509,8 @@ class Recipe extends Model
      * @param array $rda
      * @return Markup
      */
-    public function renderNutritionFacts(array $rda = self::US_RDA): Markup {
+    public function renderNutritionFacts(array $rda = self::US_RDA): Markup
+    {
         return PluginTemplate::renderPluginTemplate(
             'recipe-nutrition-facts',
             [
@@ -685,9 +686,9 @@ class Recipe extends Model
                 $denominator = 10 ** $precision;
                 $numerator = $pnum * $denominator;
                 $fraction = ' <sup>'
-                    .$numerator
+                    . $numerator
                     . '</sup>&frasl;<sub>'
-                    .$denominator
+                    . $denominator
                     . '</sub>';
                 break;
         }
@@ -695,7 +696,7 @@ class Recipe extends Model
             $whole = '';
         }
 
-        return $whole.$fraction;
+        return $whole . $fraction;
     }
 
     /**
@@ -781,7 +782,7 @@ class Recipe extends Model
      */
     public function getServes(): string
     {
-        if(!empty($this->servesUnit)) {
+        if (!empty($this->servesUnit)) {
             return $this->serves . ' ' . $this->servesUnit;
         }
 
@@ -810,10 +811,10 @@ class Recipe extends Model
 
         // Render the resulting JSON-LD
         $result = '<script type="application/ld+json">'
-            .$linebreak
-            .Json::encode($json)
-            .$linebreak
-            .'</script>';
+            . $linebreak
+            . Json::encode($json)
+            . $linebreak
+            . '</script>';
 
         if ($raw === true) {
             $result = Template::raw($result);

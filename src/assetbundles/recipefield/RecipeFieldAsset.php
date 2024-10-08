@@ -11,7 +11,6 @@
 
 namespace nystudio107\recipe\assetbundles\recipefield;
 
-use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 

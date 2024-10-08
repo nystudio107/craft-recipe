@@ -15,9 +15,9 @@ use Craft;
 use craft\helpers\Template;
 use craft\web\View;
 
-use yii\base\Exception;
-
 use Twig\Markup;
+
+use yii\base\Exception;
 
 /**
  * @author    nystudio107
@@ -68,7 +68,7 @@ class PluginTemplate
             }
             // Render the template with our vars passed in
             try {
-                $htmlText = Craft::$app->view->renderTemplate('recipe/' .$templatePath, $params);
+                $htmlText = Craft::$app->view->renderTemplate('recipe/' . $templatePath, $params);
                 $templateRendered = true;
             } catch (\Exception $e) {
                 $templateRendered = false;

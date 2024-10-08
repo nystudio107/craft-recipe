@@ -37,8 +37,8 @@ class NutritionApi extends Component
         }
 
         $url = 'https://api.edamam.com/api/nutrition-details'
-            .'?app_id='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationId)
-            .'&app_key='.Craft::parseEnv(Recipe::$plugin->settings->apiApplicationKey);
+            . '?app_id=' . Craft::parseEnv(Recipe::$plugin->settings->apiApplicationId)
+            . '&app_key=' . Craft::parseEnv(Recipe::$plugin->settings->apiApplicationKey);
 
         $data = [
             'ingr' => $ingredients,
@@ -69,8 +69,7 @@ class NutritionApi extends Component
                 'transFatContent' => round($result->totalNutrients->FATRN->quantity ?? 0 / $yield, 1),
                 'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity ?? 0 + $result->totalNutrients->FAPU->quantity ?? 0) / $yield, 1),
             ];
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';
 
             switch ($exception->getCode()) {
@@ -82,7 +81,7 @@ class NutritionApi extends Component
                     break;
             }
 
-            Craft::error($message.$exception->getMessage(), __METHOD__);
+            Craft::error($message . $exception->getMessage(), __METHOD__);
 
             return ['error' => $message];
         }

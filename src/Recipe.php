@@ -83,7 +83,7 @@ class Recipe extends Plugin
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event) {
+            function(RegisterComponentTypesEvent $event) {
                 $event->types[] = RecipeField::class;
             }
         );
@@ -92,7 +92,7 @@ class Recipe extends Plugin
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
+            function(PluginEvent $event) {
                 if (!Craft::$app->getRequest()->getIsConsoleRequest()
                     && ($event->plugin === $this)) {
                     Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('recipe/welcome'))->send();
@@ -103,7 +103,7 @@ class Recipe extends Plugin
         $feedMeInstalled = Craft::$app->getPlugins()->isPluginInstalled('feed-me') && Craft::$app->getPlugins()->isPluginEnabled('feed-me');
 
         if ($feedMeInstalled) {
-            Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function (RegisterFeedMeFieldsEvent $e) {
+            Event::on(FeedMeFields::class, FeedMeFields::EVENT_REGISTER_FEED_ME_FIELDS, function(RegisterFeedMeFieldsEvent $e) {
                 $e->fields[] = RecipeFeedMeField::class;
             });
         }
@@ -132,7 +132,7 @@ class Recipe extends Plugin
     protected function settingsHtml()
     {
         return Craft::$app->getView()->renderTemplate('recipe/settings', [
-            'settings' => $this->settings
+            'settings' => $this->settings,
         ]);
     }
 }

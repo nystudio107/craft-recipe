@@ -35,7 +35,7 @@ trait ServicesTrait
         // ref: https://github.com/craftcms/cms/issues/1989
         $config = ArrayHelper::merge([
             'components' => [
-                'nutritionApi' => NutritionApi::class,]
+                'nutritionApi' => NutritionApi::class, ],
         ], $config);
 
         parent::__construct($id, $parent, $config);
