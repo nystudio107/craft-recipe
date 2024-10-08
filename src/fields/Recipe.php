@@ -65,7 +65,7 @@ class Recipe extends Field implements PreviewableFieldInterface
      */
     public static function icon(): string
     {
-        return '@nystudio107/recipe/icon-mask.svg';
+        return 'hat-chef';
     }
 
     /**
