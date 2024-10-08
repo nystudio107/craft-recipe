@@ -11,21 +11,17 @@
 
 namespace nystudio107\recipe\fields;
 
-use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
-use nystudio107\recipe\models\Recipe as RecipeModel;
-
 use Craft;
 use craft\base\ElementInterface;
+
 use craft\base\Field;
 use craft\elements\Asset;
 use craft\helpers\Html;
 use craft\helpers\Json;
+use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
+use nystudio107\recipe\models\Recipe as RecipeModel;
 
 use nystudio107\recipe\Recipe as RecipePlugin;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\db\Schema;
 
@@ -139,7 +135,7 @@ class Recipe extends Field
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
         ];
         $jsonVars = Json::encode($jsonVars);
-        Craft::$app->getView()->registerJs("$('#{$nameSpacedId}-field').RecipeRecipe(".$jsonVars.");");
+        Craft::$app->getView()->registerJs("$('#{$nameSpacedId}-field').RecipeRecipe(" . $jsonVars . ");");
 
         // Set asset elements
         $elements = [];
@@ -193,7 +189,7 @@ class Recipe extends Field
             if (!isset($volume['heading'])) {
                 $sourceOptions[] = [
                     'label' => Html::encode($volume['label']),
-                    'value' => $volume['key']
+                    'value' => $volume['key'],
                 ];
             }
         }
