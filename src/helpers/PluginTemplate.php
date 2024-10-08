@@ -14,9 +14,7 @@ namespace nystudio107\recipe\helpers;
 use Craft;
 use craft\helpers\Template;
 use craft\web\View;
-
 use Twig\Markup;
-
 use yii\base\Exception;
 
 /**
@@ -55,37 +53,38 @@ class PluginTemplate
      */
     public static function renderPluginTemplate(string $templatePath, array $params = []): Markup
     {
+        $exception = null;
         $htmlText = '';
         // Stash the old template mode, and set it Control Panel template mode
         $oldMode = Craft::$app->view->getTemplateMode();
-        $templateRendered = false;
         // Look for a frontend template to render first
-        if (!$templateRendered) {
-            try {
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-            } catch (Exception $e) {
-                Craft::error($e->getMessage(), __METHOD__);
-            }
-            // Render the template with our vars passed in
-            try {
-                $htmlText = Craft::$app->view->renderTemplate('recipe/' . $templatePath, $params);
-                $templateRendered = true;
-            } catch (\Exception $e) {
-                $templateRendered = false;
-            }
+        try {
+            Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+        } catch (Exception $exception) {
+            Craft::error($exception->getMessage(), __METHOD__);
         }
+
+        // Render the template with our vars passed in
+        try {
+            $htmlText = Craft::$app->view->renderTemplate('recipe/' . $templatePath, $params);
+            $templateRendered = true;
+        } catch (\Exception $exception) {
+            $templateRendered = false;
+        }
+
         // If no frontend template was found, try our built-in template
         if (!$templateRendered) {
             try {
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-            } catch (Exception $e) {
-                Craft::error($e->getMessage(), __METHOD__);
+            } catch (Exception $exception) {
+                Craft::error($exception->getMessage(), __METHOD__);
             }
+
             // Render the template with our vars passed in
             try {
                 $htmlText = Craft::$app->view->renderTemplate('recipe/' . $templatePath, $params);
                 $templateRendered = true;
-            } catch (\Exception $e) {
+            } catch (\Exception $exception) {
                 $templateRendered = false;
             }
         }
@@ -95,7 +94,7 @@ class PluginTemplate
             $htmlText = Craft::t(
                 'recipe',
                 'Error rendering `{template}` -> {error}',
-                ['template' => $templatePath, 'error' => $e->getMessage()]
+                ['template' => $templatePath, 'error' => $exception->getMessage()]
             );
             Craft::error($htmlText, __METHOD__);
         }
@@ -103,8 +102,8 @@ class PluginTemplate
         // Restore the old template mode
         try {
             Craft::$app->view->setTemplateMode($oldMode);
-        } catch (Exception $e) {
-            Craft::error($e->getMessage(), __METHOD__);
+        } catch (Exception $exception) {
+            Craft::error($exception->getMessage(), __METHOD__);
         }
 
         return Template::raw($htmlText);

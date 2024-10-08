@@ -67,7 +67,7 @@ class NutritionApi extends Component
                 'sodiumContent' => round($result->totalNutrients->NA->quantity ?? 0 / $yield, 1),
                 'sugarContent' => round($result->totalNutrients->SUGAR->quantity ?? 0 / $yield, 1),
                 'transFatContent' => round($result->totalNutrients->FATRN->quantity ?? 0 / $yield, 1),
-                'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity ?? 0 + $result->totalNutrients->FAPU->quantity ?? 0) / $yield, 1),
+                'unsaturatedFatContent' => round((($result->totalNutrients->FAMS->quantity ?? 0) + ($result->totalNutrients->FAPU->quantity ?? 0)) / $yield, 1),
             ];
         } catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';

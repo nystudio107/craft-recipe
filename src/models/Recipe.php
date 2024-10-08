@@ -15,14 +15,14 @@ use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
 use craft\helpers\Template;
-
 use craft\validators\ArrayValidator;
+use Exception;
 use nystudio107\recipe\helpers\Json;
 use nystudio107\recipe\helpers\PluginTemplate;
 use nystudio107\seomatic\models\MetaJsonLd;
 use nystudio107\seomatic\Seomatic;
-
 use Twig\Markup;
+use Twig_Markup;
 
 /**
  * @author    nystudio107
@@ -128,12 +128,12 @@ class Recipe extends Model
     public $equipment = [];
 
     /**
-     * @var int
+     * @var ?int
      */
     public $imageId = 0;
 
     /**
-     * @var int
+     * @var ?int
      */
     public $videoId = 0;
 
@@ -410,7 +410,7 @@ class Recipe extends Model
                 if ($add && $key === null) {
                     try {
                         $key = StringHelper::UUID();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // That's okay
                     }
                 }
@@ -440,7 +440,7 @@ class Recipe extends Model
      *
      * @param bool $raw
      *
-     * @return string|\Twig_Markup
+     * @return string|Twig_Markup
      */
     public function renderRecipeJSONLD($raw = true)
     {
@@ -457,8 +457,8 @@ class Recipe extends Model
     public function getImageUrl($transform = null)
     {
         $result = '';
-        if (isset($this->imageId) && $this->imageId) {
-            $image = Craft::$app->getAssets()->getAssetById($this->imageId[0]);
+        if ($this->imageId) {
+            $image = Craft::$app->getAssets()->getAssetById($this->imageId);
             if ($image) {
                 $result = $image->getUrl($transform);
             }
@@ -475,8 +475,8 @@ class Recipe extends Model
     public function getVideoUrl()
     {
         $result = '';
-        if (isset($this->videoId) && $this->videoId) {
-            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+        if ($this->videoId) {
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId);
             if ($video) {
                 $result = $video->getUrl();
             }
@@ -493,8 +493,8 @@ class Recipe extends Model
     public function getVideoUploadedDate()
     {
         $result = '';
-        if (isset($this->videoId) && $this->videoId) {
-            $video = Craft::$app->getAssets()->getAssetById($this->videoId[0]);
+        if ($this->videoId) {
+            $video = Craft::$app->getAssets()->getAssetById($this->videoId);
             if ($video) {
                 $result = $video->dateCreated->format('c');
             }
@@ -524,8 +524,8 @@ class Recipe extends Model
      * Get all of the ingredients for this recipe
      *
      * @param string $outputUnits
-     * @param int    $serving
-     * @param bool   $raw
+     * @param int $serving
+     * @param bool $raw
      *
      * @return array
      */
@@ -634,6 +634,99 @@ class Recipe extends Model
     }
 
     /**
+     * Get all of the directions for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return array
+     */
+    public function getDirections($raw = true)
+    {
+        $result = [];
+        if (!empty($this->directions)) {
+            foreach ($this->directions as $row) {
+                $direction = $row['direction'];
+                if ($raw) {
+                    $direction = Template::raw($direction);
+                }
+                $result[] = $direction;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all of the equipment for this recipe
+     *
+     * @param bool $raw
+     *
+     * @return array
+     */
+    public function getEquipment($raw = true)
+    {
+        $result = [];
+        if (!empty($this->equipment)) {
+            foreach ($this->equipment as $row) {
+                $equipment = $row['equipment'];
+                if ($raw) {
+                    $equipment = Template::raw($equipment);
+                }
+                $result[] = $equipment;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the aggregate rating from all of the ratings
+     *
+     * @return float|int|string
+     */
+    public function getAggregateRating()
+    {
+        $result = 0;
+        $total = 0;
+        if (!empty($this->ratings)) {
+            foreach ($this->ratings as $row) {
+                $result += $row['rating'];
+                ++$total;
+            }
+
+            $result /= $total;
+        } else {
+            $result = '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the total number of ratings
+     *
+     * @return int
+     */
+    public function getRatingsCount(): int
+    {
+        return count($this->ratings);
+    }
+
+    /**
+     * Returns concatenated serves with its unit
+     *
+     * @return int|string
+     */
+    public function getServes()
+    {
+        if (!empty($this->servesUnit)) {
+            return $this->serves . ' ' . $this->servesUnit;
+        }
+
+        return $this->serves;
+    }
+
+    /**
      * Convert decimal numbers into fractions
      *
      * @param $quantity
@@ -699,96 +792,6 @@ class Recipe extends Model
         return $whole . $fraction;
     }
 
-    /**
-     * Get all of the directions for this recipe
-     *
-     * @param bool $raw
-     *
-     * @return array
-     */
-    public function getDirections($raw = true)
-    {
-        $result = [];
-        if (!empty($this->directions)) {
-            foreach ($this->directions as $row) {
-                $direction = $row['direction'];
-                if ($raw) {
-                    $direction = Template::raw($direction);
-                }
-                $result[] = $direction;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get all of the equipment for this recipe
-     *
-     * @param bool $raw
-     *
-     * @return array
-     */
-    public function getEquipment($raw = true)
-    {
-        $result = [];
-        if (!empty($this->equipment)) {
-            foreach ($this->equipment as $row) {
-                $equipment = $row['equipment'];
-                if ($raw) {
-                    $equipment = Template::raw(equipment);
-                }
-                $result[] = $equipment;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the aggregate rating from all of the ratings
-     *
-     * @return float|int|string
-     */
-    public function getAggregateRating()
-    {
-        $result = 0;
-        $total = 0;
-        if (isset($this->ratings) && !empty($this->ratings)) {
-            foreach ($this->ratings as $row) {
-                $result += $row['rating'];
-                $total++;
-            }
-            $result /= $total;
-        } else {
-            $result = '';
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the total number of ratings
-     *
-     * @return int
-     */
-    public function getRatingsCount(): int
-    {
-        return count($this->ratings);
-    }
-
-    /**
-     * Returns concatenated serves with its unit
-     */
-    public function getServes(): string
-    {
-        if (!empty($this->servesUnit)) {
-            return $this->serves . ' ' . $this->servesUnit;
-        }
-
-        return $this->serves;
-    }
-
     // Private Methods
     // =========================================================================
 
@@ -798,7 +801,7 @@ class Recipe extends Model
      * @param      $json
      * @param bool $raw
      *
-     * @return string|\Twig_Markup
+     * @return string|Twig_Markup
      */
     private function renderJsonLd($json, $raw = true)
     {
