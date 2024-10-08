@@ -24,7 +24,10 @@ export default defineConfig({
     algolia: {
       appId: 'ANVOBU7GYX',
       apiKey: '66d1888afb505fa3d1b0342a487706ff',
-      indexName: 'recipe'
+      indexName: 'recipe',
+      searchParameters: {
+        facetFilters: ["version:v3"],
+      },
     },
     lastUpdatedText: 'Last Updated',
     sidebar: [],
