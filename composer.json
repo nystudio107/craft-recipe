@@ -2,7 +2,7 @@
   "name": "nystudio107/craft-recipe",
   "description": "A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support",
   "type": "craft-plugin",
-  "version": "4.0.9",
+  "version": "5.0.0",
   "keywords": [
     "craft",
     "cms",
@@ -23,14 +23,14 @@
     }
   ],
   "require": {
-    "craftcms/cms": "^4.0.0"
+    "craftcms/cms": "^5.0.0"
   },
   "require-dev": {
     "craftcms/ecs": "dev-main",
-    "craftcms/feed-me": "^5.0.0",
+    "craftcms/feed-me": "^6.0.0",
     "craftcms/phpstan": "dev-main",
     "craftcms/rector": "dev-main",
-    "nystudio107/craft-seomatic": "^4.0.0"
+    "nystudio107/craft-seomatic": "^5.0.0"
   },
   "scripts": {
     "phpstan": "phpstan --ansi --memory-limit=1G",
