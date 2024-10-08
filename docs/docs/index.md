@@ -169,7 +169,7 @@ To do any further manipulation of the Recipe Image (perhaps a transform) you can
 
 The Recipe field conceptually encompasses a single recipe. However, if you require multiple components in a recipe you can still use Recipe.
 
-An example of a multiple component recipe might be a dish that requires a sauce that's prepared separately from the main dish.
+An example of a multiple component recipe might be a dish that requires a sauce that’s prepared separately from the main dish.
 
 What you can do is create a Matrix field that contains a Recipe field.
 
