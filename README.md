@@ -21,8 +21,6 @@ To install Recipe, follow these steps:
 
 You can also install Recipe via the **Plugin Store** in the Craft AdminCP.
 
-Recipe works on Craft 3.x.
-
 ## Documentation
 
 Click here -> [Recipe Documentation](https://nystudio107.com/plugins/recipe/documentation)
