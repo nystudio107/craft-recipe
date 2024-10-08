@@ -1,16 +1,14 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/quality-score.png?b=v4)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v4) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/coverage.png?b=v4)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v4) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/build.png?b=v4)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/build-status/v4) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/code-intelligence.svg?b=v4)](https://scrutinizer-ci.com/code-intelligence)
 
-# Recipe plugin for Craft CMS
+# Recipe plugin for Craft CMS 4.x
 
 A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support
 
 ![Screenshot](./resources/img/plugin-logo.png)
 
-Related: [Recipe for Craft 2.x](https://github.com/nystudio107/recipe)
-
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later or Craft CMS 4.0.0 or later.
+This plugin requires Craft CMS 4.0.0 or later
 
 ## Installation
 
