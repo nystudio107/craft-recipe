@@ -38,7 +38,7 @@ class NutritionApiController extends Controller
 
         if (empty($ingredients)) {
             return $this->asJson([
-                'error' => 'Please provide some ingredients first.'
+                'error' => 'Please provide some ingredients first.',
             ]);
         }
 

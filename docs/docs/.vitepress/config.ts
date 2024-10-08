@@ -3,7 +3,7 @@ import {defineConfig} from 'vitepress';
 export default defineConfig({
   title: 'Recipe Plugin',
   description: 'Documentation for the Recipe plugin',
-  base: '/docs/recipe/',
+  base: '/docs/recipe/v4/',
   lang: 'en-US',
   head: [
     ['meta', {content: 'https://github.com/nystudio107', property: 'og:see_also',}],
@@ -18,13 +18,16 @@ export default defineConfig({
     ],
     logo: '/img/plugin-logo.svg',
     editLink: {
-      pattern: 'https://github.com/nystudio107/craft-recipe/edit/develop/docs/docs/:path',
+      pattern: 'https://github.com/nystudio107/craft-recipe/edit/develop-v4/docs/docs/:path',
       text: 'Edit this page on GitHub'
     },
     algolia: {
       appId: 'ANVOBU7GYX',
       apiKey: '66d1888afb505fa3d1b0342a487706ff',
-      indexName: 'recipe'
+      indexName: 'recipe',
+      searchParameters: {
+        facetFilters: ["version:v4"],
+      },
     },
     lastUpdatedText: 'Last Updated',
     sidebar: [],
@@ -35,6 +38,7 @@ export default defineConfig({
       {text: 'Issues', link: 'https://github.com/nystudio107/craft-recipe/issues'},
       {
         text: 'v4', items: [
+          {text: 'v5', link: 'https://nystudio107.com/docs/recipe/'},
           {text: 'v4', link: '/'},
           {text: 'v1', link: 'https://nystudio107.com/docs/recipe/v1/'},
         ],

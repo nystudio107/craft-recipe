@@ -14,6 +14,7 @@ namespace nystudio107\recipe\services;
 use Craft;
 use craft\base\Component;
 use Exception;
+use nystudio107\recipe\models\Settings;
 use nystudio107\recipe\Recipe;
 
 /**
@@ -30,13 +31,15 @@ class NutritionApi extends Component
      */
     public function getNutritionalInfo(array $ingredients, int $serves = null): array
     {
-        if (!Recipe::$plugin->getSettings()->hasApiCredentials()) {
+        /** @var Settings $settings */
+        $settings = Recipe::$plugin->getSettings();
+        if (!$settings->hasApiCredentials()) {
             return [];
         }
 
         $url = 'https://api.edamam.com/api/nutrition-details'
-            . '?app_id=' . Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationId)
-            . '&app_key=' . Craft::parseEnv(Recipe::$plugin->getSettings()->apiApplicationKey);
+            . '?app_id=' . Craft::parseEnv($settings->apiApplicationId)
+            . '&app_key=' . Craft::parseEnv($settings->apiApplicationKey);
 
         $data = [
             'ingr' => $ingredients,
@@ -65,7 +68,7 @@ class NutritionApi extends Component
                 'sodiumContent' => round($result->totalNutrients->NA->quantity ?? 0 / $yield, 1),
                 'sugarContent' => round($result->totalNutrients->SUGAR->quantity ?? 0 / $yield, 1),
                 'transFatContent' => round($result->totalNutrients->FATRN->quantity ?? 0 / $yield, 1),
-                'unsaturatedFatContent' => round(($result->totalNutrients->FAMS->quantity ?? 0 + $result->totalNutrients->FAPU->quantity ?? 0) / $yield, 1),
+                'unsaturatedFatContent' => round((($result->totalNutrients->FAMS->quantity ?? 0) + ($result->totalNutrients->FAPU->quantity ?? 0)) / $yield, 1),
             ];
         } catch (Exception $exception) {
             $message = 'Error fetching nutritional information from API. ';

@@ -15,6 +15,7 @@ use Craft;
 use craft\console\Controller;
 use craft\elements\Entry;
 use craft\helpers\Console;
+use nystudio107\recipe\models\Settings;
 use nystudio107\recipe\Recipe;
 use yii\console\ExitCode;
 use yii\helpers\BaseConsole;
@@ -53,7 +54,9 @@ class NutritionApiController extends Controller
      */
     public function actionGenerate(): int
     {
-        if (!Recipe::$plugin->getSettings()->hasApiCredentials()) {
+        /** @var Settings $settings */
+        $settings = Recipe::$plugin->getSettings();
+        if (!$settings->hasApiCredentials()) {
             $this->stderr(Craft::t('recipe', 'API credentials do not exist in plugin settings.') . PHP_EOL, BaseConsole::FG_RED);
 
             return ExitCode::OK;

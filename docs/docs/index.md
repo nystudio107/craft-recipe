@@ -1,16 +1,14 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/quality-score.png?b=v4)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v4) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/coverage.png?b=v4)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/?branch=v4) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/build.png?b=v4)](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/build-status/v4) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-recipe/badges/code-intelligence.svg?b=v4)](https://scrutinizer-ci.com/code-intelligence)
 
-# Recipe plugin for Craft CMS
+# Recipe plugin for Craft CMS 4.x
 
 A comprehensive recipe FieldType for Craft CMS that includes metric/imperial conversion, portion calculation, and JSON-LD microdata support
 
 ![Screenshot](./resources/img/plugin-logo.png)
 
-Related: [Recipe for Craft 2.x](https://github.com/nystudio107/recipe)
-
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later or Craft CMS 4.0.0 or later.
+This plugin requires Craft CMS 4.0.0 or later
 
 ## Installation
 
@@ -169,7 +167,7 @@ To do any further manipulation of the Recipe Image (perhaps a transform) you can
 
 The Recipe field conceptually encompasses a single recipe. However, if you require multiple components in a recipe you can still use Recipe.
 
-An example of a multiple component recipe might be a dish that requires a sauce that's prepared separately from the main dish.
+An example of a multiple component recipe might be a dish that requires a sauce that’s prepared separately from the main dish.
 
 What you can do is create a Matrix field that contains a Recipe field.
 

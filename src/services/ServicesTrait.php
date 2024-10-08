@@ -33,7 +33,7 @@ trait ServicesTrait
         return [
             'components' => [
                 'nutritionApi' => NutritionApi::class,
-            ]
+            ],
         ];
     }
 

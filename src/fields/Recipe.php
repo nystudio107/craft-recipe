@@ -19,6 +19,7 @@ use craft\helpers\Html;
 use craft\helpers\Json;
 use nystudio107\recipe\assetbundles\recipefield\RecipeFieldAsset;
 use nystudio107\recipe\models\Recipe as RecipeModel;
+use nystudio107\recipe\models\Settings;
 use nystudio107\recipe\Recipe as RecipePlugin;
 use Throwable;
 use yii\base\InvalidConfigException;
@@ -174,6 +175,8 @@ class Recipe extends Field
             $videoElements = [Craft::$app->getAssets()->getAssetById($value->videoId)];
         }
 
+        /** @var Settings $settings */
+        $settings = RecipePlugin::$plugin->getSettings();
         // Render the input template
         try {
             return Craft::$app->getView()->renderTemplate(
@@ -185,12 +188,12 @@ class Recipe extends Field
                     'id' => $id,
                     'nameSpacedId' => $nameSpacedId,
                     'prefix' => Craft::$app->getView()->namespaceInputId(''),
-                    'assetsSourceExists' => is_countable(Craft::$app->getAssets()->findFolders()) ? count(Craft::$app->getAssets()->findFolders()) : 0,
+                    'assetsSourceExists' => count(Craft::$app->getAssets()->findFolders()),
                     'elements' => $elements,
                     'videoElements' => $videoElements,
                     'elementType' => Asset::class,
                     'assetSources' => $this->assetSources,
-                    'hasApiCredentials' => RecipePlugin::$plugin->getSettings()->hasApiCredentials(),
+                    'hasApiCredentials' => $settings->hasApiCredentials(),
                 ]
             );
         } catch (Throwable $throwable) {
@@ -210,7 +213,7 @@ class Recipe extends Field
             if (!isset($volume['heading'])) {
                 $sourceOptions[] = [
                     'label' => Html::encode($volume['label']),
-                    'value' => $volume['key']
+                    'value' => $volume['key'],
                 ];
             }
         }
