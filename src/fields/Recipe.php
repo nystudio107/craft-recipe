@@ -14,6 +14,7 @@ namespace nystudio107\recipe\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\base\PreviewableFieldInterface;
 use craft\elements\Asset;
 use craft\helpers\Html;
 use craft\helpers\Json;
@@ -30,7 +31,7 @@ use yii\db\Schema;
  * @package   Recipe
  * @since     1.0.0
  */
-class Recipe extends Field
+class Recipe extends Field implements PreviewableFieldInterface
 {
     // Public Properties
     // =========================================================================
@@ -46,9 +47,33 @@ class Recipe extends Field
     /**
      * @inheritdoc
      */
+    public static function dbType(): array|string|null
+    {
+        return Schema::TYPE_TEXT;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('recipe', 'Recipe');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function icon(): string
+    {
+        return '@nystudio107/recipe/icon-mask.svg';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function phpType(): string
+    {
+        return sprintf('\\%s', RecipeModel::class);
     }
 
     // Public Methods
@@ -63,14 +88,6 @@ class Recipe extends Field
 
         return array_merge($rules, [
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getContentColumnType(): string
-    {
-        return Schema::TYPE_TEXT;
     }
 
     /**
