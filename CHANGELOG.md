@@ -1,6 +1,6 @@
 # Recipe Changelog
 
-## 4.0.9 - UNRELEASED
+## 4.0.9 - 2024.10.08
 ### Added
 * Add `phpstan` and `ecs` code linting
 * Add `code-analysis.yaml` GitHub action
