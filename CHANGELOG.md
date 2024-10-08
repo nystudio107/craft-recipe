@@ -1,5 +1,10 @@
 # Recipe Changelog
 
+## 1.4.6 - UNRELEASED
+### Added
+* Add `phpstan` and `ecs` code linting
+* Add `code-analysis.yaml` GitHub action
+
 ## 1.4.5 - 2024.01.14
 ### Added
 * Automate release generation via GitHub action
